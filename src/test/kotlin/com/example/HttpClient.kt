@@ -55,7 +55,7 @@ suspend fun <Input : Any> HttpClient.request(
 ): HttpResponse =
     request(HttpRequestBuilder().apply {
         this.method = method
-
+        val input = route.reverse(input)
         if (input !is Params) throw TODO("Not supporting transformation of Params yet.")
         val params = input.toList()
         if (params.size != route.arity) throw IllegalStateException("Expected ${route.arity} parameters, got ${params.size}")

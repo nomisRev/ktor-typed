@@ -531,275 +531,253 @@ data class Params22<out A, out B, out C, out D, out E, out F, out G, out H, out 
     )
 }
 
-context(routing: RoutingContext) internal suspend fun List<*>.execute(
-    block: suspend RoutingContext.(Any?) -> Unit, transform: (suspend (Any?) -> Any?)?
-): Any {
-    val execute: suspend (Any?) -> Unit = { block.invoke(routing, transform?.invoke(it) ?: it) }
-    return when (size) {
-        0 -> execute(Params0)
-        1 -> execute(this[0])
-        2 -> execute(Params2(this[0], this[1]))
-        3 -> execute(Params3(this[0], this[1], this[2]))
-        4 -> execute(Params4(this[0], this[1], this[2], this[3]))
-        5 -> execute(Params5(this[0], this[1], this[2], this[3], this[4]))
-        6 -> execute(Params6(this[0], this[1], this[2], this[3], this[4], this[5]))
-        7 -> execute(Params7(this[0], this[1], this[2], this[3], this[4], this[5], this[6]))
-        8 -> execute(Params8(this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7]))
-        9 -> execute(Params9(this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8]))
-        10 -> execute(
-            Params10(
-                this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8], this[9]
-            )
+internal fun List<*>.toParams(): Params =
+    when (size) {
+        0 -> Params0
+        1 -> Params1(this[0])
+        2 -> Params2(this[0], this[1])
+        3 -> Params3(this[0], this[1], this[2])
+        4 -> Params4(this[0], this[1], this[2], this[3])
+        5 -> Params5(this[0], this[1], this[2], this[3], this[4])
+        6 -> Params6(this[0], this[1], this[2], this[3], this[4], this[5])
+        7 -> Params7(this[0], this[1], this[2], this[3], this[4], this[5], this[6])
+        8 -> Params8(this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7])
+        9 -> Params9(this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8])
+        10 -> Params10(this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8], this[9])
+
+        11 -> Params11(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10]
         )
 
-        11 -> execute(
-            Params11(
-                this[0], this[1], this[2], this[3], this[4], this[5], this[6], this[7], this[8], this[9], this[10]
-            )
+        12 -> Params12(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11]
         )
 
-        12 -> execute(
-            Params12(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11]
-            )
+        13 -> Params13(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12]
         )
 
-        13 -> execute(
-            Params13(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12]
-            )
+        14 -> Params14(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13]
         )
 
-        14 -> execute(
-            Params14(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13]
-            )
+        15 -> Params15(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14]
         )
 
-        15 -> execute(
-            Params15(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14]
-            )
+        16 -> Params16(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15]
         )
 
-        16 -> execute(
-            Params16(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15]
-            )
+        17 -> Params17(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15],
+            this[16]
         )
 
-        17 -> execute(
-            Params17(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15],
-                this[16]
-            )
+        18 -> Params18(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15],
+            this[16],
+            this[17]
         )
 
-        18 -> execute(
-            Params18(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15],
-                this[16],
-                this[17]
-            )
+        19 -> Params19(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15],
+            this[16],
+            this[17],
+            this[18]
         )
 
-        19 -> execute(
-            Params19(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15],
-                this[16],
-                this[17],
-                this[18]
-            )
+        20 -> Params20(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15],
+            this[16],
+            this[17],
+            this[18],
+            this[19]
         )
 
-        20 -> execute(
-            Params20(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15],
-                this[16],
-                this[17],
-                this[18],
-                this[19]
-            )
+        21 -> Params21(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15],
+            this[16],
+            this[17],
+            this[18],
+            this[19],
+            this[20]
         )
 
-        21 -> execute(
-            Params21(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15],
-                this[16],
-                this[17],
-                this[18],
-                this[19],
-                this[20]
-            )
-        )
-
-        22 -> execute(
-            Params22(
-                this[0],
-                this[1],
-                this[2],
-                this[3],
-                this[4],
-                this[5],
-                this[6],
-                this[7],
-                this[8],
-                this[9],
-                this[10],
-                this[11],
-                this[12],
-                this[13],
-                this[14],
-                this[15],
-                this[16],
-                this[17],
-                this[18],
-                this[19],
-                this[20],
-                this[21]
-            )
+        22 -> Params22(
+            this[0],
+            this[1],
+            this[2],
+            this[3],
+            this[4],
+            this[5],
+            this[6],
+            this[7],
+            this[8],
+            this[9],
+            this[10],
+            this[11],
+            this[12],
+            this[13],
+            this[14],
+            this[15],
+            this[16],
+            this[17],
+            this[18],
+            this[19],
+            this[20],
+            this[21]
         )
 
         else -> throw IllegalArgumentException("Cannot convert list of size $size to params!")
     }
-}

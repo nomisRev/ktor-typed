@@ -7,7 +7,7 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.appendPathSegments
 
 fun <A> Path(block: PathBuilder<Unit>.() -> PathBuilder<A>): Route<A, Unit> =
-    Route(PathBuilder<Unit>().block())
+    Route(PathBuilder<Unit>().block(), emptyList(), { it }) { it }
 
 class PathBuilder<A> {
     val segments = mutableListOf<Pair<String, Parameter.Path<*>?>>()

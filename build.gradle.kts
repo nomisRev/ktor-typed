@@ -4,6 +4,7 @@ val logback_version: String by project
 plugins {
     kotlin("jvm") version "2.1.21"
     kotlin("plugin.power-assert") version "2.1.21"
+    kotlin("plugin.serialization") version "2.1.21"
     id("io.ktor.plugin") version "3.1.3"
     id("org.jetbrains.kotlinx.kover") version "0.7.5"
 }
