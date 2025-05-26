@@ -71,18 +71,9 @@ suspend fun <Input : Any> HttpClient.request(
 
         route.parameters.zip(params.drop(index)) { parameter, value ->
             val value = when (parameter) {
-                is Parameter.Cookie -> (value as Cookie).let { cookie ->
-                    this.cookie(
-                        cookie.name,
-                        cookie.value,
-                        cookie.maxAge ?: 0,
-                        cookie.expires,
-                        cookie.domain,
-                        cookie.path,
-                        cookie.secure,
-                        cookie.httpOnly,
-                        cookie.extensions
-                    )
+                is Parameter.Cookie -> (value as String).let { cookie ->
+                    // TODO We should support all cookie parameters
+                    this.cookie(parameter.name, value)
                 }
 
                 is Parameter.Header -> this.headers.appendAll(parameter.name, value as List<String>)

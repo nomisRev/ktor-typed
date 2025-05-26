@@ -46,12 +46,12 @@ class Route<Input, Output>(
     private var transform: (suspend (Any?) -> Any?)? = null,
 ) {
     val parameters = mutableListOf<Parameter<*>>()
-    val arity = path.arity + parameters.size
+    val arity get() = path.arity + parameters.size
 
     // TODO: Split this to a server module. This module can be build on io.ktor.http
     context(routing: io.ktor.server.routing.Route)
     internal fun handle(method: HttpMethod, block: suspend RoutingContext.(Input) -> Unit) =
-        routing.route(path.routeString().also { println(it) }, method) {
+        routing.route(path.routeString(), method) {
             handle {
                 (path.segments.mapNotNull { (segment, parameter) ->
                     if (parameter != null) {
@@ -61,7 +61,7 @@ class Route<Input, Output>(
                 } + parameters.map { parameter ->
                     when (parameter) {
                         is Parameter.Cookie -> call.request.cookies[parameter.name, parameter.encoding]
-                        is Parameter.Header -> call.request.headers[parameter.name]
+                        is Parameter.Header -> call.request.headers.getAll(parameter.name)
                         is Parameter.Query<*> -> {
                             val value = call.request.queryParameters[parameter.name]
                             when {
