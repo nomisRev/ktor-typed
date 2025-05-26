@@ -81,7 +81,7 @@ internal fun <Input, Output> Route<Input, Output>.handle(
             val params = (path.segments.mapNotNull { (segment, parameter) ->
                 if (parameter != null) {
                     val value = call.parameters[segment]
-                    parameter.deserialize.deserialize(requireNotNull(value))
+                    parameter.codec.deserialize(requireNotNull(value))
                 } else null
             } + parameters.map { parameter ->
                 when (parameter) {
@@ -90,8 +90,8 @@ internal fun <Input, Output> Route<Input, Output>.handle(
                     is Parameter.Query<*> -> {
                         val value = call.request.queryParameters[parameter.name]
                         when {
-                            value == null -> if (parameter.optional) null else throw IllegalStateException("Parameter ${parameter.name} is required")
-                            else -> parameter.deserialize.deserialize(value)
+                            value == null -> if (parameter.isNullable) null else throw IllegalStateException("Parameter ${parameter.name} is required")
+                            else -> parameter.codec.deserialize(value)
                         }
                     }
                 }

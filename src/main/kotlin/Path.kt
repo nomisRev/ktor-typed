@@ -71,18 +71,11 @@ class PathBuilder<A> {
 }
 
 context(builder: PathBuilder<Unit>)
-operator fun <B> String.div(path: Parameter.Path<B>): PathBuilder<Params1<B>> {
+operator fun <B> String.div(path: Parameter.Path<B>): PathBuilder<B> {
     builder.addSegment(this)
     builder.addSegment(path)
     builder.arity++
-    return builder as PathBuilder<Params1<B>>
-}
-
-@JvmName("stringDivPathParameter")
-operator fun <B> PathBuilder<Params0>.div(path: Parameter.Path<B>): PathBuilder<Params1<B>> {
-    addSegment(path)
-    arity++
-    return this as PathBuilder<Params1<B>>
+    return builder as PathBuilder<B>
 }
 
 operator fun <A> PathBuilder<A>.div(path: String): PathBuilder<A> {

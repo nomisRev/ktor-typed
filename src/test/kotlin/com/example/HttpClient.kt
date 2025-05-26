@@ -7,48 +7,47 @@ import io.ktor.client.request.cookie
 import io.ktor.client.request.parameter
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.Cookie
 import io.ktor.http.HttpMethod
 import io.ktor.http.appendEncodedPathSegments
 
 // TODO move to separate module
 
-suspend fun <Input : Any> HttpClient.get(
+suspend fun <Input> HttpClient.get(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Get, route, input)
 
-suspend fun <Input : Any> HttpClient.post(
+suspend fun <Input> HttpClient.post(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Post, route, input)
 
-suspend fun <Input : Any> HttpClient.put(
+suspend fun <Input> HttpClient.put(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Put, route, input)
 
-suspend fun <Input : Any> HttpClient.patch(
+suspend fun <Input> HttpClient.patch(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Patch, route, input)
 
-suspend fun <Input : Any> HttpClient.delete(
+suspend fun <Input> HttpClient.delete(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Delete, route, input)
 
-suspend fun <Input : Any> HttpClient.head(
+suspend fun <Input> HttpClient.head(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Head, route, input)
 
-suspend fun <Input : Any> HttpClient.options(
+suspend fun <Input > HttpClient.options(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Options, route, input)
 
-suspend fun <Input : Any> HttpClient.request(
+suspend fun <Input> HttpClient.request(
     method: HttpMethod,
     route: Route<Input, Unit>,
     input: Input
@@ -57,12 +56,12 @@ suspend fun <Input : Any> HttpClient.request(
         this.method = method
         val input = route.reverse(input)
         if (input !is Params) throw TODO("Not supporting transformation of Params yet.")
-        val params = input.toList()
+        val params = input.toArray()
         if (params.size != route.arity) throw IllegalStateException("Expected ${route.arity} parameters, got ${params.size}")
         var index = 0
         val segments = route.path.segments.mapIndexedNotNull { idx, (path, parameter) ->
             if (parameter == null) path else {
-                val codec = parameter.deserialize as Codec<Any?>
+                val codec = parameter.codec as Codec<Any?>
                 val value = codec.serialize(params[index++])
                 if (value == null && idx == route.path.segments.lastIndex) null else value
             }

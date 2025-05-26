@@ -2,16 +2,10 @@
 
 package com.example
 
-import kotlinx.serialization.serializer
-import kotlin.reflect.full.callSuspendBy
-import kotlin.reflect.full.primaryConstructor
-
-
-//fun <A, B> Route<A, Unit>.map(map: suspend (A) -> B, imap: suspend (B) -> A): Route<B, Unit> =
-//    Route(path, parameters, { map(this.transform(it) as A) }) {
-//        imap(this.reverse(it) as B)
-//    }
-
+fun <A, B> Route<A, Unit>.map(map: suspend (A) -> B, imap: suspend (B) -> A): Route<B, Unit> =
+    Route(path, parameters, { map(this.transform(it) as A) }) {
+        imap(this.reverse(it) as B)
+    }
 
 fun <A, B, C> Route<Params2<A, B>, Unit>.map(transform: suspend (A, B) -> C, imap: suspend (C) -> Params2<A, B>): Route<C, Unit> =
     Route(path, parameters, {
