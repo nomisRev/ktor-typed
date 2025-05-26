@@ -1,16 +1,16 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example
 
+import com.example.codec.Codec
 import io.ktor.http.URLBuilder
 import io.ktor.http.appendPathSegments
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
-import kotlin.text.toInt
 
 fun <A> Path(block: PathBuilder<Unit>.() -> PathBuilder<A>): Route<A, Unit> =
     Route(PathBuilder<Unit>().block())
 
 class PathBuilder<A> {
-    val segments = mutableListOf<Pair<String, Parameter<*>?>>()
+    val segments = mutableListOf<Pair<String, Parameter.Path<*>?>>()
     var arity: Int = 0
     var transform: ((Any?) -> Any?)? = null
 
@@ -18,7 +18,7 @@ class PathBuilder<A> {
         segments += segment to null
     }
 
-    fun addSegment(segment: Parameter<*>) {
+    fun addSegment(segment: Parameter.Path<*>) {
         segments += segment.name to segment
     }
 
@@ -33,22 +33,23 @@ class PathBuilder<A> {
     }
 
     inline fun <reified B> PathBuilder<A>.jsonParam(name: String, optional: Boolean = false): Parameter<B> =
-        Parameter.Path(name, optional) { value -> Json.decodeFromString(serializer<B>(), value) }
+        TODO()
+//        Parameter.Path(name, optional) { value -> Json.decodeFromString(serializer<B>(), value) }
 
-    fun string(name: String) = Parameter.Path(name, false)  { it }
-    fun char(name: String) = Parameter.Path(name, false)  {
-        if (it.length == 1) it[0] else throw IllegalArgumentException("Expected a single character")
-    }
+    fun string(name: String) = Parameter.Path(name, Codec.string)
+//    fun char(name: String) = Parameter.Path(name, false)  {
+//        if (it.length == 1) it[0] else throw IllegalArgumentException("Expected a single character")
+//    }
 
-    fun int(name: String) = Parameter.Path(name, false) { it.toInt() }
-    fun long(name: String) = Parameter.Path(name, false) { it.toLong() }
-    fun double(name: String) = Parameter.Path(name, false) { it.toDouble() }
+    fun int(name: String) = Parameter.Path(name, Codec.int)
+    fun long(name: String) = Parameter.Path(name, Codec.long)
+    fun double(name: String) = Parameter.Path(name, Codec.double)
 
     fun routeString(): String =
         segments.joinToString("/") { (segment, parameter) ->
-            val nullable = if (parameter?.optional == true) "?" else ""
-            if (parameter == null) segment
-            else "{${parameter.name}$nullable}"
+            // TODO support nullable, but it can only be the last segment
+//            val nullable = if (parameter?.optional == true) "?" else ""
+            if (parameter == null) segment else "{${parameter.name}}"
         }
 
     fun builder() = URLBuilder().apply {
