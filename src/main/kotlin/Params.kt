@@ -9,8 +9,10 @@ sealed interface Parameter<A> {
 
     class Query<A>(val name: String, val optional: Boolean, val deserialize: Codec<A>) : Parameter<A>
 
+    // TODO support optional
     class Header(val name: String, val optional: Boolean) : Parameter<List<String>>
 
+    // TODO support optional
     class Cookie(
         val name: String,
         val optional: Boolean,

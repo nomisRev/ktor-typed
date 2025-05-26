@@ -59,7 +59,7 @@ class Route<Input, Output>(
                         parameter.deserialize.deserialize(requireNotNull(value))
                     } else null
                 } + parameters.map { parameter ->
-                    val value = when (parameter) {
+                    when (parameter) {
                         is Parameter.Cookie -> call.request.cookies[parameter.name, parameter.encoding]
                         is Parameter.Header -> call.request.headers[parameter.name]
                         is Parameter.Query<*> -> {
