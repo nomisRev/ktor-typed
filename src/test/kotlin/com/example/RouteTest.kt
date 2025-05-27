@@ -20,7 +20,7 @@ class RouteTest {
         val age: Int?,
         val email: String?,
         val test: Boolean,
-        val custom: List<String>,
+        val custom: String,
         val sessionId: String
     )
 
@@ -39,11 +39,11 @@ class RouteTest {
         val route = Path { "users" / string("name") / intOrNull("age") }
             .query(Parameter.Query("email", Codec.stringOrNull))
             .query(Parameter.Query("test", Codec.boolean))
-            .header(Parameter.Header("X-Custom-Header"))
+            .header("X-Custom-Header")
             .cookie(Parameter.Cookie("session_id"))
             .asDataClass(::ComplexUser)
 
-        val user = ComplexUser("John", 21, "j.d@jb.com", true, listOf("header"), "session")
+        val user = ComplexUser("John", 21, "j.d@jb.com", true, "header", "session")
 
         testInput(route, user)
     }
@@ -53,16 +53,16 @@ class RouteTest {
         data class AuthData(
             val userId: String,
             val clientId: String,
-            val userAgent: List<String>,
-            val acceptLanguage: List<String>,
+            val userAgent: String,
+            val acceptLanguage: String,
             val sessionToken: String,
             val refreshToken: String
         )
 
         val route = Path { "auth" / string("userId") }
             .query(Parameter.Query("client_id", Codec.string))
-            .header(Parameter.Header("User-Agent"))
-            .header(Parameter.Header("Accept-Language"))
+            .header("User-Agent")
+            .header("Accept-Language")
             .cookie(Parameter.Cookie("session_token"))
             .cookie(Parameter.Cookie("refresh_token"))
             .asDataClass(::AuthData)
@@ -70,8 +70,8 @@ class RouteTest {
         val authData = AuthData(
             userId = "user123",
             clientId = "client456",
-            userAgent = listOf("Mozilla/5.0"),
-            acceptLanguage = listOf("en-US,en;q=0.9"),
+            userAgent = "Mozilla/5.0",
+            acceptLanguage = "en-US,en;q=0.9",
             sessionToken = "session789",
             refreshToken = "refresh012"
         )
@@ -163,8 +163,8 @@ fun <A> testInput(
 ) = testApplication {
     routing {
         methods.forEach { method ->
-            route.handle(method) { a ->
-                assert(a)
+            route.handle(method) { actual ->
+                assert(actual)
                 call.respond(HttpStatusCode.OK)
             }
         }

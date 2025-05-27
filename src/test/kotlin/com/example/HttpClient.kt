@@ -42,7 +42,7 @@ suspend fun <Input> HttpClient.head(
     input: Input
 ): HttpResponse = request(HttpMethod.Head, route, input)
 
-suspend fun <Input > HttpClient.options(
+suspend fun <Input> HttpClient.options(
     route: Route<Input, Unit>,
     input: Input
 ): HttpResponse = request(HttpMethod.Options, route, input)
@@ -59,6 +59,7 @@ suspend fun <Input> HttpClient.request(
             input === Unit -> emptyArray()
             input !is Params ->
                 if (route.arity == 1) arrayOf(input) else throw TODO("Not supporting transformation of Params yet.")
+
             else -> input.toArray().also {
                 require(it.size == route.arity) { "Expected ${route.arity} parameters, got ${it.size}" }
             }
@@ -75,14 +76,23 @@ suspend fun <Input> HttpClient.request(
         url.appendEncodedPathSegments(segments)
 
         route.parameters.zip(params.drop(index)) { parameter, value ->
-            val value = when (parameter) {
-                is Parameter.Cookie -> (value as String).let { cookie ->
-                    // TODO We should support all cookie parameters
-                    this.cookie(parameter.name, value)
-                }
+            when (parameter) {
+                // TODO We should support all cookie parameters
+                is Parameter.Cookie -> this.cookie(parameter.name, value as String)
+                is Parameter.Header ->
+                    when {
+                        value == null ->
+                            if (parameter.optional) Unit
+                            else throw IllegalStateException("Header ${parameter.name} is required")
 
-                is Parameter.Header -> this.headers.appendAll(parameter.name, value as List<String>)
-                is Parameter.Query<*> -> parameter(parameter.name, value as Any?)
+                        else -> headers.append(parameter.name, value as String)
+                    }
+// TODO https://youtrack.jetbrains.com/issue/KTOR-7824/Ktor-doesnt-parse-multiple-headers
+//                is Parameter.Headers ->
+//                    @Suppress("UNCHECKED_CAST")
+//                    headers.appendAll(parameter.name, value as List<String>)
+
+                is Parameter.Query<*> -> parameter(parameter.name, value)
             }
         }
     })

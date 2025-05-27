@@ -13,8 +13,12 @@ sealed interface Parameter<A> {
         inline val isNullable get() = codec.serializer.descriptor.isNullable
     }
 
-    class Header(val name: String) : Parameter<List<String>>
+    // TODO support optional headers
+    class Header(val name: String, val optional: Boolean) : Parameter<String>
+    // TODO https://youtrack.jetbrains.com/issue/KTOR-7824/Ktor-doesnt-parse-multiple-headers
+//    class Headers(val name: String) : Parameter<List<String>>
 
+    // TODO support optional cookies
     class Cookie(
         val name: String,
         val encoding: CookieEncoding = CookieEncoding.URI_ENCODING,

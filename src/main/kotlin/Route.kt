@@ -8,13 +8,6 @@ class Route<Input, Output>(
 ) {
     val arity get() = path.arity + parameters.size
 
-    internal fun addHeader(header: Parameter.Header): Route<Input, Output> = Route(
-        path,
-        parameters + header,
-        transform,
-        reverse
-    )
-
     internal fun addCookie(cookie: Parameter.Cookie): Route<Input, Output> = Route(
         path,
         parameters + cookie,
