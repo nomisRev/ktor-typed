@@ -5,7 +5,9 @@ import io.ktor.http.CookieEncoding
 
 // TODO support optional
 sealed interface Parameter<A> {
-    class Path<A>(val name: String, val codec: Codec<A>)
+    class Path<A>(val name: String, val codec: Codec<A>) {
+        inline val isNullable get() = codec.serializer.descriptor.isNullable
+    }
 
     class Query<A>(val name: String, val codec: Codec<A>) : Parameter<A> {
         inline val isNullable get() = codec.serializer.descriptor.isNullable

@@ -11,9 +11,7 @@ fun <A, F : Any> Route<A, Unit>.asDataClass(
     val components = kClass.members.filter { it.name.startsWith("component") }
     return Route(path, parameters, { params ->
         val params = params as Params1<A>
-        block.invoke(
-            params.value
-        )
+        block.invoke(params.value)
     }) { value ->
         components.map { it.call(value) }.toParams()
     }

@@ -55,9 +55,13 @@ suspend fun <Input> HttpClient.request(
     request(HttpRequestBuilder().apply {
         this.method = method
         val input = route.reverse(input)
-        if (input !is Params) throw TODO("Not supporting transformation of Params yet.")
-        val params = input.toArray()
-        if (params.size != route.arity) throw IllegalStateException("Expected ${route.arity} parameters, got ${params.size}")
+        val params = when {
+            input !is Params ->
+                if (route.arity == 1) arrayOf(input) else throw TODO("Not supporting transformation of Params yet.")
+            else -> input.toArray().also {
+                require(it.size == route.arity) { "Expected ${route.arity} parameters, got ${it.size}" }
+            }
+        }
         var index = 0
         val segments = route.path.segments.mapIndexedNotNull { idx, (path, parameter) ->
             if (parameter == null) path else {
@@ -76,7 +80,7 @@ suspend fun <Input> HttpClient.request(
                 }
 
                 is Parameter.Header -> this.headers.appendAll(parameter.name, value as List<String>)
-                is Parameter.Query<*> -> parameter(parameter.name, value as String)
+                is Parameter.Query<*> -> parameter(parameter.name, value as Any?)
             }
         }
     })
