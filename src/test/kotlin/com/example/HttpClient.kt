@@ -67,7 +67,8 @@ suspend fun <Input> HttpClient.request(
         val segments = route.path.segments.mapIndexedNotNull { idx, (path, parameter) ->
             if (parameter == null) path else {
                 val codec = parameter.codec as Codec<Any?>
-                val value = codec.serialize(params[index++])
+                val param = params[index++]
+                val value = codec.serialize(param)
                 if (value == null && idx == route.path.segments.lastIndex) null else value
             }
         }

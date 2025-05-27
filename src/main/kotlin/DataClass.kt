@@ -2,6 +2,9 @@ package com.example
 
 import kotlin.reflect.KClass
 
+inline fun <A, reified F : Any> Route<A, Unit>.asDataClass(noinline block: (A) -> F): Route<F, Unit> =
+    asDataClass(F::class, block)
+
 @Suppress("UNCHECKED_CAST")
 fun <A, F : Any> Route<A, Unit>.asDataClass(
     kClass: KClass<F>,
@@ -10,8 +13,7 @@ fun <A, F : Any> Route<A, Unit>.asDataClass(
     require(kClass.isData) { "Only data classes are supported." }
     val components = kClass.members.filter { it.name.startsWith("component") }
     return Route(path, parameters, { params ->
-        val params = params as Params1<A>
-        block.invoke(params.value)
+        block.invoke(params as A)
     }) { value ->
         components.map { it.call(value) }.toParams()
     }
@@ -240,7 +242,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K : Any> Route<Params10<A, B, C, D, E, F, G, 
     block: (A, B, C, D, E, F, G, H, I, J) -> K
 ): Route<K, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params10<A, B, C, D, E, F, G, H, I, J>
         block.invoke(
@@ -271,7 +275,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L : Any> Route<Params11<A, B, C, D, E, F, 
     block: (A, B, C, D, E, F, G, H, I, J, K) -> L
 ): Route<L, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params11<A, B, C, D, E, F, G, H, I, J, K>
         block.invoke(
@@ -303,7 +309,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M : Any> Route<Params12<A, B, C, D, E, 
     block: (A, B, C, D, E, F, G, H, I, J, K, L) -> M
 ): Route<M, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params12<A, B, C, D, E, F, G, H, I, J, K, L>
         block.invoke(
@@ -336,7 +344,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N : Any> Route<Params13<A, B, C, D, 
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M) -> N
 ): Route<N, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params13<A, B, C, D, E, F, G, H, I, J, K, L, M>
         block.invoke(
@@ -370,7 +380,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O : Any> Route<Params14<A, B, C, 
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) -> O
 ): Route<O, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params14<A, B, C, D, E, F, G, H, I, J, K, L, M, N>
         block.invoke(
@@ -405,7 +417,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P : Any> Route<Params15<A, B, 
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) -> P
 ): Route<P, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params15<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>
         block.invoke(
@@ -441,7 +455,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q : Any> Route<Params16<A, 
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) -> Q
 ): Route<Q, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params16<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>
         block.invoke(
@@ -478,7 +494,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R : Any> Route<Params17<
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) -> R
 ): Route<R, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params17<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q>
         block.invoke(
@@ -516,7 +534,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S : Any> Route<Params
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) -> S
 ): Route<S, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params18<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R>
         block.invoke(
@@ -555,7 +575,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T : Any> Route<Par
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) -> T
 ): Route<T, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params19<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S>
         block.invoke(
@@ -595,7 +617,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U : Any> Route<
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) -> U
 ): Route<U, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params20<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T>
         block.invoke(
@@ -636,7 +660,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V : Any> Rou
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) -> V
 ): Route<V, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params21<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U>
         block.invoke(
@@ -678,7 +704,9 @@ fun <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W : Any> 
     block: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) -> W
 ): Route<W, Unit> {
     require(kClass.isData) { "Only data classes are supported." }
-    val components = kClass.members.filter { it.name.startsWith("component") }
+    val components = kClass.members
+        .filter { it.name.startsWith("component") }
+        .sortedBy { it.name.removePrefix("component").toInt() }
     return Route(path, parameters, { params ->
         val params = params as Params22<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V>
         block.invoke(
