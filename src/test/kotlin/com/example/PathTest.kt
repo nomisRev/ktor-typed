@@ -6,6 +6,11 @@ import kotlin.test.assertEquals
 
 class PathTest {
     @Test
+    fun nonePathParameters() {
+        testInput(pathOf("simple"), Unit)
+    }
+
+    @Test
     fun singlePathParameters() {
         testInput(
             Path { "users" / string("name") },

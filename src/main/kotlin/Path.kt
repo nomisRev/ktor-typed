@@ -6,6 +6,12 @@ import com.example.PathResult.PartialPath
 import com.example.PathResult.PathDone
 import com.example.codec.Codec
 
+fun pathOf(simple: String): Route<Unit, Unit> = Route(
+    PartialPath<Unit>(listOf(Pair(simple, null)), 0),
+    emptyList(),
+    { it }
+) { it }
+
 /**
  * Path DSL for defining Path's in a typed manner.
  * This prevents creating incorrect paths by mistake, and automatically keeps track of all types required by a [Route].

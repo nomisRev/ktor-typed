@@ -56,6 +56,7 @@ suspend fun <Input> HttpClient.request(
         this.method = method
         val input = route.reverse(input)
         val params = when {
+            input === Unit -> emptyArray()
             input !is Params ->
                 if (route.arity == 1) arrayOf(input) else throw TODO("Not supporting transformation of Params yet.")
             else -> input.toArray().also {

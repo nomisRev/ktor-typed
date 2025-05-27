@@ -8,13 +8,6 @@ class Route<Input, Output>(
 ) {
     val arity get() = path.arity + parameters.size
 
-    internal fun addQuery(query: Parameter.Query<*>): Route<Input, Output> = Route(
-        path,
-        parameters + query,
-        transform,
-        reverse
-    )
-
     internal fun addHeader(header: Parameter.Header): Route<Input, Output> = Route(
         path,
         parameters + header,
