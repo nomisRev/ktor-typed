@@ -3,6 +3,8 @@ package com.example
 import io.ktor.http.HttpMethod
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.route
+import io.ktor.server.util.getOrFail
+import kotlin.collections.emptyList
 
 fun <Input> io.ktor.server.routing.Route.get(route: Route<Input, Unit>, block: suspend RoutingContext.(Input) -> Unit) =
     route.handle(HttpMethod.Get, block)
@@ -48,25 +50,33 @@ internal fun <Input, Output> Route<Input, Output>.handle(
     routing.route(path.routeString(), method) {
         handle {
             val params = (path.segments
-                .mapNotNull { path ->
-                    if (path.second == null) null
-                    else path as Pair<String, Parameter.Path<*>>
-                }
-                .map { (segment, parameter) ->
-                    val value = call.parameters[segment]
-                    if (parameter.isNullable && value == null) null
-                    else parameter.codec.deserialize(requireNotNull(value) { "Parameter ${parameter.name} is required but was null." })
+                .mapNotNull { path -> if (path.second == null) null else path as Pair<String, Path<*>> }
+                .map { (_, parameter) ->
+                    when(parameter) {
+                        is Path.Required<*> -> parameter.deserialize(call.parameters.getOrFail(parameter.name))
+                        is Path.Optional<*> -> {
+                            val optional = call.parameters[parameter.name]
+                            if (optional == null) parameter.defaultValue
+                            else parameter.deserialize(optional)
+                        }
+                        is Path.Multiple<*> -> {
+                            val values = (call.parameters.getAll(parameter.name) ?: emptyList<String>())
+                            parameter.deserialize(values)
+                        }
+                    }
                 } + parameters.map { parameter ->
                 when (parameter) {
-                    is Parameter.Cookie -> call.request.cookies[parameter.name, parameter.encoding]
+
+                    is Parameter.Cookie -> call.request.cookies[parameter.name/*, parameter.encoding*/] // TODO
                     is Parameter.Header -> call.request.headers[parameter.name]
 //                    is Parameter.Headers -> call.request.headers.getAll(parameter.name)
                     is Parameter.Query<*> -> {
-                        val value = call.request.queryParameters[parameter.name]
-                        when {
-                            value == null -> if (parameter.isNullable) null else throw IllegalStateException("Parameter ${parameter.name} is required")
-                            else -> parameter.codec.deserialize(value)
-                        }
+//                        val value = call.request.queryParameters[parameter.name]
+//                        when {
+//                            value == null -> if (parameter.isNullable) null else throw IllegalStateException("Parameter ${parameter.name} is required")
+//                            else -> parameter.codec.deserialize(value)
+//                        }
+                        TODO()
                     }
                 }
             }).toParams()

@@ -7,11 +7,4 @@ class Route<Input, Output>(
     val reverse: suspend (Any?) -> Any?
 ) {
     val arity get() = path.arity + parameters.size
-
-    internal fun addCookie(cookie: Parameter.Cookie): Route<Input, Output> = Route(
-        path,
-        parameters + cookie,
-        transform,
-        reverse
-    )
 }

@@ -1,30 +1,157 @@
 package com.example
 
-import com.example.codec.Codec
-import io.ktor.http.CookieEncoding
+import io.ktor.http.Parameters
 
-// TODO support optional
-sealed interface Parameter<A> {
-    class Path<A>(val name: String, val codec: Codec<A>) {
-        inline val isNullable get() = codec.serializer.descriptor.isNullable
-    }
+sealed interface Path<A> {
+    val name: String
 
-    class Query<A>(val name: String, val codec: Codec<A>) : Parameter<A> {
-        inline val isNullable get() = codec.serializer.descriptor.isNullable
-    }
+    class Required<A : Any>(
+        override val name: String,
+        val deserialize: suspend (String) -> A,
+        val serialize: suspend (A) -> String
+    ) : Path<A>
 
-    // TODO support optional headers
-    class Header(val name: String, val optional: Boolean) : Parameter<String>
-    // TODO https://youtrack.jetbrains.com/issue/KTOR-7824/Ktor-doesnt-parse-multiple-headers
-//    class Headers(val name: String) : Parameter<List<String>>
+    class Optional<A : Any?>(
+        override val name: String,
+        val defaultValue: A?,
+        val deserialize: suspend (String?) -> A,
+        val serialize: suspend (A) -> String?
+    ) : Path<A>
 
-    // TODO support optional cookies
-    class Cookie(
-        val name: String,
-        val encoding: CookieEncoding = CookieEncoding.URI_ENCODING,
-    ) : Parameter<String>
+    class Multiple<A>(
+        override val name: String,
+        val deserialize: suspend (List<String>) -> A,
+        val serialize: suspend (A) -> List<String>
+    ) : Path<A>
 }
 
+sealed interface Parameter<A> {
+    sealed interface Query<A> : Parameter<A> {
+        class Required<A : Any>(
+            val name: String,
+            val deserialize: suspend (String) -> A,
+            val serialize: suspend (A) -> String
+        ) : Query<A>
+
+        class Optional<A : Any?>(
+            val name: String,
+            val defaultValue: A?,
+            val deserialize: suspend (String?) -> A,
+            val serialize: suspend (A) -> String?
+        ) : Query<A>
+
+        class Multiple<A>(
+            val name: String,
+            val deserialize: suspend (List<String>) -> A,
+            val serialize: suspend (A) -> List<String>
+        ) : Query<A>
+
+        data object AllParameters : Query<Parameters>
+
+        companion object {
+            fun int(name: String): Required<Int> = Required(name, { it.toInt() }) { it.toString() }
+
+            fun ints(name: String): Multiple<List<Int>> =
+                Multiple(name, { it.map { it.toInt() } }) { it.map { it.toString() } }
+
+            fun intOrNull(
+                name: String,
+                defaultValue: Int? = null,
+            ): Optional<Int?> = Optional(name, defaultValue, { it?.toInt() }) { it?.toString() }
+
+            fun string(name: String): Required<String> = Required(name, { it }) { it }
+
+            fun strings(name: String): Multiple<List<String>> = Multiple(name, { it }) { it }
+
+            fun stringOrNull(
+                name: String,
+                defaultValue: String? = null
+            ): Optional<String?> = Optional(name, defaultValue, { it }) { it }
+
+            fun long(name: String): Required<Long> = Required(name, { it.toLong() }) { it.toString() }
+
+            fun longs(name: String): Multiple<List<Long>> =
+                Multiple(name, { it.map { it.toLong() } }) { it.map { it.toString() } }
+
+            fun longOrNull(
+                name: String,
+                defaultValue: Long? = null,
+            ): Optional<Long?> = Optional(name, defaultValue, { it?.toLong() }) { it?.toString() }
+
+            fun double(name: String): Required<Double> = Required(name, { it.toDouble() }) { it.toString() }
+
+            fun doubles(name: String): Multiple<List<Double>> =
+                Multiple(name, { it.map { it.toDouble() } }) { it.map { it.toString() } }
+
+            fun doubleOrNull(
+                name: String,
+                defaultValue: Double? = null,
+            ): Optional<Double?> = Optional(name, defaultValue, { it?.toDouble() }) { it?.toString() }
+
+            fun boolean(name: String): Required<Boolean> = Required(name, { it.toBoolean() }) { it.toString() }
+
+            fun booleans(name: String): Multiple<List<Boolean>> =
+                Multiple(name, { it.map { it.toBoolean() } }) { it.map { it.toString() } }
+
+            fun booleanOrNull(
+                name: String,
+                defaultValue: Boolean? = null,
+            ): Optional<Boolean?> = Optional(name, defaultValue, { it?.toBoolean() }) { it?.toString() }
+
+            fun float(name: String): Required<Float> = Required(name, { it.toFloat() }) { it.toString() }
+
+            fun floats(name: String): Multiple<List<Float>> =
+                Multiple(name, { it.map { it.toFloat() } }) { it.map { it.toString() } }
+
+            fun floatOrNull(
+                name: String,
+                defaultValue: Float? = null,
+            ): Optional<Float?> = Optional(name, defaultValue, { it?.toFloat() }) { it?.toString() }
+
+            fun allQueries(): AllParameters = AllParameters
+        }
+    }
+
+    sealed interface Header<A> : Parameter<A> {
+        val name: String
+
+        class Required<A : Any>(
+            override val name: String,
+            val deserialize: suspend (String) -> A,
+            val serialize: suspend (A) -> String
+        ) : Header<String>
+
+        class Optional<A : Any?>(
+            override val name: String,
+            val defaultValue: A?,
+            val deserialize: suspend (String?) -> A,
+            val serialize: suspend (A) -> String?
+        ) : Header<String?>
+
+        class Multiple<A>(
+            override val name: String,
+            val deserialize: suspend (List<String>) -> A,
+            val serialize: suspend (A) -> List<String>
+        ) : Header<List<String>>
+    }
+
+    sealed interface Cookie<A>: Parameter<A> {
+        val name: String
+
+        class Required<A : Any>(
+            override val name: String,
+            val deserialize: suspend (String) -> A,
+            val serialize: suspend (A) -> String
+        ) : Cookie<A>
+
+        class Optional<A : Any?>(
+            override val name: String,
+            val defaultValue: A?,
+            val deserialize: suspend (String?) -> A,
+            val serialize: suspend (A) -> String?
+        ) : Cookie<A>
+    }
+}
 
 sealed interface Params {
     fun toArray(): Array<Any?>
@@ -34,7 +161,8 @@ data object Params0 : Params {
     override fun toArray(): Array<Any?> = emptyArray()
 }
 
-data class Params1<out A>(val value: A) : Params {
+@JvmInline
+value class Params1<out A>(val value: A) : Params {
     override fun toArray(): Array<Any?> = arrayOf(value)
 }
 
@@ -155,7 +283,21 @@ data class Params13<out A, out B, out C, out D, out E, out F, out G, out H, out 
     val thirteenth: M
 ) : Params {
     override fun toArray(): Array<Any?> =
-        arrayOf(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth)
+        arrayOf(
+            first,
+            second,
+            third,
+            fourth,
+            fifth,
+            sixth,
+            seventh,
+            eighth,
+            ninth,
+            tenth,
+            eleventh,
+            twelfth,
+            thirteenth
+        )
 }
 
 data class Params14<out A, out B, out C, out D, out E, out F, out G, out H, out I, out J, out K, out L, out M, out N>(

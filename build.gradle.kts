@@ -31,6 +31,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
+    testImplementation("io.ktor:ktor-server-content-negotiation:3.1.3")
 }
 
 kotlin {

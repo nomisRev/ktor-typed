@@ -65,12 +65,27 @@ suspend fun <Input> HttpClient.request(
             }
         }
         var index = 0
-        val segments = route.path.segments.mapIndexedNotNull { idx, (path, parameter) ->
-            if (parameter == null) path else {
-                val codec = parameter.codec as Codec<Any?>
-                val param = params[index++]
-                val value = codec.serialize(param)
-                if (value == null && idx == route.path.segments.lastIndex) null else value
+        val segments: List<String> = route.path.segments.flatMap { (path, parameter) ->
+            when (parameter) {
+                is Path.Multiple<*> -> {
+                    val serialize = parameter.serialize as suspend (Any?) -> List<String>
+                    val param = params[index++]
+                    serialize(param)
+                }
+
+                is Path.Optional<*> -> {
+                    val serialize = parameter.serialize as suspend (Any?) -> String?
+                    val param = params[index++]
+                    listOfNotNull(serialize(param))
+                }
+
+                is Path.Required<*> -> {
+                    val serialize = parameter.serialize as suspend (Any?) -> String
+                    val param = params[index++]
+                    listOf(serialize(param))
+                }
+
+                null -> listOf(path)
             }
         }
         url.appendEncodedPathSegments(segments)
@@ -82,8 +97,8 @@ suspend fun <Input> HttpClient.request(
                 is Parameter.Header ->
                     when {
                         value == null ->
-                            if (parameter.optional) Unit
-                            else throw IllegalStateException("Header ${parameter.name} is required")
+                            /*if (parameter.optional) Unit
+                            else*/ throw IllegalStateException("Header ${parameter.name} is required")
 
                         else -> headers.append(parameter.name, value as String)
                     }
@@ -92,7 +107,7 @@ suspend fun <Input> HttpClient.request(
 //                    @Suppress("UNCHECKED_CAST")
 //                    headers.appendAll(parameter.name, value as List<String>)
 
-                is Parameter.Query<*> -> parameter(parameter.name, value)
+                is Parameter.Query<*> -> TODO()//parameter(parameter.name, value)
             }
         }
     })
