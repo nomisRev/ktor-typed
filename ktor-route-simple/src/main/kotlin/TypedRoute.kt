@@ -1,25 +1,18 @@
-package com.example.test
+package io.ktor.route.simple
 
-import io.ktor.client.call.body
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
-import io.ktor.client.request.get
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationCall
+import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.MissingRequestParameterException
 import io.ktor.server.request.receive
-import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
-import io.ktor.server.testing.testApplication
+import io.ktor.server.routing.port
+import io.ktor.util.internal.initCauseBridge
 import io.ktor.util.reflect.TypeInfo
+import kotlinx.coroutines.CopyableThrowable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -29,10 +22,11 @@ import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
-annotation class Header(val name: String)
+/**
+ * Annotation for marking header parameters in route data classes.
+ */
+public annotation class Header(val name: String)
 
 /**
  * Automatically picks up which serializer you're using.
@@ -40,24 +34,15 @@ annotation class Header(val name: String)
  *
  * Using `receive` and `receiveNullable` on server side.
  */
-annotation class Body
+public annotation class Body
 
-@Serializable
-data class CreateUser(
-    val userId: String,
-    @SerialName("name") val NAME: String,
-    val age: Int,
-    val many: List<String>,
-    @Header("X-flag")
-    val header: Boolean,
-    @Body val body: JsonBody
-)
-
-@Serializable
-data class JsonBody(val value: String)
+inline fun <reified A : Any> Route.route(
+    route: String,
+    noinline block: suspend RoutingContext.(A) -> Unit
+) = route(route, A::class, block)
 
 @OptIn(InternalSerializationApi::class)
-fun <A : Any> Route.trout2(
+fun <A : Any> Route.route(
     route: String,
     kClass: KClass<A>,
     block: suspend RoutingContext.(A) -> Unit
@@ -70,8 +55,8 @@ fun <A : Any> Route.trout2(
     }
 
     // Validation logic
-    val bodies = propertiesDescriptors.filter { it.second.annotations.filterIsInstance<Body>().size > 1 }
-    require(bodies.size <= 1) { "Only a single or no @Body annotation is allowed but found ${bodies.joinToString { it.first }} in ${kClass.simpleName}}" }
+    val bodies = properties.filter { it.annotations.filterIsInstance<Body>().isNotEmpty() }
+    require(bodies.size <= 1) { "Only a single or no @Body annotation is allowed but found ${bodies.joinToString { "'${it.name!!}'" }} in ${kClass.simpleName}" }
     // End Validation logic
 
     get(route) {
@@ -89,8 +74,7 @@ fun <A : Any> Route.trout2(
 
                         header != null -> {
                             val value = call.request.headers[header.name]
-                            if (value == null && !descriptor.isNullable)
-                                throw IllegalStateException("Header ${header.name} is required for property ${property.name} in ${kClass.simpleName} but was not found in the request headers.")
+                            if (value == null && !descriptor.isNullable) throw MissingHeaderException(header.name)
                             value?.convertType(descriptor)
                         }
 
@@ -104,7 +88,7 @@ fun <A : Any> Route.trout2(
                             }
 
                             if (value == null && !descriptor.isNullable)
-                                throw IllegalStateException("Parameter $name is required for property ${property.name} in ${kClass.simpleName} but was not found in the request parameters.")
+                                throw MissingRequestParameterException("Parameter $name is required for property ${property.name} in ${kClass.simpleName} but was not found in the request parameters.")
                             value
                         }
                     }
@@ -142,34 +126,11 @@ private fun String.convertType(kind: SerialDescriptor): Any {
     }
 }
 
-class MyTest {
-    @Test
-    fun test() = testApplication {
-        routing {
-            install(ServerContentNegotiation) { json() }
-            trout2("/users/{userId}/create", CreateUser::class) {
-                println(it)
-                call.respond(HttpStatusCode.OK, it)
-            }
-        }
-        val user = createClient {
-            install(ContentNegotiation) { json() }
-        }.get("/users/123/create?name=John&age=30") {
-            headers.append("X-flag", "true")
-            url.parameters.appendAll("many", listOf("a", "b", "c"))
-            contentType(ContentType.Application.Json)
-            setBody(JsonBody("Hello World"))
-        }.body<CreateUser>()
-        assertEquals(
-            CreateUser(
-                userId = "123",
-                NAME = "John",
-                age = 30,
-                many = listOf("a", "b", "c"),
-                header = true,
-                body = JsonBody("Hello World")
-            ),
-            user
-        )
+@OptIn(ExperimentalCoroutinesApi::class)
+class MissingHeaderException(val headerName: String) : BadRequestException("Request header $headerName is missing"),
+    CopyableThrowable<MissingHeaderException> {
+
+    override fun createCopy(): MissingHeaderException = MissingHeaderException(headerName).also {
+        it.initCauseBridge(this)
     }
 }
