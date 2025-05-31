@@ -1,13 +1,20 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package io.ktor.route.simple
 
 import io.ktor.http.HttpMethod
+import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.route
 import io.ktor.server.util.getOrFail
+import io.ktor.util.internal.initCauseBridge
 import io.ktor.util.reflect.TypeInfo
+import kotlinx.coroutines.CopyableThrowable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -19,6 +26,25 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
+
+/**
+ * Annotation for marking header parameters in route data classes.
+ */
+@SerialInfo
+@Target(AnnotationTarget.PROPERTY)
+@ExperimentalSerializationApi
+annotation class Header(val name: String)
+
+/**
+ * Automatically picks up which serializer you're using.
+ * It relies on the configured `ContentNegotiation` plugin.
+ *
+ * Using `receive` and `receiveNullable` on server side.
+ */
+@SerialInfo
+@Target(AnnotationTarget.PROPERTY)
+@ExperimentalSerializationApi
+annotation class Body
 
 @Serializable
 data class JsonBody(val value: String)
@@ -35,30 +61,30 @@ data class CreateUser(
     @Body val body: JsonBody
 )
 
-inline fun <reified A : Any> Route.test(
+// TODO make actual impl non-inline
+inline fun <reified A : Any> Route.get(
     path: String,
     crossinline block: suspend RoutingContext.(A) -> Unit
-) = route(HttpMethod.Get, path, block)
-
-inline fun <reified A : Any> Route.route(
-    method: HttpMethod,
-    path: String,
-    crossinline block: suspend RoutingContext.(A) -> Unit
-) = route(path, method) {
+) = route(path, HttpMethod.Get) {
     val serializer = serializer<A>()
     val kClass = A::class
-    val typeInfo = kClass.members
-        .firstOrNull { it.annotations.any { it is Body } }
-        ?.run { TypeInfo(returnType.classifier as KClass<*>, returnType) }
+    val bodies = kClass.members
+        .filter { it.annotations.filterIsInstance<Body>().isNotEmpty() }
+    val typeInfo = bodies.firstOrNull()?.run { TypeInfo(returnType.classifier as KClass<*>, returnType) }
+
+    require(bodies.size <= 1) { "Only a single or no @Body annotation is allowed but found ${bodies.joinToString { "'${it.name}'" }} in ${kClass.simpleName}" }
 
     handle {
-        val body = if (typeInfo != null) call.receiveNullable<Any?>(typeInfo) else null
-        val value = RoutingContextDecoder(
-            this,
-            serializer.descriptor,
-            body
-        ).decodeSerializableValue(serializer)
-        block(value)
+        try {
+            val body =
+                if (typeInfo != null) call.receiveNullable<Any?>(typeInfo) else null
+            val value = RoutingContextDecoder(this, serializer.descriptor, body)
+                .decodeSerializableValue(serializer)
+            block(value)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            throw e
+        }
     }
 }
 
@@ -71,6 +97,7 @@ class RoutingContextDecoder(
     var structureFieldIndex = 0
     var descriptor: SerialDescriptor? = null
     var kind: SerialKind? = null
+
     private var isDecodingList = false
     private var listValues: List<String>? = null
     private var annotation: List<Annotation>? = null
@@ -97,101 +124,84 @@ class RoutingContextDecoder(
             structureFieldIndex++
             return idxToDecode
         }
+
+
     }
 
     fun name() =
         original.getElementName(structureFieldIndex - 1)
 
-    override fun decodeString(): String {
-        return if (isDecodingList && listValues != null) {
-            val index = listElementIndex - 1
-            if (index < 0 || index >= listValues!!.size) {
-                throw IllegalStateException("Invalid list element index: $index (size: ${listValues!!.size})")
-            }
-            listValues!![index]
-        } else {
-            routingContext.call.parameters.getOrFail(name())
-        }
+    override fun decodeString(): String =
+        decode { it }
+
+    override fun decodeBoolean(): Boolean =
+        decode(String::toBooleanStrict)
+
+    override fun decodeByte(): Byte =
+        decode(String::toByte)
+
+    override fun decodeShort(): Short =
+        decode(String::toShort)
+
+    override fun decodeInt(): Int =
+        decode(String::toInt)
+
+    override fun decodeNotNullMark(): Boolean {
+        println("decodeNotNullMark: $currentElementName")
+        return !original.getElementDescriptor(structureFieldIndex - 1).isNullable
+//        return super.decodeNotNullMark()
     }
 
-    override fun decodeBoolean(): Boolean {
-        val paramName = name()
+    override fun decodeNull(): Nothing? {
+        println("decodeNull: $currentElementName")
+        return super.decodeNull()
+    }
+
+    override fun <T : Any> decodeNullableSerializableValue(deserializer: DeserializationStrategy<T?>): T? {
+        println("decodeNullableSerializableValue: $deserializer")
+        return super.decodeNullableSerializableValue(deserializer)
+    }
+
+    private inline fun <reified A> decode(transform: (String) -> A): A {
+        println("decode${A::class.simpleName}: $currentElementName, annotation: $annotation, body: $body")
         val elementIndex = structureFieldIndex - 1
 
         val headerAnnotation = original.getElementAnnotations(elementIndex)
             .filterIsInstance<Header>()
             .firstOrNull()
 
-        val value = if (headerAnnotation != null) {
-            routingContext.call.request.headers[headerAnnotation.name]
+        val value = when {
+            headerAnnotation != null -> routingContext.call.request.headers[headerAnnotation.name]
                 ?: throw MissingHeaderException(headerAnnotation.name)
-        } else {
-            routingContext.call.parameters.getOrFail(paramName)
-        }
 
-        return value.toBooleanStrictOrNull()
-            ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Boolean")
-    }
-
-    override fun decodeByte(): Byte {
-        val paramName = name()
-        val value = routingContext.call.parameters.getOrFail(paramName)
-        return value.toByteOrNull()
-            ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Byte")
-    }
-
-    override fun decodeShort(): Short {
-        val paramName = name()
-        val value = routingContext.call.parameters.getOrFail(paramName)
-        return value.toShortOrNull()
-            ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Short")
-    }
-
-    override fun decodeInt(): Int {
-        if (isDecodingList && listValues != null) {
-            val index = listElementIndex - 1
-            if (index < 0 || index >= listValues!!.size) {
-                throw IllegalStateException("Invalid list element index: $index (size: ${listValues!!.size})")
+            isDecodingList && listValues != null -> {
+                val index = listElementIndex - 1
+                if (index < 0 || index >= listValues!!.size) {
+                    throw IllegalStateException("Invalid list element index: $index (size: ${listValues!!.size})")
+                }
+                listValues!![index]
             }
-            val stringValue = listValues!![index]
-            return stringValue.toIntOrNull()
-                ?: throw NumberFormatException("Cannot parse list element '$stringValue' as Int")
-        } else {
-            val paramName = name()
-            val value = routingContext.call.parameters.getOrFail(paramName)
-            return value.toIntOrNull()
-                ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Int")
+
+            else -> routingContext.call.parameters.getOrFail(name())
         }
+
+        return transform(value)
     }
 
-    override fun decodeLong(): Long {
-        val paramName = name()
-        val value = routingContext.call.parameters.getOrFail(paramName)
-        return value.toLongOrNull()
-            ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Long")
-    }
+    override fun decodeLong(): Long =
+        decode(String::toLong)
 
-    override fun decodeFloat(): Float {
-        val paramName = name()
-        val value = routingContext.call.parameters.getOrFail(paramName)
-        return value.toFloatOrNull()
-            ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Float")
-    }
+    override fun decodeFloat(): Float =
+        decode(String::toFloat)
 
-    override fun decodeDouble(): Double {
-        val paramName = name()
-        val value = routingContext.call.parameters.getOrFail(paramName)
-        return value.toDoubleOrNull()
-            ?: throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Double")
-    }
+    override fun decodeDouble(): Double =
+        decode(String::toDouble)
 
-    override fun decodeChar(): Char {
-        val paramName = name()
-        val value = routingContext.call.parameters.getOrFail(paramName)
-        return if (value.length == 1) value[0] else throw IllegalArgumentException("Cannot convert parameter $paramName with value '$value' to Char")
-    }
+    override fun decodeChar(): Char =
+        decode(String::single)
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
+        println("beginStructure: $descriptor")
         kind = descriptor.kind
 
         if (descriptor.kind == StructureKind.LIST) {
@@ -208,6 +218,7 @@ class RoutingContextDecoder(
     }
 
     override fun endStructure(descriptor: SerialDescriptor) {
+        println("endStructure: $descriptor")
         if (descriptor.kind == StructureKind.LIST && isDecodingList) {
             isDecodingList = false
             listValues = null
@@ -223,6 +234,7 @@ class RoutingContextDecoder(
         }
 
     override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
+        println("decodeSerializableValue: $deserializer")
         val elementIndex = structureFieldIndex - 1
         if (elementIndex >= 0) {
             val bodyAnnotation = original.getElementAnnotations(elementIndex)
@@ -235,5 +247,14 @@ class RoutingContextDecoder(
         }
 
         return super.decodeSerializableValue(deserializer)
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class MissingHeaderException(val headerName: String) : BadRequestException("Request header $headerName is missing"),
+    CopyableThrowable<MissingHeaderException> {
+
+    override fun createCopy(): MissingHeaderException = MissingHeaderException(headerName).also {
+        it.initCauseBridge(this)
     }
 }

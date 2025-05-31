@@ -7,19 +7,14 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.http.headers
-import io.ktor.route.simple.RoutingContextDecoder
-import io.ktor.route.simple.test
+import io.ktor.route.simple.get
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 import io.ktor.server.response.respond
-import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 import io.ktor.server.testing.testApplication
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class RoutingContextDecoderTest {
     @Test
@@ -27,7 +22,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/users/{userId}/create") { create: CreateUser ->
+                get("/users/{userId}/create") { create: CreateUser ->
                     call.respond(HttpStatusCode.OK, create)
                 }
             }
@@ -56,7 +51,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/users/{userId}/create") { create: CreateUser ->
+                get("/users/{userId}/create") { create: CreateUser ->
                     call.respond(HttpStatusCode.OK, create)
                 }
             }
@@ -81,7 +76,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/users/{userId}/create") { value: CreateUser ->
+                get("/users/{userId}/create") { value: CreateUser ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -107,7 +102,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/users/{userId}/create") { value: CreateUser ->
+                get("/users/{userId}/create") { value: CreateUser ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -130,7 +125,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/list-test") { value: ListTest ->
+                get("/list-test") { value: ListTest ->
                     call.respond(HttpStatusCode.OK, mapOf("success" to true))
                 }
             }
@@ -153,7 +148,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/list-test") { value: ListTest ->
+                get("/list-test") { value: ListTest ->
                     assertEquals(listOf("a", "b", "c"), value.stringList)
                     assertEquals(emptyList(), value.intList)
                     call.respond(HttpStatusCode.OK, mapOf("success" to true))
@@ -178,7 +173,7 @@ class RoutingContextDecoderTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                test("/primitives") { value: PrimitiveTypes ->
+                get("/primitives") { value: PrimitiveTypes ->
                     assertEquals("test", value.stringValue)
                     assertEquals(42, value.intValue)
                     assertEquals(9223372036854775807L, value.longValue)

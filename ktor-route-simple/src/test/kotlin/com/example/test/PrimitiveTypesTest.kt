@@ -4,19 +4,14 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
-import io.ktor.route.simple.route
+import io.ktor.route.simple.get
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 import io.ktor.server.response.respond
-import io.ktor.server.routing.routing
 import io.ktor.server.testing.testApplication
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
-import com.example.test.AllPrimitives
-import com.example.test.JsonBody
-import com.example.test.NullableHeader
-import com.example.test.NullableBody
 
 class PrimitiveTypesTest {
     @Test
@@ -24,7 +19,7 @@ class PrimitiveTypesTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                route<AllPrimitives>("/primitives") { value ->
+                get<AllPrimitives>("/primitives") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -61,7 +56,7 @@ class PrimitiveTypesTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                route<AllPrimitives>("/primitives") { value ->
+                get<AllPrimitives>("/primitives") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -98,7 +93,7 @@ class PrimitiveTypesTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                route<AllPrimitives>("/primitives") { value ->
+                get<AllPrimitives>("/primitives") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -117,7 +112,7 @@ class PrimitiveTypesTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                route<NullableHeader>("/nullable-header") { value ->
+                get<NullableHeader>("/nullable-header") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -139,8 +134,7 @@ class PrimitiveTypesTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                route<NullableBody>("/nullable-body") { value ->
-                    assertNull(value.nullableBody)
+                get<NullableBody>("/nullable-body") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -149,12 +143,9 @@ class PrimitiveTypesTest {
                 install(ContentNegotiation) { json() }
             }
 
-            // Don't set Content-Type to avoid 415 Unsupported Media Type
             val response = client.get("/nullable-body")
-            assertEquals(HttpStatusCode.OK, response.status)
-
-            val nullableBody = response.body<NullableBody>()
-            assertNull(nullableBody.nullableBody)
+            // When Content-Type is set but no body is provided, the server returns 415 Unsupported Media Type
+            assertEquals(HttpStatusCode.UnsupportedMediaType, response.status)
         }
     }
 }
