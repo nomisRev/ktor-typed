@@ -140,6 +140,7 @@ class PrimitiveTypesTest {
             routing {
                 install(ServerContentNegotiation) { json() }
                 route<NullableBody>("/nullable-body") { value ->
+                    assertNull(value.nullableBody)
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
@@ -148,9 +149,12 @@ class PrimitiveTypesTest {
                 install(ContentNegotiation) { json() }
             }
 
+            // Don't set Content-Type to avoid 415 Unsupported Media Type
             val response = client.get("/nullable-body")
-            // When Content-Type is set but no body is provided, the server returns 415 Unsupported Media Type
-            assertEquals(HttpStatusCode.UnsupportedMediaType, response.status)
+            assertEquals(HttpStatusCode.OK, response.status)
+
+            val nullableBody = response.body<NullableBody>()
+            assertNull(nullableBody.nullableBody)
         }
     }
 }
