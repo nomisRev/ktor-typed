@@ -22,6 +22,7 @@ import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
@@ -94,159 +95,115 @@ class RoutingContextDecoder(
     val body: Any?,
     override val serializersModule: SerializersModule = EmptySerializersModule()
 ) : AbstractDecoder() {
-    var structureFieldIndex = 0
-    var descriptor: SerialDescriptor? = null
-    var kind: SerialKind? = null
 
-    private var isDecodingList = false
-    private var listValues: List<String>? = null
-    private var annotation: List<Annotation>? = null
-    private var listElementIndex = 0
-    private var currentElementName: String? = null
+    var index = 0
+    var listIndex = DECODE_DONE
+    private var currentDescriptor: SerialDescriptor? = null
+    private var current: String? = null
+    private var currents: List<String>? = null
+    private var header: Header? = null
+    private var bodyOrNull: Any? = null
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        if (isDecodingList) {
-            if (listValues != null && listElementIndex < listValues!!.size) {
-                val idxToDecode = listElementIndex
-                listElementIndex++
-                return idxToDecode
-            } else {
-                return CompositeDecoder.DECODE_DONE
+        val currentIndex = index++
+        if (currentIndex >= original.elementsCount) return DECODE_DONE
+        currentDescriptor = original.getElementDescriptor(currentIndex)
+        val annotations: List<Annotation> = original.getElementAnnotations(currentIndex)
+        header = annotations.filterIsInstance<Header>().firstOrNull()
+        bodyOrNull = annotations.filterIsInstance<Body>().firstOrNull()
+
+        if (
+            currentDescriptor?.kind == StructureKind.LIST
+            && currents == null
+            && listIndex == DECODE_DONE
+        ) {
+            currents = when {
+                header != null -> routingContext.call.request.headers.getAll(header!!.name)
+                else -> routingContext.call.parameters.getAll(original.getElementName(currentIndex))
             }
-        } else {
-            this.descriptor = descriptor
-            if (structureFieldIndex >= descriptor.elementsCount) {
-                return CompositeDecoder.DECODE_DONE
-            }
-            currentElementName = descriptor.getElementName(structureFieldIndex)
-            annotation = original.getElementAnnotations(structureFieldIndex).ifEmpty { null }
-            val idxToDecode = structureFieldIndex
-            structureFieldIndex++
-            return idxToDecode
+            listIndex = 0
         }
 
+        when {
+            bodyOrNull != null -> Unit
+            currents != null ->
+                if (listIndex >= (currents?.size ?: 0)) {
+                    return DECODE_DONE
+                } else {
+                    current = currents!![listIndex]
+                    return listIndex++
+                }
 
+            else -> {
+                current = when {
+                    header != null -> routingContext.call.request.headers[header!!.name]
+                    else -> routingContext.call.parameters[original.getElementName(currentIndex)]
+                }
+            }
+        }
+
+        return currentIndex
     }
 
-    fun name() =
-        original.getElementName(structureFieldIndex - 1)
+    // TODO implement ENUM
+    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
+        return super.decodeEnum(enumDescriptor)
+    }
 
     override fun decodeString(): String =
-        decode { it }
-
-    override fun decodeBoolean(): Boolean =
-        decode(String::toBooleanStrict)
-
-    override fun decodeByte(): Byte =
-        decode(String::toByte)
+        currentValue()
 
     override fun decodeShort(): Short =
-        decode(String::toShort)
-
-    override fun decodeInt(): Int =
-        decode(String::toInt)
-
-    override fun decodeNotNullMark(): Boolean {
-        println("decodeNotNullMark: $currentElementName")
-        return !original.getElementDescriptor(structureFieldIndex - 1).isNullable
-//        return super.decodeNotNullMark()
-    }
-
-    override fun decodeNull(): Nothing? {
-        println("decodeNull: $currentElementName")
-        return super.decodeNull()
-    }
-
-    override fun <T : Any> decodeNullableSerializableValue(deserializer: DeserializationStrategy<T?>): T? {
-        println("decodeNullableSerializableValue: $deserializer")
-        return super.decodeNullableSerializableValue(deserializer)
-    }
-
-    private inline fun <reified A> decode(transform: (String) -> A): A {
-        println("decode${A::class.simpleName}: $currentElementName, annotation: $annotation, body: $body")
-        val elementIndex = structureFieldIndex - 1
-
-        val headerAnnotation = original.getElementAnnotations(elementIndex)
-            .filterIsInstance<Header>()
-            .firstOrNull()
-
-        val value = when {
-            headerAnnotation != null -> routingContext.call.request.headers[headerAnnotation.name]
-                ?: throw MissingHeaderException(headerAnnotation.name)
-
-            isDecodingList && listValues != null -> {
-                val index = listElementIndex - 1
-                if (index < 0 || index >= listValues!!.size) {
-                    throw IllegalStateException("Invalid list element index: $index (size: ${listValues!!.size})")
-                }
-                listValues!![index]
-            }
-
-            else -> routingContext.call.parameters.getOrFail(name())
-        }
-
-        return transform(value)
-    }
+        currentValue().toShort()
 
     override fun decodeLong(): Long =
-        decode(String::toLong)
+        currentValue().toLong()
+
+    override fun decodeInt(): Int =
+        currentValue().toInt()
 
     override fun decodeFloat(): Float =
-        decode(String::toFloat)
+        currentValue().toFloat()
 
     override fun decodeDouble(): Double =
-        decode(String::toDouble)
+        currentValue().toDouble()
 
     override fun decodeChar(): Char =
-        decode(String::single)
+        currentValue().single()
 
-    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
-        println("beginStructure: $descriptor")
-        kind = descriptor.kind
+    override fun decodeByte(): Byte =
+        currentValue().toByte()
 
-        if (descriptor.kind == StructureKind.LIST) {
-            isDecodingList = true
-            val paramName = name()
-            listValues = routingContext.call.parameters.getAll(paramName)
-            listElementIndex = 0
-        } else {
-            isDecodingList = false
-            listValues = null
+    override fun decodeBoolean(): Boolean =
+        currentValue().toBooleanStrict()
+
+    fun currentValue(): String =
+        current ?: when {
+            header != null -> throw MissingHeaderException(header!!.name)
+            else -> throw BadRequestException("Missing parameter '${original.getElementName(index - 1)}'")
         }
 
-        return super.beginStructure(descriptor)
-    }
+    fun name() =
+        original.getElementName(index - 1)
+
+    override fun decodeNotNullMark(): Boolean =
+        !(current == null && currentDescriptor?.isNullable == true)
+
+    override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T =
+        if (bodyOrNull != null) body as T
+        else super.decodeSerializableValue(deserializer)
 
     override fun endStructure(descriptor: SerialDescriptor) {
-        println("endStructure: $descriptor")
-        if (descriptor.kind == StructureKind.LIST && isDecodingList) {
-            isDecodingList = false
-            listValues = null
+        if (descriptor.kind == StructureKind.LIST && current != null) {
+            currents = null
+            listIndex = DECODE_DONE
         }
         super.endStructure(descriptor)
     }
 
-    override fun decodeCollectionSize(descriptor: SerialDescriptor): Int =
-        if (isDecodingList && listValues != null) {
-            listValues!!.size
-        } else {
-            super.decodeCollectionSize(descriptor)
-        }
-
-    override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
-        println("decodeSerializableValue: $deserializer")
-        val elementIndex = structureFieldIndex - 1
-        if (elementIndex >= 0) {
-            val bodyAnnotation = original.getElementAnnotations(elementIndex)
-                .filterIsInstance<Body>()
-                .firstOrNull()
-
-            if (bodyAnnotation != null) {
-                return body as T
-            }
-        }
-
-        return super.decodeSerializableValue(deserializer)
+    override fun decodeCollectionSize(descriptor: SerialDescriptor): Int {
+        val size = currents?.size ?: super.decodeCollectionSize(descriptor)
+        return size
     }
 }
 

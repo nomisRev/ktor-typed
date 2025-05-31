@@ -16,6 +16,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import io.ktor.route.simple.auth.Jwt
+import kotlinx.serialization.Serializable
 
 data class UserPrincipal(val name: String)
 
@@ -33,7 +34,34 @@ val googleJwt: Jwt<UserPrincipal> = Jwt.jwk(
     UserPrincipal(credential.getClaim("email", String::class)!!)
 }
 
+@Serializable
+data class Simple(
+    val name: String,
+    val age: Int?,
+)
+
 class MyTest {
+
+    @Test
+    fun simple() {
+        testApplication {
+            routing {
+                install(ServerContentNegotiation) { json() }
+                get<Simple>("/simple") { value ->
+                    call.respond(HttpStatusCode.OK, value)
+                }
+            }
+
+            val client = createClient {
+                install(ContentNegotiation) { json() }
+            }
+
+            val simple = client.get("/simple?name=John&age=32").body<Simple>()
+
+            assertEquals(Simple("John", 32), simple)
+        }
+    }
+
     @Test
     fun test() {
         testApplication {
