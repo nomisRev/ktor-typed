@@ -86,7 +86,6 @@ fun <A : Any> Route.route(
                         val value = if (descriptor.kind is StructureKind.LIST) {
                             call.parameters.getAll(name)
                                 ?.map { it.convertType(descriptor.elementDescriptors.first()) }
-                            // TODO make configurable? Annotation, or plugin setting? both?
                                 ?: if (property.isOptional) emptyList<Nothing>() else null
                         } else {
                             call.parameters[name]?.convertType(descriptor)
@@ -99,10 +98,6 @@ fun <A : Any> Route.route(
                     }
                 }
             value
-
-            // TODO if you remove x: Any? here the compiler returns Unit, possible only when using `descriptor.kind`.
-            //   When function is inlined
-//            value?.convertType(kind)
         }
 
         val input = constructor.call(*values)

@@ -154,7 +154,6 @@ class RoutingContextDecoderTest {
             routing {
                 install(ServerContentNegotiation) { json() }
                 test("/list-test") { value: ListTest ->
-                    println("Successfully decoded value: $value")
                     assertEquals(listOf("a", "b", "c"), value.stringList)
                     assertEquals(emptyList(), value.intList)
                     call.respond(HttpStatusCode.OK, mapOf("success" to true))
@@ -180,7 +179,6 @@ class RoutingContextDecoderTest {
             routing {
                 install(ServerContentNegotiation) { json() }
                 test("/primitives") { value: PrimitiveTypes ->
-                    println("Successfully decoded value: $value")
                     assertEquals("test", value.stringValue)
                     assertEquals(42, value.intValue)
                     assertEquals(9223372036854775807L, value.longValue)
