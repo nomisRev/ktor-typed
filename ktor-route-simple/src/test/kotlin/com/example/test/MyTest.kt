@@ -1,6 +1,5 @@
 package com.example.test
 
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
@@ -8,19 +7,32 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.http.headers
 import io.ktor.route.simple.route
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 import io.ktor.server.response.respond
-import io.ktor.server.routing.routing
 import io.ktor.server.testing.testApplication
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import com.example.test.CreateUser
-import com.example.test.JsonBody
-import com.example.test.TwoBodies
+import io.ktor.route.simple.auth.Jwt
+import io.ktor.route.simple.auth.authenticate
+
+data class UserPrincipal(val name: String)
+
+val jwt: Jwt<UserPrincipal> = Jwt.hmaC256(
+    "your-super-secret-for-hmac",
+    "your-api-audience",
+    "https://your.issuer.com/"
+) { credential -> UserPrincipal("Simon") }
+
+val googleJwt: Jwt<UserPrincipal> = Jwt.jwk(
+    "https://accounts.google.com/.well-known/jwks.json",
+    "https://your.issuer.com/",
+    "clientId"
+) { credential ->
+    UserPrincipal(credential.getClaim("email", String::class)!!)
+}
 
 class MyTest {
     @Test
@@ -28,8 +40,11 @@ class MyTest {
         testApplication {
             routing {
                 install(ServerContentNegotiation) { json() }
-                route<CreateUser>("/users/{userId}/create") { value ->
-                    call.respond(HttpStatusCode.OK, value)
+                authenticate(jwt) {
+                    route<CreateUser>("/users/{userId}/create") { value ->
+                        val user: UserPrincipal = principal()
+                        call.respond(HttpStatusCode.OK, value)
+                    }
                 }
             }
 

@@ -49,6 +49,35 @@ sealed interface Parameter<A> {
         data object AllParameters : Query<Parameters>
 
         companion object {
+            fun string(name: String): Required<String> = Required(name, { it }) { it }
+
+            fun strings(name: String): Multiple<List<String>> = Multiple(name, { it }) { it }
+
+            fun stringOrNull(
+                name: String,
+                defaultValue: String? = null
+            ): Optional<String?> = Optional(name, defaultValue, { it }) { it }
+
+            fun byte(name: String): Required<Byte> = Required(name, { it.toByte() }) { it.toString() }
+
+            fun bytes(name: String): Multiple<List<Byte>> =
+                Multiple(name, { it.map { it.toByte() } }) { it.map { it.toString() } }
+
+            fun byteOrNull(
+                name: String,
+                defaultValue: Byte? = null,
+            ): Optional<Byte?> = Optional(name, defaultValue, { it?.toByte() }) { it?.toString() }
+
+            fun short(name: String): Required<Short> = Required(name, { it.toShort() }) { it.toString() }
+
+            fun shorts(name: String): Multiple<List<Short>> =
+                Multiple(name, { it.map { it.toShort() } }) { it.map { it.toString() } }
+
+            fun shortOrNull(
+                name: String,
+                defaultValue: Short? = null,
+            ): Optional<Short?> = Optional(name, defaultValue, { it?.toShort() }) { it?.toString() }
+
             fun int(name: String): Required<Int> = Required(name, { it.toInt() }) { it.toString() }
 
             fun ints(name: String): Multiple<List<Int>> =
@@ -59,14 +88,6 @@ sealed interface Parameter<A> {
                 defaultValue: Int? = null,
             ): Optional<Int?> = Optional(name, defaultValue, { it?.toInt() }) { it?.toString() }
 
-            fun string(name: String): Required<String> = Required(name, { it }) { it }
-
-            fun strings(name: String): Multiple<List<String>> = Multiple(name, { it }) { it }
-
-            fun stringOrNull(
-                name: String,
-                defaultValue: String? = null
-            ): Optional<String?> = Optional(name, defaultValue, { it }) { it }
 
             fun long(name: String): Required<Long> = Required(name, { it.toLong() }) { it.toString() }
 

@@ -32,7 +32,6 @@ fun <A, B, C, D> Route<Params4<A, B, C, D>, Unit>.cookie(cookie: Parameter.Cooki
 fun <A, B, C, D, E> Route<Params5<A, B, C, D, E>, Unit>.cookie(cookie: Parameter.Cookie<String>): Route<Params6<A, B, C, D, E, String>, Unit> =
     addCookie(cookie)
 
-
 @JvmName("cookieParams6")
 fun <A, B, C, D, E, F> Route<Params6<A, B, C, D, E, F>, Unit>.cookie(cookie: Parameter.Cookie<String>): Route<Params7<A, B, C, D, E, F, String>, Unit> =
     addCookie(cookie)

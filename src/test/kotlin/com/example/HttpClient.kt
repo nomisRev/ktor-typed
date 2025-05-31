@@ -54,13 +54,20 @@ suspend fun <Input> HttpClient.request(
 ): HttpResponse =
     request(HttpRequestBuilder().apply {
         this.method = method
-        val input = route.reverse(input)
+        val reversedInput = route.reverse(input)
         val params = when {
-            input === Unit -> emptyArray()
-            input !is Params ->
-                if (route.arity == 1) arrayOf(input) else throw TODO("Not supporting transformation of Params yet.")
-
-            else -> input.toArray().also {
+            reversedInput === Unit -> emptyArray()
+            reversedInput !is Params -> {
+                // If the input is not a Params object but we need multiple parameters,
+                // we'll try to convert it to an array
+                when {
+                    reversedInput is Array<*> -> reversedInput
+                    reversedInput is List<*> -> reversedInput.toTypedArray()
+                    route.arity == 1 -> arrayOf(reversedInput)
+                    else -> throw IllegalArgumentException("Cannot convert input to parameters: $reversedInput")
+                }
+            }
+            else -> reversedInput.toArray().also {
                 require(it.size == route.arity) { "Expected ${route.arity} parameters, got ${it.size}" }
             }
         }
@@ -107,7 +114,21 @@ suspend fun <Input> HttpClient.request(
 //                    @Suppress("UNCHECKED_CAST")
 //                    headers.appendAll(parameter.name, value as List<String>)
 
-                is Parameter.Query<*> -> TODO()//parameter(parameter.name, value)
+                is Parameter.Query<*> -> {
+                    when (parameter) {
+                        is Parameter.Query.Required<*> -> parameter(parameter.name, value)
+                        is Parameter.Query.Optional<*> -> if (value != null) parameter(parameter.name, value)
+                        is Parameter.Query.Multiple<*> -> {
+                            @Suppress("UNCHECKED_CAST")
+                            (value as? List<*>)?.forEach { 
+                                if (it != null) parameter(parameter.name, it) 
+                            }
+                        }
+                        is Parameter.Query.AllParameters -> {
+                            // AllParameters is used for receiving all query parameters, not for sending
+                        }
+                    }
+                }
             }
         }
     })

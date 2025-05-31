@@ -71,12 +71,19 @@ internal fun <Input, Output> Route<Input, Output>.handle(
                     is Parameter.Header -> call.request.headers[parameter.name]
 //                    is Parameter.Headers -> call.request.headers.getAll(parameter.name)
                     is Parameter.Query<*> -> {
-//                        val value = call.request.queryParameters[parameter.name]
-//                        when {
-//                            value == null -> if (parameter.isNullable) null else throw IllegalStateException("Parameter ${parameter.name} is required")
-//                            else -> parameter.codec.deserialize(value)
-//                        }
-                        TODO()
+                        when (parameter) {
+                            is Parameter.Query.Required<*> -> parameter.deserialize(call.request.queryParameters.getOrFail(parameter.name))
+                            is Parameter.Query.Optional<*> -> {
+                                val optional = call.request.queryParameters[parameter.name]
+                                if (optional == null) parameter.defaultValue
+                                else parameter.deserialize(optional)
+                            }
+                            is Parameter.Query.Multiple<*> -> {
+                                val values = (call.request.queryParameters.getAll(parameter.name) ?: emptyList<String>())
+                                parameter.deserialize(values)
+                            }
+                            is Parameter.Query.AllParameters -> call.request.queryParameters
+                        }
                     }
                 }
             }).toParams()

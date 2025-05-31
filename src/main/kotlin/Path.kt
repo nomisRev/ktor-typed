@@ -72,7 +72,6 @@ object PathSyntax {
     fun boolOrNull(name: String): Path.Optional<Boolean?> =
         Path.Optional(name, null, { it?.toBooleanStrict() }) { it?.toString() }
 
-
     fun byte(name: String): Path.Required<Byte> =
         Path.Required(name, { it.toByte() }) { it.toString() }
 

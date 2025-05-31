@@ -14,9 +14,15 @@ private fun <A, B> Route<*, *>.addQuery(query: Parameter.Query<*>): Route<A, B> 
 fun <A> Route<Unit, Unit>.query(param: Parameter.Query<A>): Route<A, Unit> =
     addQuery(param)
 
+fun <A> Route<A, Unit>.string(name: String): Route<Params2<A, String>, Unit> =
+    addQuery(Parameter.Query.string(name))
+
 @JvmName("queryParams1")
 fun <A, B> Route<A, Unit>.query(param: Parameter.Query<B>): Route<Params2<A, B>, Unit> =
     addQuery(param)
+
+fun <A, B> Route<Params2<A, B>, Unit>.int(name: String): Route<Params3<A, B, Int>, Unit> =
+    addQuery(Parameter.Query.int(name))
 
 @JvmName("queryParams2")
 fun <A, B, C> Route<Params2<A, B>, Unit>.query(param: Parameter.Query<C>): Route<Params3<A, B, C>, Unit> =
