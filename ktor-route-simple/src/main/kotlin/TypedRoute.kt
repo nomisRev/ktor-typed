@@ -2,6 +2,7 @@ package io.ktor.route.simple
 
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.MissingRequestParameterException
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.receive
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
@@ -10,7 +11,9 @@ import io.ktor.util.internal.initCauseBridge
 import io.ktor.util.reflect.TypeInfo
 import kotlinx.coroutines.CopyableThrowable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -22,6 +25,9 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Annotation for marking header parameters in route data classes.
  */
+@SerialInfo
+@Target(AnnotationTarget.PROPERTY)
+@ExperimentalSerializationApi
 annotation class Header(val name: String)
 
 /**
@@ -30,6 +36,9 @@ annotation class Header(val name: String)
  *
  * Using `receive` and `receiveNullable` on server side.
  */
+@SerialInfo
+@Target(AnnotationTarget.PROPERTY)
+@ExperimentalSerializationApi
 annotation class Body
 
 inline fun <reified A : Any> Route.route(
@@ -62,6 +71,7 @@ fun <A : Any> Route.route(
             val value =
                 when {
                     body != null -> {
+
                         val typeInfo = TypeInfo(property.type.classifier as KClass<*>, property.type)
                         if (descriptor.isNullable) call.receiveNullable(typeInfo) else call.receive(typeInfo)
                     }
