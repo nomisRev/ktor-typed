@@ -27,13 +27,13 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty1
 
 /**
  * Annotation for marking header parameters in route data classes.
  */
 @SerialInfo
 @Target(AnnotationTarget.PROPERTY)
-@ExperimentalSerializationApi
 annotation class Header(val name: String)
 
 /**
@@ -44,13 +44,11 @@ annotation class Header(val name: String)
  */
 @SerialInfo
 @Target(AnnotationTarget.PROPERTY)
-@ExperimentalSerializationApi
 annotation class Body
 
 @Serializable
 data class JsonBody(val value: String)
 
-@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class CreateUser(
     val userId: String,
@@ -60,7 +58,17 @@ data class CreateUser(
     @Header("X-flag")
     val header: Boolean,
     @Body val body: JsonBody
-)
+) {
+    fun validate() {
+        val x: KProperty1<CreateUser, String> = CreateUser::userId
+
+        require(userId.isNotBlank()) { "userId must not be blank" }
+        require(name.isNotBlank()) { "name must not be blank" }
+        require(age > 0) { "age must be greater than 0" }
+        require(many.isNotEmpty()) { "many must not be empty" }
+    }
+}
+
 
 inline fun <reified A : Any> Route.get(
     path: String,
