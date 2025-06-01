@@ -72,15 +72,13 @@ inline fun <reified A : Any> Route.get(
     block
 )
 
-// TODO make actual impl non-inline
 fun <A : Any> Route.get(
     path: String,
     kClass: KClass<A>,
     serializer: KSerializer<A>,
     block: suspend RoutingContext.(A) -> Unit
 ) = route(path, HttpMethod.Get) {
-    val bodies = kClass.members
-        .filter { it.annotations.filterIsInstance<Body>().isNotEmpty() }
+    val bodies = kClass.members.filter { it.annotations.filterIsInstance<Body>().isNotEmpty() }
     val typeInfo = bodies.firstOrNull()?.run { TypeInfo(returnType.classifier as KClass<*>, returnType) }
 
     require(bodies.size <= 1) { "Only a single or no @Body annotation is allowed but found ${bodies.joinToString { "'${it.name}'" }} in ${kClass.simpleName}" }
@@ -108,41 +106,30 @@ fun <A : Any> Route.get(
     }
 }
 
-class RoutingContextDecoder(
+private class RoutingContextDecoder(
     val routingContext: RoutingContext,
     val original: SerialDescriptor,
     val body: Any?,
     override val serializersModule: SerializersModule = EmptySerializersModule()
 ) : AbstractDecoder() {
 
-    var index = 0
-    private var currentDescriptor: SerialDescriptor? = null
+    private var index = 0
     private var current: String? = null
-    private var header: Header? = null
-    private var bodyOrNull: Any? = null
-
-    fun log(name: String, descriptor: SerialDescriptor?) =
-        println(
-            """
-            $name($descriptor)
-            index: $index currentDescriptor: $currentDescriptor current: $current header: $header bodyOrNull: $bodyOrNull
-        """.trimIndent()
-        )
+    private var headerName: String? = null
+    private var isBody: Boolean = false
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        log("decodeElementIndex", descriptor)
         val currentIndex = index++
         return if (currentIndex >= original.elementsCount) DECODE_DONE
         else {
-            currentDescriptor = original.getElementDescriptor(currentIndex)
             val annotations: List<Annotation> = original.getElementAnnotations(currentIndex)
-            header = annotations.filterIsInstance<Header>().firstOrNull()
-            bodyOrNull = annotations.filterIsInstance<Body>().firstOrNull()
+            headerName = annotations.filterIsInstance<Header>().firstOrNull()?.name
+            isBody = annotations.filterIsInstance<Body>().firstOrNull() != null
 
-            if (bodyOrNull == null) {
-                current = when {
-                    header != null -> routingContext.call.request.headers[header!!.name]
-                    else -> routingContext.call.parameters[original.getElementName(currentIndex)]
+            if (!isBody) {
+                current = when (val headerName = headerName) {
+                    null -> routingContext.call.parameters[original.getElementName(currentIndex)]
+                    else -> routingContext.call.request.headers[headerName]
                 }
             }
 
@@ -150,105 +137,62 @@ class RoutingContextDecoder(
         }
     }
 
-    // TODO implement ENUM
     override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
-        log("decodeEnum", enumDescriptor)
-        return super.decodeEnum(enumDescriptor)
-    }
-
-    override fun decodeString(): String {
-        log("decodeString", null)
-        return currentValue()
-    }
-
-    override fun decodeShort(): Short {
-        log("decodeShort", null)
-        return currentValue().toShort()
-    }
-
-    override fun decodeLong(): Long {
-        log("decodeLong", null)
-        return currentValue().toLong()
-    }
-
-    override fun decodeInt(): Int {
-        log("decodeLong", null)
-        return currentValue().toInt()
-    }
-
-    override fun decodeFloat(): Float {
-        log("decodeFloat", null)
-        return currentValue().toFloat()
-    }
-
-    override fun decodeDouble(): Double {
-        log("decodeDouble", null)
-        return currentValue().toDouble()
-    }
-
-    override fun decodeChar(): Char {
-        log("decodeChar", null)
-        return currentValue().single()
-    }
-
-    override fun decodeByte(): Byte {
-        log("decodeByte", null)
-        return currentValue().toByte()
-    }
-
-    override fun decodeBoolean(): Boolean {
-        log("decodeBoolean", null)
-        return currentValue().toBooleanStrict()
-    }
-
-    fun currentValue(): String =
-        current ?: when {
-            header != null -> throw MissingHeaderException(header!!.name)
-            else -> throw BadRequestException("Missing parameter '${original.getElementName(index - 1)}'")
+        val enumName = decodeString()
+        val index = enumDescriptor.getElementIndex(enumName)
+        if (index == CompositeDecoder.UNKNOWN_NAME) {
+            throw BadRequestException("${enumDescriptor.serialName} does not contain element with name '$enumName'")
         }
-
-    override fun decodeNotNullMark(): Boolean {
-        log("decodeNotNullMark", null)
-        return !(current == null && currentDescriptor?.isNullable == true)
+        return index
     }
 
-    override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
-        log("decodeSerializableValue", deserializer.descriptor)
-        return if (bodyOrNull != null) body as T
-        else super.decodeSerializableValue(deserializer)
+    override fun decodeString(): String = current ?: when (val headerName = headerName) {
+        null -> throw BadRequestException("Missing parameter '${original.getElementName(index - 1)}'")
+        else -> throw MissingHeaderException(headerName)
     }
+
+    override fun decodeBoolean(): Boolean = decodeString().toBoolean()
+
+    override fun decodeByte(): Byte = decodeString().toByte()
+
+    override fun decodeChar(): Char = decodeString().single()
+
+    override fun decodeDouble(): Double = decodeString().toDouble()
+
+    override fun decodeFloat(): Float = decodeString().toFloat()
+
+    override fun decodeInt(): Int = decodeString().toInt()
+
+    override fun decodeLong(): Long = decodeString().toLong()
+
+    override fun decodeShort(): Short = decodeString().toShort()
+
+    override fun decodeNotNullMark(): Boolean =
+        !(current == null && original.getElementDescriptor(index - 1).isNullable)
+
+    override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T =
+        if (isBody) body as T else super.decodeSerializableValue(deserializer)
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
-        log("beginStructure", descriptor)
         return if (descriptor.kind == StructureKind.LIST) {
-            val values = when {
-                header != null -> routingContext.call.request.headers.getAll(header!!.name)
-                else -> routingContext.call.parameters.getAll(original.getElementName(index - 1))
+            val currentIndex = index - 1
+            val values = when (val headerName = headerName) {
+                null -> routingContext.call.parameters.getAll(original.getElementName(currentIndex))
+                else -> routingContext.call.request.headers.getAll(headerName)
             }
 
-            if (values == null && !descriptor.isNullable && !original.isElementOptional(index - 1))
-                throw BadRequestException("Missing parameter '${original.getElementName(index - 1)}'")
-
-            ListLikeDecoder(
-                serializersModule,
-                original.getElementDescriptor(index - 1),
-                original.getElementName(index - 1),
-                values
-            )
+            if (values == null && !descriptor.isNullable && !original.isElementOptional(currentIndex)) {
+                throw BadRequestException("Missing parameter '${original.getElementName(currentIndex)}'")
+            } else {
+                ListLikeDecoder(serializersModule, values)
+            }
         } else super.beginStructure(descriptor)
-    }
-
-    override fun endStructure(descriptor: SerialDescriptor) {
-        log("endStructure", descriptor)
-        super.endStructure(descriptor)
     }
 }
 
 @OptIn(ExperimentalSerializationApi::class)
 private class ListLikeDecoder(
     override val serializersModule: SerializersModule,
-    values1: SerialDescriptor,
-    values2: String,
     private val values: List<String>?
 ) : AbstractDecoder() {
 
@@ -291,9 +235,9 @@ private class ListLikeDecoder(
     }
 }
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
-class MissingHeaderException(val headerName: String) : BadRequestException("Request header $headerName is missing"),
+private class MissingHeaderException(val headerName: String) :
+    BadRequestException("Request header $headerName is missing"),
     CopyableThrowable<MissingHeaderException> {
 
     override fun createCopy(): MissingHeaderException = MissingHeaderException(headerName).also {
