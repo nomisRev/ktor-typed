@@ -162,8 +162,7 @@ class MyTest {
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Json)
             }
-            // When Content-Type is set but no body is provided, the server returns 415 Unsupported Media Type
-            assertEquals(HttpStatusCode.UnsupportedMediaType, response.status)
+            assertEquals(HttpStatusCode.BadRequest, response.status)
         }
     }
 

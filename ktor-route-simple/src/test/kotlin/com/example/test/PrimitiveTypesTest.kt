@@ -144,8 +144,8 @@ class PrimitiveTypesTest {
             }
 
             val response = client.get("/nullable-body")
-            // When Content-Type is set but no body is provided, the server returns 415 Unsupported Media Type
-            assertEquals(HttpStatusCode.UnsupportedMediaType, response.status)
+            assertEquals(HttpStatusCode.OK, response.status)
+            assertEquals(response.body<NullableBody>(), NullableBody(null))
         }
     }
 }

@@ -95,9 +95,7 @@ class RoutingContextDecoderTest {
         }
     }
 
-    // TODO: proper error handling when a body is missing
     @Test
-    @Ignore
     fun testMissingRequiredBody() {
         testApplication {
             routing {
