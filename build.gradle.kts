@@ -3,7 +3,6 @@ plugins {
     kotlin("plugin.power-assert") version "2.1.21"
     kotlin("plugin.serialization") version "2.1.21"
     id("org.jetbrains.kotlinx.kover") version "0.7.5"
-//    id("de.infix.testBalloon") version "0.3.0-K2.1.21"
 }
 
 group = "com.example"

@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    id("de.infix.testBalloon") version "0.3.1-K2.1.21"
 }
 
 kotlin {
@@ -25,8 +26,8 @@ dependencies {
     implementation("io.ktor:ktor-server-sessions:3.1.3")
     implementation("io.ktor:ktor-server-core:3.1.3")
 
-    testImplementation(kotlin("test"))
-    testImplementation("io.ktor:ktor-server-test-host:3.1.3")
-    testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
-    testImplementation("io.ktor:ktor-server-content-negotiation:3.1.3")
+    testImplementation("de.infix.testBalloon:testBalloon-framework-core:0.3.1-K2.1.21")
+//    testImplementation("io.ktor:ktor-server-test-host:3.1.3")
+//    testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
+//    testImplementation("io.ktor:ktor-server-content-negotiation:3.1.3")
 }
