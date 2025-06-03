@@ -6,17 +6,15 @@ import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.application
+import io.ktor.server.sessions.Sessions
+import io.ktor.server.sessions.cookie
 import kotlin.reflect.KClass
 
 sealed interface TypedAuth<T : Any> {
     val name: String?
 }
 
-inline fun <reified T : Any> Route.authenticate(
-    vararg auths: TypedAuth<T>,
-    crossinline build: SecuredRoute<T>.() -> Unit
-): Route {
-    // Checks if is configured
+inline fun <reified T : Any> Route.install(vararg auths: TypedAuth<T>) {
     application.authentication {
         auths.forEach { auth ->
             when (auth) {
@@ -28,17 +26,31 @@ inline fun <reified T : Any> Route.authenticate(
                         verifier(auth.verifier)
                         authHeader(auth.authHeader)
                         authSchemes(auth.schemes.defaultScheme, *auth.schemes.additionalSchemes.toTypedArray())
-                        validate(auth.validate)
+                        validate { credential ->
+                            if (auth.validate(this, credential)) auth.transform(this, credential)
+                            else null
+                        }
+                    }
+                }
+
+                is Session<T> -> install(Sessions) {
+                    when (auth) {
+                        is DefaultSession<T> -> cookie<T>(auth.name, auth.builder)
+                        is IdSession<T> -> cookie<T>(auth.name, auth.sessionStorage, auth.builder)
                     }
                 }
             }
         }
     }
+}
 
-    return authenticate(*auths.map { it.name }.toTypedArray()) {
+inline fun <reified T : Any> Route.authenticate(
+    vararg auths: TypedAuth<T>,
+    crossinline build: SecuredRoute<T>.() -> Unit
+): Route =
+    authenticate(*auths.map { it.name }.toTypedArray()) {
         SecuredRoute(auths, this, T::class).build()
     }
-}
 
 class SecuredRoute<T : Any>(
     private val auth: Array<out TypedAuth<T>>,

@@ -2,7 +2,15 @@
 
 package io.ktor.route.simple
 
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.onUpload
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
+import io.ktor.http.appendPathSegments
+import io.ktor.http.takeFrom
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.request.ContentTransformationException
 import io.ktor.server.routing.Route
@@ -12,17 +20,21 @@ import io.ktor.util.internal.initCauseBridge
 import io.ktor.util.reflect.TypeInfo
 import kotlinx.coroutines.CopyableThrowable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
@@ -58,17 +70,7 @@ data class CreateUser(
     @Header("X-flag")
     val header: Boolean,
     @Body val body: JsonBody
-) {
-    fun validate() {
-        val x: KProperty1<CreateUser, String> = CreateUser::userId
-
-        require(userId.isNotBlank()) { "userId must not be blank" }
-        require(name.isNotBlank()) { "name must not be blank" }
-        require(age > 0) { "age must be greater than 0" }
-        require(many.isNotEmpty()) { "many must not be empty" }
-    }
-}
-
+)
 
 inline fun <reified A : Any> Route.get(
     path: String,

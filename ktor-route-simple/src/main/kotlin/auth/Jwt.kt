@@ -8,17 +8,22 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTDecodeException
+import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.interfaces.Verification
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.request.get
+import io.ktor.http.appendPathSegments
 import io.ktor.http.auth.HttpAuthHeader
+import io.ktor.http.takeFrom
 import io.ktor.server.application.ApplicationCall
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.authentication
 import io.ktor.server.auth.jwt.JWTCredential
-import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.parseAuthorizationHeader
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.RoutingContext
-import io.ktor.server.routing.application
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.SerialName
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.IllegalArgumentException
@@ -27,19 +32,22 @@ import java.security.interfaces.ECPublicKey
 import java.security.interfaces.RSAPublicKey
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.KClass
 
-data class Jwt<T : Any>(
-    override val name: String? = null,
-    val realm: String = "Ktor Server",
+class Jwt<T : Any>(
+    override val name: String?,
+    val realm: String,
     val schemes: Schemes = Schemes(),
-    val authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
+    val authHeader: (ApplicationCall) -> HttpAuthHeader?,
     val verifier: (HttpAuthHeader) -> JWTVerifier?,
-    val validate: suspend ApplicationCall.(JWTCredential) -> T?
+    val validate: suspend ApplicationCall.(JWTCredential) -> Boolean,
+    val transform: suspend ApplicationCall.(JWTCredential) -> T
 ) : TypedAuth<T> {
 
+    inline fun <B : Any> map(crossinline block: (T) -> B): Jwt<B> =
+        Jwt(name, realm, schemes, authHeader, verifier, validate) { block(transform(it)) }
+
     companion object {
-        fun <T : Any> hmaC256(
+        fun hmaC256(
             secret: String,
             audience: String,
             issuer: String,
@@ -47,8 +55,9 @@ data class Jwt<T : Any>(
             realm: String = "Ktor Server",
             schemes: Schemes = Schemes(),
             authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
-            validate: suspend ApplicationCall.(JWTCredential) -> T?
-        ): Jwt<T> = of(Algorithm.HMAC256(secret), audience, issuer, name, realm, schemes, authHeader, validate)
+            validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
+        ): Jwt<JWTCredential> =
+            of(Algorithm.HMAC256(secret), audience, issuer, name, realm, schemes, authHeader, validate)
 
         fun <T : Any> hmaC384(
             secret: String,
@@ -58,10 +67,11 @@ data class Jwt<T : Any>(
             realm: String = "Ktor Server",
             schemes: Schemes = Schemes(),
             authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
-            validate: suspend ApplicationCall.(JWTCredential) -> T?
-        ): Jwt<T> = of(Algorithm.HMAC384(secret), audience, issuer, name, realm, schemes, authHeader, validate)
+            validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
+        ): Jwt<JWTCredential> =
+            of(Algorithm.HMAC384(secret), audience, issuer, name, realm, schemes, authHeader, validate)
 
-        fun <T : Any> hmaC512(
+        fun hmaC512(
             secret: String,
             audience: String,
             issuer: String,
@@ -69,10 +79,11 @@ data class Jwt<T : Any>(
             realm: String = "Ktor Server",
             schemes: Schemes = Schemes(),
             authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
-            validate: suspend ApplicationCall.(JWTCredential) -> T?
-        ): Jwt<T> = of(Algorithm.HMAC512(secret), audience, issuer, name, realm, schemes, authHeader, validate)
+            validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
+        ): Jwt<JWTCredential> =
+            of(Algorithm.HMAC512(secret), audience, issuer, name, realm, schemes, authHeader, validate)
 
-        fun <T : Any> of(
+        fun of(
             algorithm: Algorithm,
             audience: String,
             issuer: String,
@@ -80,50 +91,69 @@ data class Jwt<T : Any>(
             realm: String = "Ktor Server",
             schemes: Schemes = Schemes(),
             authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
-            validate: suspend ApplicationCall.(JWTCredential) -> T?
-        ): Jwt<T> = Jwt(
-            name = name,
-            realm = realm,
-            schemes = schemes,
-            authHeader = authHeader,
-            verifier = {
-                JWT.require(algorithm)
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .build()
-            },
-            validate
-        )
+            validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
+        ): Jwt<JWTCredential> = Jwt(
+            name = name, realm = realm, schemes = schemes, authHeader = authHeader, verifier = {
+                JWT.require(algorithm).withAudience(audience).withIssuer(issuer).build()
+            }, validate = validate
+        ) { it }
 
-        /** Automatically checks audience and issuer */
-        fun <T : Any> jwk(
-            certUrl: String,
-            audience: String,
-            issuer: String,
+        data class OpenIdMetadata(@SerialName("jwks_uri") val jwksUri: String)
+
+        fun discoveryJwk(
+            issuerUrl: String,
+            audience: String? = null,
             name: String? = null,
             realm: String = "Ktor Server",
             schemes: Schemes = Schemes(),
             authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
-            validate: suspend ApplicationCall.(JWTCredential) -> T
-        ): Jwt<T> {
-            val provider = JwkProviderBuilder(URL(certUrl))
-                .cached(10, 24, TimeUnit.HOURS)
-                .rateLimited(10, 1, TimeUnit.MINUTES)
-                .build()
+            verification: Verification.() -> Unit = { withAudience(audience) },
+            validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
+        ): Jwt<JWTCredential> {
+            val openIdMetadata = runBlocking {
+                HttpClient(CIO) { install(ContentNegotiation) { json() } }
+                    .get {
+                        url.takeFrom("https://accounts.google.com")
+                        url.appendPathSegments(".well-known", "openid-configuration")
+                    }.body<OpenIdMetadata>()
+            }
+
+            return jwk(
+                issuer = issuerUrl,
+                jwksUri = openIdMetadata.jwksUri,
+                audience = audience,
+                name = name,
+                realm = realm,
+                schemes = schemes,
+                authHeader = authHeader,
+                verification = verification,
+                validate = validate,
+            )
+        }
+
+        fun jwk(
+            issuer: String,
+            jwksUri: String,
+            audience: String? = null,
+            name: String? = null,
+            realm: String = "Ktor Server",
+            schemes: Schemes = Schemes(),
+            authHeader: (ApplicationCall) -> HttpAuthHeader? = ApplicationCall::parseRequestAuthorizationHeaderOrNull,
+            verification: Verification.() -> Unit = { withAudience(audience) },
+            validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
+        ): Jwt<JWTCredential> {
+            val provider =
+                JwkProviderBuilder(URL(jwksUri)).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES)
+                    .build()
 
             return Jwt(
                 name = name,
                 realm = realm,
                 schemes = schemes,
                 authHeader = authHeader,
-                verifier = { token ->
-                    // TODO patch in Verification.() -> Unit
-                    getVerifier(provider, issuer, token, schemes) { }
-                },
-            ) { credential ->
-                val isCorrect = credential.audience.contains(audience) && credential.issuer == issuer
-                if (isCorrect) validate(credential) else null
-            }
+                verifier = { token -> getVerifier(provider, issuer, token, schemes, verification) },
+                validate = validate
+            ) { it }
         }
     }
 }
@@ -133,6 +163,24 @@ class Schemes(val defaultScheme: String = "Bearer", val additionalSchemes: List<
     val schemesLowerCase = schemes.map { it.lowercase(Locale.getDefault()) }.toSet()
 
     operator fun contains(scheme: String): Boolean = scheme.lowercase(Locale.getDefault()) in schemesLowerCase
+}
+
+inline fun <reified A> JWTCredential.claimOrNull(name: String): A? {
+    val claim = payload.getClaim(name)
+    return when {
+        claim.isMissing -> null
+        claim.isNull -> return null
+        else -> claim.`as`(A::class.java)
+    }
+}
+
+inline fun <reified A> JWTCredential.claim(name: String): A {
+    val claim = payload.getClaim(name)
+    return when {
+        claim.isMissing -> throw JWTVerificationException("Missing claim: $name")
+        claim.isNull -> throw NullPointerException("Claim $name found, but found null value.")
+        else -> claim.`as`(A::class.java)
+    }
 }
 
 private fun ApplicationCall.parseRequestAuthorizationHeaderOrNull() = try {
