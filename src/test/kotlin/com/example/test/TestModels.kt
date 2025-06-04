@@ -1,7 +1,7 @@
 package com.example.test
 
-import io.ktor.route.simple.Body
-import io.ktor.route.simple.Header
+import Body
+import Header
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

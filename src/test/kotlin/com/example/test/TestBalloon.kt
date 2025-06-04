@@ -1,11 +1,8 @@
-package com.example.test
-
-
 import de.infix.testBalloon.framework.testSuite
 
-val routeSpec by testSuite {
-    test("success") {
-        throw RuntimeException("boom!")
+val test = testSuite("Test Suite") {
+    test("boom") {
+        throw RuntimeException("Boom!")
     }
 }
 
