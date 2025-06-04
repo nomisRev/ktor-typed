@@ -25,6 +25,9 @@ dependencies {
     implementation("io.ktor:ktor-server-sessions:3.1.3")
     implementation("io.ktor:ktor-server-core:3.1.3")
 
+    // YAML serialization
+    implementation("com.charleskorn.kaml:kaml:0.55.0")
+
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
