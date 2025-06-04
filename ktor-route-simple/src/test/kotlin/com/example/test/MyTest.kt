@@ -20,20 +20,6 @@ import kotlinx.serialization.Serializable
 
 data class UserPrincipal(val name: String)
 
-val jwt: Jwt<UserPrincipal> = Jwt.hmaC256(
-    "your-super-secret-for-hmac",
-    "your-api-audience",
-    "https://your.issuer.com/"
-) { credential -> UserPrincipal("Simon") }
-
-val googleJwt: Jwt<UserPrincipal> = Jwt.jwk(
-    "https://accounts.google.com/.well-known/jwks.json",
-    "https://your.issuer.com/",
-    "clientId"
-) { credential ->
-    UserPrincipal(credential.getClaim("email", String::class)!!)
-}
-
 @Serializable
 data class Simple(
     val name: String,
