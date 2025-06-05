@@ -23,13 +23,10 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("io.ktor:ktor-server-core:3.1.3")
 
-    // Use the new modules
-    implementation(project(":ktor-auth"))
-    implementation(project(":ktor-yaml-converter"))
+    implementation("com.charleskorn.kaml:kaml:0.80.1")
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
     testImplementation("io.ktor:ktor-server-content-negotiation:3.1.3")
-    testImplementation("com.charleskorn.kaml:kaml:0.80.1")
 }

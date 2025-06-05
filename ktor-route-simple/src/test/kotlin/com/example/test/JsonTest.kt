@@ -27,7 +27,7 @@ import kotlin.test.assertEquals
 
 @Serializable
 data class JsonElementBody(
-    @Body val jsonBody: JsonElement
+    @Body val body: JsonElement
 )
 
 @Serializable
@@ -81,7 +81,7 @@ class JsonTest {
             assertEquals(HttpStatusCode.OK, response.status)
 
             val responseBody = response.body<JsonElementBody>()
-            assertEquals(jsonObject, responseBody.jsonBody)
+            assertEquals(jsonObject, responseBody.body)
         }
     }
 

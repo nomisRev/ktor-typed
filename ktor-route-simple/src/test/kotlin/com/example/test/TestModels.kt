@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class JsonBody(val value: String)
+data class Body(val value: String)
 
 @Serializable
 data class CreateUser(
@@ -16,11 +16,11 @@ data class CreateUser(
     val many: List<String>,
     @Header("X-flag")
     val header: Boolean,
-    @Body val body: JsonBody
+    @Body val body: com.example.test.Body
 )
 
 @Serializable
-data class TwoBodies(@Body val one: JsonBody, @Body val two: String)
+data class TwoBodies(@Body val one: com.example.test.Body, @Body val two: String)
 
 @Serializable
 data class AllPrimitives(
@@ -73,5 +73,5 @@ data class NullableHeader(
 
 @Serializable
 data class NullableBody(
-    @Body val nullableBody: JsonBody?
+    @Body val nullableBody: com.example.test.Body?
 )

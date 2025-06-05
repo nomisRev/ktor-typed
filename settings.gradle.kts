@@ -12,3 +12,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "ktor-tapir"
 include("ktor-route-simple")
+include("ktor-auth")
+include("ktor-yaml-converter")

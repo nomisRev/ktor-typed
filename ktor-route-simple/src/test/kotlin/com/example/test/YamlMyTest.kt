@@ -8,6 +8,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.route.simple.get
+import io.ktor.route.simple.yaml
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 import io.ktor.server.response.respond
@@ -15,56 +16,28 @@ import io.ktor.server.testing.testApplication
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import io.ktor.route.simple.auth.Jwt
-import kotlinx.serialization.Serializable
-import com.charleskorn.kaml.Yaml
 
-
-/**
- * This test class is similar to MyTest but uses YAML instead of JSON.
- * Currently, it still uses JSON under the hood since we don't have a proper YAML content negotiation implementation yet.
- */
 class YamlMyTest {
-
-    @Test
-    fun simple() {
-        testApplication {
-            routing {
-                install(ServerContentNegotiation) { json() }
-                get<Simple>("/simple") { value ->
-                    call.respond(HttpStatusCode.OK, value)
-                }
-            }
-
-            val client = createClient {
-                install(ContentNegotiation) { json() }
-            }
-
-            val simple = client.get("/simple?name=John&age=32").body<Simple>()
-
-            assertEquals(Simple("John", 32), simple)
-        }
-    }
 
     @Test
     fun test() {
         testApplication {
             routing {
-                install(ServerContentNegotiation) { json() }
-                    get<CreateUser>("/users/{userId}/create") { value ->
-                        call.respond(HttpStatusCode.OK, value)
-                    }
+                install(ServerContentNegotiation) { yaml() }
+                get<CreateUser>("/users/{userId}/create") { value ->
+                    call.respond(HttpStatusCode.OK, value)
+                }
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val user = client.get("/users/123/create?name=John&age=30") {
                 headers.append("X-flag", "true")
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Yaml)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }.body<CreateUser>()
 
             assertEquals(
@@ -74,7 +47,7 @@ class YamlMyTest {
                     age = 30,
                     many = listOf("a", "b", "c"),
                     header = true,
-                    body = JsonBody("Hello World")
+                    body = Body("Hello World")
                 ),
                 user
             )
@@ -85,20 +58,20 @@ class YamlMyTest {
     fun missingHeader() {
         testApplication {
             routing {
-                install(ServerContentNegotiation) { json() }
+                install(ServerContentNegotiation) { yaml() }
                 get<CreateUser>("/users/{userId}/create") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val response = client.get("/users/123/create?name=John&age=30") {
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Yaml)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }
             assertEquals(HttpStatusCode.BadRequest, response.status)
         }
@@ -108,20 +81,20 @@ class YamlMyTest {
     fun missingQuery() {
         testApplication {
             routing {
-                install(ServerContentNegotiation) { json() }
+                install(ServerContentNegotiation) { yaml() }
                 get<CreateUser>("/users/{userId}/create") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val response = client.get("/users/123/create?name=John") {
                 headers.append("X-flag", "true")
                 contentType(ContentType.Application.Yaml)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }
             assertEquals(HttpStatusCode.BadRequest, response.status)
         }
@@ -131,14 +104,14 @@ class YamlMyTest {
     fun missingBody() {
         testApplication {
             routing {
-                install(ServerContentNegotiation) { json() }
+                install(ServerContentNegotiation) { yaml() }
                 get<CreateUser>("/users/{userId}/create") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val response = client.get("/users/123/create?name=John&age=30") {
@@ -154,21 +127,21 @@ class YamlMyTest {
     fun missingPath() {
         testApplication {
             routing {
-                install(ServerContentNegotiation) { json() }
+                install(ServerContentNegotiation) { yaml() }
                 get<CreateUser>("/users/{userId}/create") { value ->
                     call.respond(HttpStatusCode.OK, value)
                 }
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val response = client.get("/users/123/create?name=John") {
                 headers.append("X-flag", "true")
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Yaml)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }
             assertEquals(HttpStatusCode.BadRequest, response.status)
         }
@@ -179,7 +152,7 @@ class YamlMyTest {
         val message = assertThrows<IllegalArgumentException> {
             testApplication {
                 routing {
-                    install(ServerContentNegotiation) { json() }
+                    install(ServerContentNegotiation) { yaml() }
                     get<TwoBodies>("/two-bodies") { value ->
                         call.respond(HttpStatusCode.OK, value)
                     }

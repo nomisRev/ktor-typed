@@ -9,8 +9,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.route.simple.Body
 import io.ktor.route.simple.get
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.call
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.routing
@@ -19,6 +17,9 @@ import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import com.charleskorn.kaml.Yaml
+import com.charleskorn.kaml.YamlMap
+import com.charleskorn.kaml.YamlNode
+import io.ktor.route.simple.yaml
 
 @Serializable
 data class YamlStringBody(
@@ -41,7 +42,7 @@ class YamlTest {
         testApplication {
             application {
                 routing {
-                    install(ServerContentNegotiation) { json() }
+                    install(ServerContentNegotiation) { yaml() }
                     get("/yaml-string-body") { value: YamlStringBody ->
                         // Echo back the received YAML string
                         call.respond(HttpStatusCode.OK, value)
@@ -50,23 +51,23 @@ class YamlTest {
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
-            val yamlString = """
+            val yamlStringBody = YamlStringBody("""
                 name: John
                 age: 30
-            """.trimIndent()
+            """.trimIndent())
 
             val response = client.get("/yaml-string-body") {
-                contentType(ContentType.Application.Json)
-                setBody(YamlStringBody(yamlString))
+                contentType(ContentType.Application.Yaml)
+                setBody(yamlStringBody)
             }
 
             assertEquals(HttpStatusCode.OK, response.status)
 
             val responseBody = response.body<YamlStringBody>()
-            assertEquals(yamlString, responseBody.yamlBody)
+            assertEquals(yamlStringBody.yamlBody, responseBody.yamlBody)
         }
     }
 
@@ -75,7 +76,7 @@ class YamlTest {
         testApplication {
             application {
                 routing {
-                    install(ServerContentNegotiation) { json() }
+                    install(ServerContentNegotiation) { yaml() }
                     get("/yaml-map-body") { value: YamlMapBody ->
                         // Echo back the received Map
                         call.respond(HttpStatusCode.OK, value)
@@ -84,7 +85,7 @@ class YamlTest {
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val mapBody = mapOf(
@@ -93,9 +94,11 @@ class YamlTest {
                 "role" to "admin"
             )
 
+            val yamlMapBody = YamlMapBody(mapBody)
+
             val response = client.get("/yaml-map-body") {
-                contentType(ContentType.Application.Json)
-                setBody(YamlMapBody(mapBody))
+                contentType(ContentType.Application.Yaml)
+                setBody(yamlMapBody)
             }
 
             assertEquals(HttpStatusCode.OK, response.status)
@@ -110,7 +113,7 @@ class YamlTest {
         testApplication {
             application {
                 routing {
-                    install(ServerContentNegotiation) { json() }
+                    install(ServerContentNegotiation) { yaml() }
                     get("/yaml-list-body") { value: YamlListBody ->
                         // Echo back the received list
                         call.respond(HttpStatusCode.OK, value)
@@ -119,14 +122,16 @@ class YamlTest {
             }
 
             val client = createClient {
-                install(ContentNegotiation) { json() }
+                install(ContentNegotiation) { yaml() }
             }
 
             val listBody = listOf("item1", "item2", "item3")
 
+            val yamlListBody = YamlListBody(listBody)
+
             val response = client.get("/yaml-list-body") {
-                contentType(ContentType.Application.Json)
-                setBody(YamlListBody(listBody))
+                contentType(ContentType.Application.Yaml)
+                setBody(yamlListBody)
             }
 
             assertEquals(HttpStatusCode.OK, response.status)
@@ -154,7 +159,7 @@ class YamlTest {
         """.trimIndent()
 
         // Parse YAML to a Map
-        val map = yaml.decodeFromString(kotlinx.serialization.json.JsonElement.serializer(), yamlString).toString()
+        val map = yaml.decodeFromString(YamlNode.serializer(), yamlString).toString()
 
         // Verify the parsed content
         assert(map.contains("John"))

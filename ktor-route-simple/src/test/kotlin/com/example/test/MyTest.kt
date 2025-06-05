@@ -66,7 +66,7 @@ class MyTest {
                 headers.append("X-flag", "true")
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Json)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }.body<CreateUser>()
 
             assertEquals(
@@ -76,7 +76,7 @@ class MyTest {
                     age = 30,
                     many = listOf("a", "b", "c"),
                     header = true,
-                    body = JsonBody("Hello World")
+                    body = Body("Hello World")
                 ),
                 user
             )
@@ -100,7 +100,7 @@ class MyTest {
             val response = client.get("/users/123/create?name=John&age=30") {
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Json)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }
             assertEquals(HttpStatusCode.BadRequest, response.status)
         }
@@ -123,7 +123,7 @@ class MyTest {
             val response = client.get("/users/123/create?name=John") {
                 headers.append("X-flag", "true")
                 contentType(ContentType.Application.Json)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }
             assertEquals(HttpStatusCode.BadRequest, response.status)
         }
@@ -170,7 +170,7 @@ class MyTest {
                 headers.append("X-flag", "true")
                 url.parameters.appendAll("many", listOf("a", "b", "c"))
                 contentType(ContentType.Application.Json)
-                setBody(JsonBody("Hello World"))
+                setBody(Body("Hello World"))
             }
             assertEquals(HttpStatusCode.BadRequest, response.status)
         }
