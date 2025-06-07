@@ -7,31 +7,36 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiationConfig
 import io.ktor.http.ContentType
 import io.ktor.serialization.Configuration
 import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig as ServerContentNegotiationConfig
 import io.ktor.serialization.kotlinx.serialization as serialization
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig as ServerContentNegotiationConfig
 
-private val YamlDefault = Yaml(
-    configuration = YamlConfiguration(
-        strictMode = false,
-        encodeDefaults = true,
-    )
+// Create a default YAML configuration that handles complex types better
+private val defaultYamlConfig = YamlConfiguration(
+    strictMode = false,
+    polymorphismStyle = PolymorphismStyle.Property,
+    encodeDefaults = true
+)
+
+// Create a default YAML instance with the improved configuration
+private val defaultYaml = Yaml(
+    configuration = defaultYamlConfig
 )
 
 fun Configuration.yaml(
-    yaml: Yaml = Yaml.default,
+    yaml: Yaml = defaultYaml,
     contentType: ContentType = ContentType.Application.Yaml,
 ) {
     serialization(contentType, yaml)
 }
 
 fun ContentNegotiationConfig.yaml(
-    yaml: Yaml = YamlDefault
+    yaml: Yaml = defaultYaml,
 ) {
     register(ContentType.Application.Yaml, KotlinxSerializationConverter(yaml))
 }
 
 fun ServerContentNegotiationConfig.yaml(
-    yaml: Yaml = YamlDefault
+    yaml: Yaml = defaultYaml,
 ) {
     register(ContentType.Application.Yaml, KotlinxSerializationConverter(yaml))
 }

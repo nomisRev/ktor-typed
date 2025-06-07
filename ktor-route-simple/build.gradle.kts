@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    id("de.infix.testBalloon") version "0.3.1-K2.1.21"
 }
 
 kotlin {
@@ -24,12 +25,15 @@ dependencies {
     implementation("io.ktor:ktor-server-core:3.1.3")
 
     // Use the new modules
-    implementation(project(":ktor-auth"))
-    implementation(project(":ktor-yaml-converter"))
-
+//    implementation(project(":ktor-auth"))
+    testImplementation(project(":ktor-yaml-converter"))
+    testImplementation("de.infix.testBalloon:testBalloon-framework-core:0.3.1-K2.1.21")
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
     testImplementation("io.ktor:ktor-server-content-negotiation:3.1.3")
     testImplementation("com.charleskorn.kaml:kaml:0.80.1")
+    testImplementation("org.junit.platform:junit-platform-launcher:1.10.1")
+    testImplementation("org.junit.platform:junit-platform-engine:1.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 }

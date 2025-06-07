@@ -54,16 +54,7 @@ data class ListPrimitives(
     val booleanList: List<Boolean>,
     val byteList: List<Byte>,
     val charList: List<Char>,
-    val shortList: List<Short>,
-    val nullableStringList: List<String?>,
-    val nullableIntList: List<Int?>,
-    val nullableLongList: List<Long?>,
-    val nullableDoubleList: List<Double?>,
-    val nullableFloatList: List<Float?>,
-    val nullableBooleanList: List<Boolean?>,
-    val nullableByteList: List<Byte?>,
-    val nullableCharList: List<Char?>,
-    val nullableShortList: List<Short?>
+    val shortList: List<Short>
 )
 
 @Serializable

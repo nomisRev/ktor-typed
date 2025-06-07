@@ -24,6 +24,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.IllegalArgumentException
@@ -98,6 +99,7 @@ class Jwt<T : Any>(
             }, validate = validate
         ) { it }
 
+        @Serializable
         data class OpenIdMetadata(@SerialName("jwks_uri") val jwksUri: String)
 
         fun discoveryJwk(

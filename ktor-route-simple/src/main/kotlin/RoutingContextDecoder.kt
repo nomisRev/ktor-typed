@@ -176,7 +176,12 @@ private class RoutingContextDecoder(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T =
-        if (isBody) body as T else super.decodeSerializableValue(deserializer)
+        if (isBody) {
+            // For body parameters, the body is already the deserialized value of the correct type
+            body as T
+        } else {
+            super.decodeSerializableValue(deserializer)
+        }
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return if (descriptor.kind == StructureKind.LIST) {

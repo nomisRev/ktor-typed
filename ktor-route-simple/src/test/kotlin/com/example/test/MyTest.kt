@@ -15,10 +15,7 @@ import io.ktor.server.testing.testApplication
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import io.ktor.route.simple.auth.Jwt
 import kotlinx.serialization.Serializable
-
-data class UserPrincipal(val name: String)
 
 @Serializable
 data class Simple(
