@@ -5,11 +5,12 @@ import io.ktor.server.plugins.BadRequestException
 /**
  * Validates a value against the constraints defined in a parameter metadata object.
  */
-internal fun <T> validateParameter(value: T, metadata: Any, parameterName: String): T {
+internal fun <T> validateParameter(value: T, metadata: Input<*>, parameterName: String): T {
     when (metadata) {
         is Path<*> -> validateConstraints(value, metadata, parameterName)
         is Query<*> -> validateConstraints(value, metadata, parameterName)
         is Header<*> -> validateConstraints(value, metadata, parameterName)
+        is Body<*> -> { /* No validation constraints for body parameters */ }
     }
     return value
 }

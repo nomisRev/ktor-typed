@@ -24,15 +24,6 @@ koverReport {
     defaults {
         html { onCheck = true }
     }
-
-    // TODO remove ApplicationKt example, and move to docs / KotlinX Knit
-    filters {
-        excludes {
-            // Exclude Application.kt from coverage as it's the entry point
-            classes("com.example.ApplicationKt")
-        }
-    }
-
 //    verify {
 //        rule {
 //            minBound(70) // Minimum 70% line coverage

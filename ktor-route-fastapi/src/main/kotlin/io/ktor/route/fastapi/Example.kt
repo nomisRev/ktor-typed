@@ -54,7 +54,7 @@ fun Application.configureFastAPIExample() {
         put("/items/{item_id}",
             p1 = Path.required<Int>(title = "The ID of the item to get", ge = 1),
             p2 = Query<String?>(default = null, minLength = 3, maxLength = 50, description = "A query string"),
-            p3 = DefaultParam, // Item will be parsed from body automatically
+            p3 = Body<Item>(), // Item will be parsed from body automatically
             p4 = Header<String?>(default = null, description = "The user agent of the client"),
             p5 = Header<String?>(default = null, description = "A custom header token")
         ) { itemId: Int, q: String?, item: Item, userAgent: String?, xToken: String? ->

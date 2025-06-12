@@ -18,13 +18,13 @@ import kotlin.reflect.typeOf
  * Example usage:
  * ```kotlin
  * routing {
- *     put("/items/{item_id}") {
- *         itemId: Int,
- *         q: String?,
- *         item: Item,
- *         userAgent: String?,
- *         xToken: String? ->
- *
+ *     put("/items/{item_id}",
+ *         p1 = Path.required<Int>(),
+ *         p2 = Query<String?>(),
+ *         p3 = Body<Item>(),
+ *         p4 = Header<String?>(),
+ *         p5 = Header<String?>()
+ *     ) { itemId: Int, q: String?, item: Item, userAgent: String?, xToken: String? ->
  *         // Route handler logic
  *         call.respond(mapOf(
  *             "item_id" to itemId,
@@ -39,11 +39,11 @@ import kotlin.reflect.typeOf
  */
 inline fun <reified P1, reified P2, reified P3, reified P4, reified P5> Route.put(
     path: String,
-    p1: Any = DefaultParam,
-    p2: Any = DefaultParam,
-    p3: Any = DefaultParam,
-    p4: Any = DefaultParam,
-    p5: Any = DefaultParam,
+    p1: Input<P1>,
+    p2: Input<P2>,
+    p3: Input<P3>,
+    p4: Input<P4>,
+    p5: Input<P5>,
     crossinline handler: suspend RoutingContext.(P1, P2, P3, P4, P5) -> Unit
 ) = route(path, HttpMethod.Put) {
     handle {
@@ -74,8 +74,8 @@ inline fun <reified P1, reified P2, reified P3, reified P4, reified P5> Route.pu
  */
 inline fun <reified P1, reified P2> Route.get(
     path: String,
-    p1: Any = DefaultParam,
-    p2: Any = DefaultParam,
+    p1: Input<P1>,
+    p2: Input<P2>,
     crossinline handler: suspend RoutingContext.(P1, P2) -> Unit
 ) = route(path, HttpMethod.Get) {
     handle {
@@ -97,7 +97,7 @@ inline fun <reified P1, reified P2> Route.get(
  */
 inline fun <reified P1> Route.post(
     path: String,
-    p1: Any = DefaultParam,
+    p1: Input<P1>,
     crossinline handler: suspend RoutingContext.(P1) -> Unit
 ) = route(path, HttpMethod.Post) {
     handle {
@@ -115,17 +115,14 @@ inline fun <reified P1> Route.post(
  * Represents information about a parameter including its type and metadata.
  */
 @PublishedApi
-internal data class ParameterInfo(
+internal data class ParameterInfo<T>(
     val type: KType,
     val name: String,
-    val metadata: Any,
+    val metadata: Input<T>,
     val pathParams: List<String>
 )
 
-/**
- * Sentinel object to represent default parameter metadata.
- */
-object DefaultParam
+
 
 /**
  * Extracts path parameter names from a route path.
@@ -141,7 +138,7 @@ internal fun extractPathParameterNames(path: String): List<String> {
  * Resolves parameters using FastAPI-style metadata.
  */
 @PublishedApi
-internal suspend fun RoutingContext.resolveFastAPIParameters(paramInfos: List<ParameterInfo>): List<Any?> {
+internal suspend fun RoutingContext.resolveFastAPIParameters(paramInfos: List<ParameterInfo<*>>): List<Any?> {
     return paramInfos.map { paramInfo ->
         resolveFastAPIParameter(paramInfo)
     }
@@ -150,14 +147,14 @@ internal suspend fun RoutingContext.resolveFastAPIParameters(paramInfos: List<Pa
 /**
  * Resolves a single parameter using FastAPI-style metadata.
  */
-internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: ParameterInfo): Any? {
+internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: ParameterInfo<*>): Any? {
     val classifier = paramInfo.type.classifier as? KClass<*>
         ?: throw IllegalArgumentException("Unsupported parameter type: ${paramInfo.type}")
     val isNullable = paramInfo.type.isMarkedNullable
 
-    return when {
-        // Complex types (data classes) - parse from request body
-        isComplexType(classifier) -> {
+    return when (paramInfo.metadata) {
+        // Body parameters - parse from request body
+        is Body<*> -> {
             try {
                 val typeInfo = TypeInfo(classifier, paramInfo.type)
                 if (isNullable) {
@@ -171,8 +168,8 @@ internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: Parameter
             }
         }
 
-        // Primitive types - resolve based on metadata
-        else -> {
+        // Path, Query, Header parameters - resolve based on metadata
+        is Path<*>, is Query<*>, is Header<*> -> {
             val value = when (paramInfo.metadata) {
                 is Path<*> -> {
                     // Path parameters
@@ -206,25 +203,6 @@ internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: Parameter
                     headerValue ?: paramInfo.metadata.default?.toString()
                 }
 
-                DefaultParam -> {
-                    // Auto-detect parameter source
-                    when {
-                        paramInfo.name in paramInfo.pathParams -> {
-                            // It's a path parameter
-                            val pathValue = call.parameters[paramInfo.name]
-                            if (pathValue == null && !isNullable) {
-                                throw BadRequestException("Missing required path parameter: ${paramInfo.name}")
-                            }
-                            pathValue
-                        }
-                        else -> {
-                            // Try query parameter first, then header
-                            call.request.queryParameters[paramInfo.name]
-                                ?: call.request.headers[paramInfo.name.replace('_', '-')]
-                        }
-                    }
-                }
-
                 else -> throw IllegalArgumentException("Unsupported parameter metadata: ${paramInfo.metadata}")
             }
 
@@ -234,14 +212,12 @@ internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: Parameter
             } else {
                 val convertedValue = convertStringToType(value, classifier, paramInfo.name)
 
-                // Apply validation if metadata is provided
-                if (paramInfo.metadata != DefaultParam) {
-                    validateParameter(convertedValue, paramInfo.metadata, paramInfo.name)
-                } else {
-                    convertedValue
-                }
+                // Apply validation
+                validateParameter(convertedValue, paramInfo.metadata, paramInfo.name)
             }
         }
+
+        else -> throw IllegalArgumentException("Unsupported parameter metadata type: ${paramInfo.metadata::class}")
     }
 }
 

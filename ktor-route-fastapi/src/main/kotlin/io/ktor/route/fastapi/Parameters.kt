@@ -1,6 +1,12 @@
 package io.ktor.route.fastapi
 
 /**
+ * Sealed interface representing input parameters for routing functions.
+ * Provides type-safe parameter definitions with validation and metadata.
+ */
+sealed interface Input<A>
+
+/**
  * Represents a path parameter with validation and metadata.
  * Similar to FastAPI's Path(...) function.
  */
@@ -15,7 +21,7 @@ data class Path<T>(
     val minLength: Int? = null,
     val maxLength: Int? = null,
     val regex: String? = null
-) {
+) : Input<T> {
     companion object {
         /**
          * Creates a required path parameter (equivalent to FastAPI's Path(...))
@@ -61,7 +67,7 @@ data class Query<T>(
     val maxLength: Int? = null,
     val regex: String? = null,
     val deprecated: Boolean = false
-) {
+) : Input<T> {
     companion object {
         /**
          * Creates a required query parameter (equivalent to FastAPI's Query(...))
@@ -110,7 +116,7 @@ data class Header<T>(
     val regex: String? = null,
     val deprecated: Boolean = false,
     val convertUnderscores: Boolean = true // Convert underscores to hyphens in header names
-) {
+) : Input<T> {
     companion object {
         /**
          * Creates a required header parameter (equivalent to FastAPI's Header(...))
@@ -141,5 +147,20 @@ data class Header<T>(
             deprecated = deprecated,
             convertUnderscores = convertUnderscores
         )
+    }
+}
+
+/**
+ * Represents a request body parameter.
+ * Used for complex types that should be parsed from the request body.
+ */
+data class Body<T>(
+    val description: String? = null
+) : Input<T> {
+    companion object {
+        /**
+         * Creates a body parameter for request body parsing.
+         */
+        fun <T> create(description: String? = null): Body<T> = Body(description)
     }
 }

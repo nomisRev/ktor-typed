@@ -1,6 +1,6 @@
 # Ktor Route FastAPI
 
-A FastAPI-inspired routing module for Ktor that provides typed route definitions with parameter metadata and validation, similar to FastAPI's `Path()`, `Query()`, and `Header()` functions.
+A FastAPI-inspired routing module for Ktor that provides typed route definitions with parameter metadata and validation, similar to FastAPI's `Path()`, `Query()`, `Header()`, and request body functions.
 
 ## Overview
 
@@ -8,7 +8,7 @@ This module brings FastAPI's elegant parameter definition style to Ktor, allowin
 
 ## Key Features
 
-- **FastAPI-style Parameter Metadata**: Use `Path()`, `Query()`, and `Header()` with validation constraints
+- **FastAPI-style Parameter Metadata**: Use `Path()`, `Query()`, `Header()`, and `Body()` with validation constraints
 - **Automatic Parameter Resolution**: Resolves parameters from path, query, headers, and request body
 - **Built-in Validation**: Numeric constraints (ge, gt, le, lt), string length, regex patterns
 - **Type Safety**: Full compile-time type checking with Kotlin's type system
@@ -44,7 +44,7 @@ routing {
     put("/items/{item_id}",
         p1 = Path.required<Int>(title = "The ID of the item to get", ge = 1),
         p2 = Query<String?>(default = null, minLength = 3, maxLength = 50, description = "A query string"),
-        p3 = DefaultParam, // Item will be parsed from body automatically
+        p3 = Body<Item>(), // Item will be parsed from body automatically
         p4 = Header<String?>(default = null, description = "The user agent of the client"),
         p5 = Header<String?>(default = null, description = "A custom header token")
     ) { itemId: Int, q: String?, item: Item, userAgent: String?, xToken: String? ->
@@ -108,10 +108,10 @@ Header.required<String>(
 
 ### Request Body (Complex Types)
 ```kotlin
-// Use DefaultParam for automatic body parsing
+// Use Body<T>() for automatic body parsing
 put("/items/{id}",
     p1 = Path.required<String>(),
-    p2 = DefaultParam  // Item will be parsed from JSON body
+    p2 = Body<Item>()  // Item will be parsed from JSON body
 ) { id: String, item: Item ->
     // Handle the request
 }
@@ -170,7 +170,7 @@ data class CreateUserRequest(val name: String, val email: String)
 
 routing {
     post("/users",
-        p1 = DefaultParam  // CreateUserRequest from body
+        p1 = Body<CreateUserRequest>()  // CreateUserRequest from body
     ) { request: CreateUserRequest ->
         // Process the user creation
         call.respond(HttpStatusCode.Created)
@@ -184,7 +184,7 @@ routing {
     put("/items/{itemId}",
         p1 = Path.required<Int>(ge = 1),
         p2 = Query<String?>(default = null, maxLength = 100),
-        p3 = DefaultParam, // Request body
+        p3 = Body<UpdateRequest>(), // Request body
         p4 = Header<String?>(default = null),
         p5 = Header<String?>(default = null)
     ) { itemId: Int, filter: String?, updateData: UpdateRequest, userAgent: String?, authToken: String? ->
@@ -231,7 +231,7 @@ install(ContentNegotiation) {
 
 | Feature | FastAPI (Python) | ktor-route-fastapi | ktor-route-simple | Traditional Ktor |
 |---------|------------------|-------------------|-------------------|------------------|
-| Parameter Metadata | ✅ Path(), Query(), Header() | ✅ Path(), Query(), Header() | ❌ Annotations only | ❌ Manual extraction |
+| Parameter Metadata | ✅ Path(), Query(), Header() | ✅ Path(), Query(), Header(), Body() | ❌ Annotations only | ❌ Manual extraction |
 | Validation | ✅ Built-in | ✅ Built-in | ❌ Manual | ❌ Manual |
 | Type Safety | ✅ Runtime | ✅ Compile-time | ✅ Compile-time | ❌ Runtime |
 | API Style | Function parameters | Function parameters | Data classes | Manual routing |

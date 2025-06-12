@@ -39,7 +39,7 @@ class FastAPIExampleTest {
                 put("/items/{item_id}",
                     p1 = Path.required<Int>(title = "The ID of the item to get", ge = 1),
                     p2 = Query<String?>(default = null, minLength = 3, maxLength = 50, description = "A query string"),
-                    p3 = DefaultParam, // Item will be parsed from body automatically
+                    p3 = Body<Item>(), // Item will be parsed from body automatically
                     p4 = Header<String?>(default = null, description = "The user agent of the client"),
                     p5 = Header<String?>(default = null, description = "A custom header token")
                 ) { itemId: Int, q: String?, item: Item, userAgent: String?, xToken: String? ->
@@ -86,10 +86,10 @@ class FastAPIExampleTest {
             routing {
                 put("/items/{item_id}",
                     p1 = io.ktor.route.fastapi.Path.required<Int>(ge = 1), // item_id must be >= 1
-                    p2 = io.ktor.route.fastapi.DefaultParam,
-                    p3 = io.ktor.route.fastapi.DefaultParam,
-                    p4 = io.ktor.route.fastapi.DefaultParam,
-                    p5 = io.ktor.route.fastapi.DefaultParam
+                    p2 = io.ktor.route.fastapi.Query<String?>(default = null),
+                    p3 = io.ktor.route.fastapi.Body<Item>(),
+                    p4 = io.ktor.route.fastapi.Header<String?>(default = null),
+                    p5 = io.ktor.route.fastapi.Header<String?>(default = null)
                 ) { itemId: Int, q: String?, item: Item, userAgent: String?, xToken: String? ->
                     call.respond(mapOf("item_id" to itemId))
                 }
@@ -116,11 +116,11 @@ class FastAPIExampleTest {
 
             routing {
                 put("/items/{item_id}",
-                    p1 = io.ktor.route.fastapi.DefaultParam,
+                    p1 = io.ktor.route.fastapi.Path.required<Int>(),
                     p2 = io.ktor.route.fastapi.Query.required<String>(minLength = 3, maxLength = 10),
-                    p3 = io.ktor.route.fastapi.DefaultParam,
-                    p4 = io.ktor.route.fastapi.DefaultParam,
-                    p5 = io.ktor.route.fastapi.DefaultParam
+                    p3 = io.ktor.route.fastapi.Body<Item>(),
+                    p4 = io.ktor.route.fastapi.Header<String?>(default = null),
+                    p5 = io.ktor.route.fastapi.Header<String?>(default = null)
                 ) { itemId: Int, q: String, item: Item, userAgent: String?, xToken: String? ->
                     call.respond(mapOf("q" to q))
                 }
@@ -148,11 +148,11 @@ class FastAPIExampleTest {
 
             routing {
                 put("/items/{item_id}",
-                    p1 = io.ktor.route.fastapi.DefaultParam,
-                    p2 = io.ktor.route.fastapi.Query.required<String>(), // Required query parameter
-                    p3 = io.ktor.route.fastapi.DefaultParam,
-                    p4 = io.ktor.route.fastapi.DefaultParam,
-                    p5 = io.ktor.route.fastapi.DefaultParam
+                    Path.required(),
+                    Query.required(), // Required query parameter
+                    Body(),
+                    Header(default = null),
+                    Header(default = null)
                 ) { itemId: Int, q: String, item: Item, userAgent: String?, xToken: String? ->
                     call.respond(mapOf("q" to q))
                 }
