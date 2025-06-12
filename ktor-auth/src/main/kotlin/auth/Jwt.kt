@@ -144,6 +144,7 @@ class Jwt<T : Any>(
             verification: Verification.() -> Unit = { withAudience(audience) },
             validate: suspend ApplicationCall.(JWTCredential) -> Boolean = { true }
         ): Jwt<JWTCredential> {
+            @Suppress("DEPRECATION")
             val provider =
                 JwkProviderBuilder(URL(jwksUri)).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES)
                     .build()

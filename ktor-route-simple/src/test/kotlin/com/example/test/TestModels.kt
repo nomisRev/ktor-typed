@@ -66,3 +66,49 @@ data class NullableHeader(
 data class NullableBody(
     @Body val nullableBody: com.example.test.Body?
 )
+
+@Serializable
+data class Simple(
+    val name: String,
+    val age: Int?,
+)
+
+@Serializable
+data class JsonElementBody(
+    @Body val body: kotlinx.serialization.json.JsonElement
+)
+
+@Serializable
+data class MapStringBody(
+    @Body val mapBody: Map<String, String>
+)
+
+@Serializable
+data class JsonObjectBody(
+    @Body val jsonObjectBody: kotlinx.serialization.json.JsonObject
+)
+
+@Serializable
+data class JsonArrayBody(
+    @Body val jsonArrayBody: kotlinx.serialization.json.JsonArray
+)
+
+@Serializable
+data class JsonPrimitiveBody(
+    @Body val jsonPrimitiveBody: kotlinx.serialization.json.JsonPrimitive
+)
+
+@Serializable
+data class Person(val name: String, val age: Int)
+
+@Serializable
+data class StringWrapper(val value: String)
+
+@Serializable
+data class StringYamlTest(@Body val body: StringWrapper)
+
+@Serializable
+data class PersonYamlTest(@Body val body: Person)
+
+@Serializable
+data class ListYamlTest(@Body val body: List<String>)

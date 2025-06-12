@@ -45,6 +45,8 @@ fun Application.configureJwk(
         jwt(name) {
             val jwksUri =
                 jwksUri ?: TODO("Implement reaching issuer endpoint, and getting jwksUri from it. This needs suspend.")
+
+            @Suppress("DEPRECATION")
             val jwkProvider = JwkProviderBuilder(URL(jwksUri))
                 .apply(configureJwkProvider)
                 .build()

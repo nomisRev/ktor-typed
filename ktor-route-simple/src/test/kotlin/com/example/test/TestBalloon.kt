@@ -7,10 +7,18 @@ import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.OutgoingContent
+import io.ktor.http.content.TextContent
 import io.ktor.route.simple.get
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.route.simple.yaml
+import io.ktor.server.application.call
 import io.ktor.server.response.respond
+import io.ktor.server.routing.routing
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
+import io.ktor.server.response.respondText
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.ClientProvider
 import io.ktor.server.testing.TestApplicationBuilder
@@ -18,14 +26,35 @@ import io.ktor.server.testing.testApplication
 import io.ktor.utils.io.KtorDsl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.TestScope
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 
 inline fun <reified A : Any> TestSuite.testRoute(
     name: String,
+    path: String = "/route",
     crossinline action: suspend KtorTestApplicationScope.() -> Unit
 ) = testServer(name) {
     routing {
-        get("/route") { value: A ->
-            call.respond(HttpStatusCode.OK, value)
+        install(ServerContentNegotiation) {
+            json()
+            yaml()
+        }
+        get<A>(path) { value ->
+            val contentType = call.request.headers["Content-Type"]
+            when {
+                contentType == null -> call.respond(HttpStatusCode.OK, value)
+                ContentType.Application.Json.match(contentType) -> call.respondText(
+                    Json.encodeToString(serializer(), value),
+                    ContentType.Application.Json,
+                    HttpStatusCode.OK,
+                )
+                ContentType.Application.Yaml.match(contentType) -> call.respondText(
+                    Json.encodeToString(serializer(), value),
+                    ContentType.Application.Yaml,
+                    HttpStatusCode.OK,
+                )
+                else -> call.respond(HttpStatusCode.OK, value)
+            }
         }
     }
     action()
@@ -45,24 +74,27 @@ fun TestSuite.testServer(
 open class KtorTestApplicationScope internal constructor(
     private val test: TestCoroutineScope,
     private val original: ApplicationTestBuilder,
-) : TestApplicationBuilder(),
-    ClientProvider,
-    AbstractTest by test,
+) : AbstractTest by test,
     CoroutineScope by test {
 
     val testScope: TestScope
         get() = test.testScope
 
-    override val client: HttpClient by lazy {
-        createClient {
-            install(ContentNegotiation) { json() }
+    val client: HttpClient by lazy {
+        original.createClient {
+            install(ContentNegotiation) {
+                json()
+                yaml()
+            }
         }
     }
 
-    suspend fun startApplication() = original.startApplication()
+    fun routing(configuration: io.ktor.server.routing.Route.() -> Unit) {
+        original.routing(configuration)
+    }
 
     @KtorDsl
-    override fun createClient(
+    fun createClient(
         block: HttpClientConfig<out HttpClientEngineConfig>.() -> Unit
     ): HttpClient = original.createClient(block)
 }
