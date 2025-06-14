@@ -26,7 +26,11 @@ koverReport {
     }
     verify {
         rule {
-            minBound(70) // Minimum 70% line coverage
+            minBound(90)
         }
     }
+}
+
+dependencies {
+    kover(project(":ktor-route-delegation-api"))
 }

@@ -32,8 +32,8 @@ routing {
 ```kotlin
 routing {
     get("/search") {
-        val query by query<String>()  // Returns null if not provided
-        val limit by query<Int>()     // Returns null if not provided
+        val query by query<String>()
+        val limit by query<Int>()
         
         call.respond(mapOf(
             "query" to query,
@@ -60,21 +60,24 @@ routing {
 
 ## Parameter Validation
 
-### Numeric Constraints
+The validation system provides comprehensive validation for all primitive types and common patterns. Validations are chainable and provide clear error messages.
+
+### Numeric Validations
+
+#### Integer Validations
 ```kotlin
 routing {
     post("/users/{userId}") {
         val userId by path<Int>(
-            title = "User ID",
-            description = "The unique identifier for the user",
-            ge = 1  // Must be >= 1
+            validation = Validation.int()
+                .min(1, "User ID must be positive")
+                .max(1000000, "User ID must be less than 1 million")
         )
         
         val age by query<Int>(
-            title = "Age",
-            description = "User's age",
-            ge = 0,
-            le = 150
+            validation = Validation.int()
+                .range(0, 150, "Age must be between 0 and 150")
+                .positive("Age must be positive")
         )
         
         call.respond("User $userId with age $age")
@@ -82,22 +85,217 @@ routing {
 }
 ```
 
-### String Constraints
+#### All Numeric Types
+```kotlin
+routing {
+    post("/analytics/{sessionId}") {
+        // Long validation
+        val sessionId by path<Long>(
+            validation = Validation.long()
+                .positive("Session ID must be positive")
+        )
+        
+        // Double validation
+        val score by query<Double>(
+            validation = Validation.double()
+                .range(0.0, 100.0, "Score must be between 0.0 and 100.0")
+                .nonNegative("Score cannot be negative")
+        )
+        
+        // Float validation
+        val precision by query<Float>(
+            validation = Validation.float()
+                .min(0.1f, "Precision must be at least 0.1")
+        )
+        
+        // Short validation
+        val attempts by query<Short>(
+            validation = Validation.short()
+                .range(1, 10, "Attempts must be between 1 and 10")
+        )
+        
+        // Byte validation
+        val flags by query<Byte>(
+            validation = Validation.byte()
+                .range(0, 127, "Flags must be between 0 and 127")
+        )
+        
+        call.respond("Analytics recorded")
+    }
+}
+```
+
+### String Validations
+
+#### Basic String Constraints
 ```kotlin
 routing {
     post("/register") {
         val username by query<String>(
-            title = "Username",
-            description = "The username for registration",
-            minLength = 3,
-            maxLength = 20,
-            regex = "[a-zA-Z0-9_]+"
+            validation = Validation.string()
+                .minLength(3, "Username must be at least 3 characters")
+                .maxLength(20, "Username must be at most 20 characters")
+                .notBlank("Username cannot be blank")
+                .alphanumeric("Username must be alphanumeric")
+                .lowercase("Username must be lowercase")
         )
         
         call.respond("Registered user: $username")
     }
 }
 ```
+
+#### Advanced String Validations
+```kotlin
+routing {
+    post("/content") {
+        val title by query<String>(
+            validation = Validation.string()
+                .exactLength(50, "Title must be exactly 50 characters")
+                .contains("important", message = "Title must contain 'important'")
+                .startsWith("Article:", message = "Title must start with 'Article:'")
+                .endsWith(".", message = "Title must end with a period")
+        )
+        
+        val category by query<String>(
+            validation = Validation.string()
+                .oneOf("tech", "science", "business", 
+                       message = "Category must be one of: tech, science, business")
+        )
+        
+        val tags by query<String>(
+            validation = Validation.string()
+                .regex("[a-z,]+", "Tags must be lowercase letters separated by commas")
+        )
+        
+        call.respond("Content created")
+    }
+}
+```
+
+### Common Pattern Validations
+
+#### Email, URL, and UUID
+```kotlin
+routing {
+    post("/profile") {
+        // Email validation
+        val email by query<String>(
+            validation = Validation.email()
+        )
+        
+        // URL validation
+        val website by query<String>(
+            validation = Validation.url()
+        )
+        
+        // UUID validation
+        val apiKey by header<String>(
+            name = "X-API-Key",
+            validation = Validation.uuid()
+        )
+        
+        call.respond("Profile updated")
+    }
+}
+```
+
+### Boolean Validations
+```kotlin
+routing {
+    get("/settings") {
+        val enableNotifications by query<Boolean>(
+            validation = Validation.boolean()
+                .isTrue("Notifications must be enabled")
+        )
+        
+        val debugMode by query<Boolean>(
+            validation = Validation.boolean()
+                .isFalse("Debug mode must be disabled in production")
+        )
+        
+        call.respond("Settings retrieved")
+    }
+}
+```
+
+### Collection Validations
+```kotlin
+routing {
+    post("/batch") {
+        val items by query<List<String>>(
+            validation = Validation<Collection<String>> { it }
+                .minSize(1, "At least one item is required")
+                .maxSize(100, "Maximum 100 items allowed")
+                .notEmpty("Items list cannot be empty")
+        )
+        
+        call.respond("Batch processed")
+    }
+}
+```
+
+### Chained Validations
+```kotlin
+routing {
+    post("/complex") {
+        val complexField by query<String>(
+            validation = Validation.string()
+                .minLength(5, "Too short")
+                .maxLength(50, "Too long")
+                .regex("[a-zA-Z0-9_-]+", "Invalid characters")
+                .notBlank("Cannot be blank")
+                .contains("_", message = "Must contain underscore")
+        )
+        
+        call.respond("Complex validation passed")
+    }
+}
+```
+
+### Available Validation Functions
+
+#### Numeric Types (Int, Long, Double, Float, Short, Byte)
+- `min(value, message)` - Minimum value constraint
+- `max(value, message)` - Maximum value constraint  
+- `range(min, max, message)` - Range constraint
+- `positive(message)` - Must be positive (> 0)
+- `nonNegative(message)` - Must be non-negative (>= 0)
+- `negative(message)` - Must be negative (< 0)
+
+#### String Type
+- `minLength(min, message)` - Minimum length
+- `maxLength(max, message)` - Maximum length
+- `length(min, max, message)` - Length range
+- `exactLength(length, message)` - Exact length
+- `notEmpty(message)` - Not empty string
+- `notBlank(message)` - Not blank (not empty or whitespace)
+- `regex(pattern, message)` - Regular expression match
+- `contains(substring, ignoreCase, message)` - Contains substring
+- `startsWith(prefix, ignoreCase, message)` - Starts with prefix
+- `endsWith(suffix, ignoreCase, message)` - Ends with suffix
+- `oneOf(values, ignoreCase, message)` - One of specified values
+- `alphanumeric(message)` - Only alphanumeric characters
+- `alphabetic(message)` - Only alphabetic characters
+- `numeric(message)` - Only numeric characters
+- `lowercase(message)` - Must be lowercase
+- `uppercase(message)` - Must be uppercase
+
+#### Boolean Type
+- `isTrue(message)` - Must be true
+- `isFalse(message)` - Must be false
+
+#### Collection Types
+- `minSize(min, message)` - Minimum collection size
+- `maxSize(max, message)` - Maximum collection size
+- `size(min, max, message)` - Collection size range
+- `exactSize(size, message)` - Exact collection size
+- `notEmpty(message)` - Collection not empty
+
+#### Common Patterns
+- `Validation.email()` - Email address validation
+- `Validation.url()` - HTTP/HTTPS URL validation
+- `Validation.uuid()` - UUID format validation
 
 ## Advanced Features
 
