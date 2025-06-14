@@ -1,9 +1,11 @@
 package io.ktor.route.fastapi
 
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.request.ContentTransformationException
 import io.ktor.server.request.receive
+import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.route
@@ -47,25 +49,31 @@ inline fun <reified P1, reified P2, reified P3, reified P4, reified P5> Route.pu
     crossinline handler: suspend RoutingContext.(P1, P2, P3, P4, P5) -> Unit
 ) = route(path, HttpMethod.Put) {
     handle {
-        val pathParams = extractPathParameterNames(path)
-        val params = resolveFastAPIParameters(
-            listOf(
-                ParameterInfo(typeOf<P1>(), "item_id", p1, pathParams),
-                ParameterInfo(typeOf<P2>(), "q", p2, pathParams),
-                ParameterInfo(typeOf<P3>(), "item", p3, pathParams),
-                ParameterInfo(typeOf<P4>(), "user_agent", p4, pathParams),
-                ParameterInfo(typeOf<P5>(), "x_token", p5, pathParams)
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(
+                    ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams),
+                    ParameterInfo(typeOf<P2>(), determineParameterName(p2, pathParams, 1), p2, pathParams),
+                    ParameterInfo(typeOf<P3>(), determineParameterName(p3, pathParams, 2), p3, pathParams),
+                    ParameterInfo(typeOf<P4>(), determineParameterName(p4, pathParams, 3), p4, pathParams),
+                    ParameterInfo(typeOf<P5>(), determineParameterName(p5, pathParams, 4), p5, pathParams)
+                )
             )
-        )
 
-        @Suppress("UNCHECKED_CAST")
-        handler(
-            params[0] as P1,
-            params[1] as P2,
-            params[2] as P3,
-            params[3] as P4,
-            params[4] as P5
-        )
+            @Suppress("UNCHECKED_CAST")
+            handler(
+                params[0] as P1,
+                params[1] as P2,
+                params[2] as P3,
+                params[3] as P4,
+                params[4] as P5
+            )
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
     }
 }
 
@@ -79,16 +87,51 @@ inline fun <reified P1, reified P2> Route.get(
     crossinline handler: suspend RoutingContext.(P1, P2) -> Unit
 ) = route(path, HttpMethod.Get) {
     handle {
-        val pathParams = extractPathParameterNames(path)
-        val params = resolveFastAPIParameters(
-            listOf(
-                ParameterInfo(typeOf<P1>(), "name", p1, pathParams),
-                ParameterInfo(typeOf<P2>(), "age", p2, pathParams)
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(
+                    ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams),
+                    ParameterInfo(typeOf<P2>(), determineParameterName(p2, pathParams, 1), p2, pathParams)
+                )
             )
-        )
 
-        @Suppress("UNCHECKED_CAST")
-        handler(params[0] as P1, params[1] as P2)
+            @Suppress("UNCHECKED_CAST")
+            handler(params[0] as P1, params[1] as P2)
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
+    }
+}
+
+/**
+ * FastAPI-style POST route with 2 parameters.
+ */
+inline fun <reified P1, reified P2> Route.post(
+    path: String,
+    p1: Input<P1>,
+    p2: Input<P2>,
+    crossinline handler: suspend RoutingContext.(P1, P2) -> Unit
+) = route(path, HttpMethod.Post) {
+    handle {
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(
+                    ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams),
+                    ParameterInfo(typeOf<P2>(), determineParameterName(p2, pathParams, 1), p2, pathParams)
+                )
+            )
+
+            @Suppress("UNCHECKED_CAST")
+            handler(params[0] as P1, params[1] as P2)
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
     }
 }
 
@@ -101,13 +144,114 @@ inline fun <reified P1> Route.post(
     crossinline handler: suspend RoutingContext.(P1) -> Unit
 ) = route(path, HttpMethod.Post) {
     handle {
-        val pathParams = extractPathParameterNames(path)
-        val params = resolveFastAPIParameters(
-            listOf(ParameterInfo(typeOf<P1>(), "request", p1, pathParams))
-        )
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams))
+            )
 
-        @Suppress("UNCHECKED_CAST")
-        handler(params[0] as P1)
+            @Suppress("UNCHECKED_CAST")
+            handler(params[0] as P1)
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
+    }
+}
+
+/**
+ * FastAPI-style POST route with 3 parameters.
+ */
+inline fun <reified P1, reified P2, reified P3> Route.post(
+    path: String,
+    p1: Input<P1>,
+    p2: Input<P2>,
+    p3: Input<P3>,
+    crossinline handler: suspend RoutingContext.(P1, P2, P3) -> Unit
+) = route(path, HttpMethod.Post) {
+    handle {
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(
+                    ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams),
+                    ParameterInfo(typeOf<P2>(), determineParameterName(p2, pathParams, 1), p2, pathParams),
+                    ParameterInfo(typeOf<P3>(), determineParameterName(p3, pathParams, 2), p3, pathParams)
+                )
+            )
+
+            @Suppress("UNCHECKED_CAST")
+            handler(params[0] as P1, params[1] as P2, params[2] as P3)
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
+    }
+}
+
+/**
+ * FastAPI-style POST route with 4 parameters.
+ */
+inline fun <reified P1, reified P2, reified P3, reified P4> Route.post(
+    path: String,
+    p1: Input<P1>,
+    p2: Input<P2>,
+    p3: Input<P3>,
+    p4: Input<P4>,
+    crossinline handler: suspend RoutingContext.(P1, P2, P3, P4) -> Unit
+) = route(path, HttpMethod.Post) {
+    handle {
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(
+                    ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams),
+                    ParameterInfo(typeOf<P2>(), determineParameterName(p2, pathParams, 1), p2, pathParams),
+                    ParameterInfo(typeOf<P3>(), determineParameterName(p3, pathParams, 2), p3, pathParams),
+                    ParameterInfo(typeOf<P4>(), determineParameterName(p4, pathParams, 3), p4, pathParams)
+                )
+            )
+
+            @Suppress("UNCHECKED_CAST")
+            handler(params[0] as P1, params[1] as P2, params[2] as P3, params[3] as P4)
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
+    }
+}
+
+/**
+ * FastAPI-style GET route with 3 parameters.
+ */
+inline fun <reified P1, reified P2, reified P3> Route.get(
+    path: String,
+    p1: Input<P1>,
+    p2: Input<P2>,
+    p3: Input<P3>,
+    crossinline handler: suspend RoutingContext.(P1, P2, P3) -> Unit
+) = route(path, HttpMethod.Get) {
+    handle {
+        try {
+            val pathParams = extractPathParameterNames(path)
+            val params = resolveFastAPIParameters(
+                listOf(
+                    ParameterInfo(typeOf<P1>(), determineParameterName(p1, pathParams, 0), p1, pathParams),
+                    ParameterInfo(typeOf<P2>(), determineParameterName(p2, pathParams, 1), p2, pathParams),
+                    ParameterInfo(typeOf<P3>(), determineParameterName(p3, pathParams, 2), p3, pathParams)
+                )
+            )
+
+            @Suppress("UNCHECKED_CAST")
+            handler(params[0] as P1, params[1] as P2, params[2] as P3)
+        } catch (e: BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad Request")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error: ${e.message}")
+        }
     }
 }
 
@@ -135,6 +279,46 @@ internal fun extractPathParameterNames(path: String): List<String> {
 }
 
 /**
+ * Determines the parameter name based on the input type and position.
+ */
+@PublishedApi
+internal fun determineParameterName(input: Input<*>, pathParams: List<String>, index: Int): String {
+    return when (input) {
+        is Path<*> -> {
+            // For path parameters, use the path parameter name at the given index
+            if (index < pathParams.size) pathParams[index]
+            else throw IllegalArgumentException("Path parameter at index $index not found in path parameters: $pathParams")
+        }
+        is Query<*> -> {
+            // For query parameters, use explicit name or fallback to common names
+            input.name ?: when (index) {
+                0 -> "q"
+                1 -> "filter"
+                2 -> "sort"
+                3 -> "limit"
+                4 -> "offset"
+                else -> "param$index"
+            }
+        }
+        is Header<*> -> {
+            // For header parameters, use explicit name or fallback to common names
+            input.name ?: when (index) {
+                0 -> "user_agent"
+                1 -> "x_token"
+                2 -> "authorization"
+                3 -> "content_type"
+                4 -> "accept"
+                else -> "header$index"
+            }
+        }
+        is Body<*> -> {
+            // For body parameters, use a generic name
+            "body"
+        }
+    }
+}
+
+/**
  * Resolves parameters using FastAPI-style metadata.
  */
 @PublishedApi
@@ -157,12 +341,11 @@ internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: Parameter
         is Body<*> -> {
             try {
                 val typeInfo = TypeInfo(classifier, paramInfo.type)
-                if (isNullable) {
-                    call.receiveNullable<Any?>(typeInfo)
-                } else {
-                    call.receive<Any>(typeInfo)
-                }
+                call.receive(typeInfo)
             } catch (e: ContentTransformationException) {
+                if (isNullable) null
+                else throw BadRequestException("Failed to parse request body for parameter '${paramInfo.name}'", e)
+            } catch (e: Exception) {
                 if (isNullable) null
                 else throw BadRequestException("Failed to parse request body for parameter '${paramInfo.name}'", e)
             }
@@ -217,7 +400,7 @@ internal suspend fun RoutingContext.resolveFastAPIParameter(paramInfo: Parameter
             }
         }
 
-        else -> throw IllegalArgumentException("Unsupported parameter metadata type: ${paramInfo.metadata::class}")
+
     }
 }
 
@@ -243,7 +426,7 @@ internal fun convertStringToType(value: String, targetClass: KClass<*>, paramNam
             Long::class -> value.toLong()
             Double::class -> value.toDouble()
             Float::class -> value.toFloat()
-            Boolean::class -> value.toBoolean()
+            Boolean::class -> value.toBooleanStrict()
             Byte::class -> value.toByte()
             Char::class -> value.single()
             Short::class -> value.toShort()

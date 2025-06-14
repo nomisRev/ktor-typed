@@ -66,7 +66,8 @@ data class Query<T>(
     val minLength: Int? = null,
     val maxLength: Int? = null,
     val regex: String? = null,
-    val deprecated: Boolean = false
+    val deprecated: Boolean = false,
+    val name: String? = null
 ) : Input<T> {
     companion object {
         /**
@@ -82,7 +83,8 @@ data class Query<T>(
             minLength: Int? = null,
             maxLength: Int? = null,
             regex: String? = null,
-            deprecated: Boolean = false
+            deprecated: Boolean = false,
+            name: String? = null
         ): Query<T> = Query(
             default = null,
             title = title,
@@ -94,7 +96,8 @@ data class Query<T>(
             minLength = minLength,
             maxLength = maxLength,
             regex = regex,
-            deprecated = deprecated
+            deprecated = deprecated,
+            name = name
         )
     }
 }
@@ -115,7 +118,8 @@ data class Header<T>(
     val maxLength: Int? = null,
     val regex: String? = null,
     val deprecated: Boolean = false,
-    val convertUnderscores: Boolean = true // Convert underscores to hyphens in header names
+    val convertUnderscores: Boolean = true, // Convert underscores to hyphens in header names
+    val name: String? = null
 ) : Input<T> {
     companion object {
         /**
@@ -132,7 +136,8 @@ data class Header<T>(
             maxLength: Int? = null,
             regex: String? = null,
             deprecated: Boolean = false,
-            convertUnderscores: Boolean = true
+            convertUnderscores: Boolean = true,
+            name: String? = null
         ): Header<T> = Header(
             default = null,
             title = title,
@@ -145,7 +150,8 @@ data class Header<T>(
             maxLength = maxLength,
             regex = regex,
             deprecated = deprecated,
-            convertUnderscores = convertUnderscores
+            convertUnderscores = convertUnderscores,
+            name = name
         )
     }
 }

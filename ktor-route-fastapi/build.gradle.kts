@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    kotlin("plugin.power-assert")
     id("de.infix.testBalloon") version "0.3.1-K2.1.21"
 }
 
