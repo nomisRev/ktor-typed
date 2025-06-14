@@ -24,9 +24,9 @@ koverReport {
     defaults {
         html { onCheck = true }
     }
-//    verify {
-//        rule {
-//            minBound(70) // Minimum 70% line coverage
-//        }
-//    }
+    verify {
+        rule {
+            minBound(70) // Minimum 70% line coverage
+        }
+    }
 }

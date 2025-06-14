@@ -25,10 +25,7 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("io.ktor:ktor-server-core:3.1.3")
 
-    // Use the new modules
-//    implementation(project(":ktor-auth"))
     testImplementation(project(":ktor-yaml-converter"))
-    // testImplementation("de.infix.testBalloon:testBalloon-framework-core:0.3.1-K2.1.21")
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
