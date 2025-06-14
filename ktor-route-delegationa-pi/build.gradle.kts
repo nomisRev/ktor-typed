@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     kotlin("plugin.power-assert")
-    id("de.infix.testBalloon") version "0.3.1-K2.1.21"
+    // id("de.infix.testBalloon") version "0.3.1-K2.1.21"
 }
 
 kotlin {
@@ -28,7 +28,7 @@ dependencies {
     // Use the new modules
 //    implementation(project(":ktor-auth"))
     testImplementation(project(":ktor-yaml-converter"))
-    testImplementation("de.infix.testBalloon:testBalloon-framework-core:0.3.1-K2.1.21")
+    // testImplementation("de.infix.testBalloon:testBalloon-framework-core:0.3.1-K2.1.21")
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
