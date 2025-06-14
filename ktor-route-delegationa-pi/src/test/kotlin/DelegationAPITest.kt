@@ -44,7 +44,7 @@ class DelegationAPITest {
             }
             routing {
                 put("/items/{itemId}") {
-                    val itemId by path(Int::class)
+                    val itemId by path<Int>()
                     val q by query<String>(String::class)
                     val userAgent by header<String>(String::class, name = "User-Agent")
                     val xToken by header<String>(String::class, name = "X-Token")
@@ -105,7 +105,7 @@ class DelegationAPITest {
             }
             routing {
                 put("/items/{itemId}") {
-                    val itemId by path(Int::class)
+                    val itemId by path<Int>()
                     val item = call.receive<TestItem>()
 
                     val response = SimpleResponse("Item $itemId processed", itemId)
@@ -138,7 +138,7 @@ class DelegationAPITest {
             }
             routing {
                 put("/items/{itemId}") {
-                    val itemId by path(Int::class)
+                    val itemId by path<Int>()
                     val optionalQuery by query<String>(String::class)
                     val item = call.receive<TestItem>()
 
@@ -195,7 +195,7 @@ class DelegationAPITest {
             routing {
                 // Let's start with a simpler test to debug the issue
                 put("/test/{intParam}") {
-                    val intParam by path(Int::class)
+                    val intParam by path<Int>()
                     val item = call.receive<TestItem>()
 
                     // Use a response that can be serialized properly
@@ -211,10 +211,10 @@ class DelegationAPITest {
 
                 // Also test the complex route
                 put("/complex/{intParam}/{longParam}/{doubleParam}/{boolParam}") {
-                    val intParam by path(Int::class)
-                    val longParam by path(Long::class)
-                    val doubleParam by path(Double::class)
-                    val boolParam by path(Boolean::class)
+                    val intParam by path<Int>()
+                    val longParam by path<Long>()
+                    val doubleParam by path<Double>()
+                    val boolParam by path<Boolean>()
                     val floatQuery by query<Float>(Float::class)
 
                     val item = call.receive<TestItem>()
@@ -292,7 +292,7 @@ class DelegationAPITest {
             }
             routing {
                 put("/items/{itemId}") {
-                    val itemId by path(Int::class)
+                    val itemId by path<Int>()
                     val item = call.receive<TestItem>()
 
                     val response = SimpleResponse("Item $itemId processed", itemId)
@@ -317,7 +317,7 @@ class DelegationAPITest {
             }
             routing {
                 put("/items/{itemId}") {
-                    val itemId by path(Int::class)
+                    val itemId by path<Int>()
                     val item = call.receive<TestItem>()
 
                     val response = SimpleResponse("Item $itemId updated", itemId)
@@ -325,7 +325,7 @@ class DelegationAPITest {
                 }
 
                 put("/products/{productId}") {
-                    val productId by path(Int::class)
+                    val productId by path<Int>()
                     val item = call.receive<TestItem>()
 
                     val response = SimpleResponse("Product $productId updated", productId)
@@ -380,7 +380,7 @@ class DelegationAPITest {
             }
             routing {
                 put("/users/{userId}") {
-                    val userId by path(Int::class)
+                    val userId by path<Int>()
                     val user = call.receive<User>()
 
                     val response = UserResponse(userId, user)
