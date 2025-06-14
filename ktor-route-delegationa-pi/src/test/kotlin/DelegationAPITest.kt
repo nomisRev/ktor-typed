@@ -45,10 +45,10 @@ class DelegationAPITest {
             routing {
                 put("/items/{itemId}") {
                     val itemId by path<Int>()
-                    val q by query<String>(String::class)
-                    val userAgent by header<String>(String::class, name = "User-Agent")
-                    val xToken by header<String>(String::class, name = "X-Token")
-                    val customHeader by header<String>(String::class, name = "Custom-Header")
+                    val q by query<String>()
+                    val userAgent by header<String>(name = "User-Agent")
+                    val xToken by header<String>(name = "X-Token")
+                    val customHeader by header<String>(name = "Custom-Header")
                     val item = call.receive<TestItem>()
 
                     val response = TestResponse(
@@ -139,7 +139,7 @@ class DelegationAPITest {
             routing {
                 put("/items/{itemId}") {
                     val itemId by path<Int>()
-                    val optionalQuery by query<String>(String::class)
+                    val optionalQuery by query<String?>()
                     val item = call.receive<TestItem>()
 
                     val response = TestResponse(
@@ -215,7 +215,7 @@ class DelegationAPITest {
                     val longParam by path<Long>()
                     val doubleParam by path<Double>()
                     val boolParam by path<Boolean>()
-                    val floatQuery by query<Float>(Float::class)
+                    val floatQuery by query<Float>()
 
                     val item = call.receive<TestItem>()
 
