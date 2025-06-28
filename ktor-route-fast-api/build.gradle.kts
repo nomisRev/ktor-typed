@@ -24,8 +24,7 @@ dependencies {
 //    api("org.jetbrains.kotlin:kotlin-reflect:2.1.21")
     api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2")
 //    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-    implementation("io.ktor:ktor-server-core:3.1.3")
-    implementation("io.ktor:ktor-client-core:3.1.3")
+    implementation("io.ktor:ktor-server-cio:3.1.3")
 
     testImplementation(project(":ktor-yaml-converter"))
     testImplementation(kotlin("test"))
