@@ -13,6 +13,23 @@ import io.github.nomisrev.typedapi.Validation
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.completeWith
 
+public fun <A : Any> Route.route(
+    path: String,
+    method: HttpMethod,
+    endpoint: (EndpointAPI) -> A,
+    block: suspend RoutingContext.(A) -> Unit,
+) =
+    route(path, method) {
+        handle {
+            val api = ServerEndpointAPI(this)
+            val value = endpoint(api)
+            api.bodyInput?.let { input ->
+                api.body.completeWith(runCatching { call.receiveNullable(TypeInfo(input.kClass, input.kType)) })
+            }
+            block(value)
+        }
+    }
+
 private class ServerEndpointAPI(private val context: RoutingContext) : EndpointAPI {
     val body: CompletableDeferred<Any?> = CompletableDeferred()
     var bodyInput: Input.Body<*>? = null
@@ -57,22 +74,3 @@ private class ServerEndpointAPI(private val context: RoutingContext) : EndpointA
             }
         }
 }
-
-public fun <A : Any> Route.route(
-    path: String,
-    method: HttpMethod,
-    endpoint: (EndpointAPI) -> A,
-    block: suspend RoutingContext.(A) -> Unit,
-) =
-    route(path, method) {
-        handle {
-            runCatching {
-                val api = ServerEndpointAPI(this)
-                val value = endpoint(api)
-                api.bodyInput?.let { input ->
-                    api.body.completeWith(runCatching { call.receiveNullable(TypeInfo(input.kClass, input.kType)) })
-                }
-                block(value)
-            }.onFailure { it.printStackTrace() }.getOrThrow()
-        }
-    }

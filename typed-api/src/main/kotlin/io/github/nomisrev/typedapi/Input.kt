@@ -39,11 +39,10 @@ sealed interface Input<A> {
         override val info: Info<A>?,
     ) : Input<A>
 
-    fun name(): String? =
-        when (this) {
-            is Path<*> -> name
-            is Query<*> -> name
-            is Body<*> -> null
-            is Header<*> -> name
-        }
+    fun name(): String? = when (this) {
+        is Path<*> -> name
+        is Query<*> -> name
+        is Body<*> -> null
+        is Header<*> -> name
+    }
 }

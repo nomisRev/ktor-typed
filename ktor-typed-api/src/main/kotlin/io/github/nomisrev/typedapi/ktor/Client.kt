@@ -1,7 +1,6 @@
 package io.github.nomisrev.typedapi.ktor
 
 import io.ktor.client.HttpClient
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.request
@@ -11,65 +10,37 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
-import io.ktor.server.plugins.MissingRequestParameterException
-import io.github.nomisrev.typedapi.DelegateProvider
-import io.github.nomisrev.typedapi.EndpointAPI
 import io.github.nomisrev.typedapi.Input
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty1
-import kotlin.reflect.full.memberProperties
+import io.github.nomisrev.typedapi.Request
+import io.github.nomisrev.typedapi.buildRequest
 
-class ClientAPI<A : Any, B : Any>(
-    val request: Request<A, B>,
+suspend fun <A, B> HttpClient.request(
+    request: Request<A, B>,
     path: String,
-    val builder: HttpRequestBuilder
-) : EndpointAPI {
-    private var currentUrl = path
-    val properties = request.properties
-
-    fun build(): Unit {
-        request.create(this)
-        builder.url.takeFrom(currentUrl)
-    }
-
-    override fun <A> input(input: Input<A>): DelegateProvider<A> = DelegateProvider { _, prop ->
-        val name = input.name() ?: prop.name
-        val property = properties[prop.name] ?: throw IllegalArgumentException("Property ${prop.name} not found")
-        val value = property.get(request.input) as? A
+    method: HttpMethod,
+): HttpResponse = request {
+    var currentUrl = path
+    request.build { name, value, input ->
         when (input) {
             // TODO: How to parameterise ContentType.
             is Input.Body<*> -> value?.let {
-                builder.contentType(ContentType.Application.Json)
-                builder.setBody(value)
+                contentType(ContentType.Application.Json)
+                setBody(value)
             }
 
             is Input.Path<*> -> currentUrl = currentUrl.replace("{${name}}", value.toString())
-            is Input.Header<*> -> builder.header(name, value)
-            is Input.Query<*> -> builder.parameter(name, value)
-        }
-
-        ReadOnlyProperty { _, _ ->
-            if (value == null && input.kType.isMarkedNullable) null as A
-            else value ?: throw MissingRequestParameterException(name)
+            is Input.Header<*> -> header(name, value)
+            is Input.Query<*> -> parameter(name, value)
         }
     }
+    url.takeFrom(currentUrl)
+    this.method = method
 }
 
-class Request<A, B>(val input: A, val create: (EndpointAPI) -> B, val properties: Map<String, KProperty1<A, *>>)
+suspend fun <A : Any, B : Any> HttpClient.get(path: String, request: Request<A, B>): HttpResponse =
+    request(request, path, HttpMethod.Get)
 
-inline fun <reified A : Any, B> Request(input: A, noinline create: (EndpointAPI) -> B) =
-    Request(input, create, A::class.memberProperties.associateBy { it.name })
+suspend fun <A : Any, B : Any> HttpClient.post(path: String, request: Request<A, B>): HttpResponse =
+    request(request, path, HttpMethod.Post)
 
-suspend fun <A : Any, B : Any> HttpClient.get(path: String, request: Request<A, B>): HttpResponse {
-    return request {
-        method = HttpMethod.Get
-        ClientAPI(request, path, this).build()
-    }
-}
-
-suspend fun <A : Any, B : Any> HttpClient.post(path: String, request: Request<A, B>): HttpResponse {
-    return request {
-        method = HttpMethod.Post
-        ClientAPI(request, path, this).build()
-    }
-}
+// TODO Add missing overloads
