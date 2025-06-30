@@ -7,7 +7,7 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.testing.testApplication
-import io.github.nomisrev.typedapi.ktor.Request
+import io.github.nomisrev.typedapi.Request
 import io.github.nomisrev.typedapi.ktor.get
 import io.github.nomisrev.typedapi.ktor.route
 import kotlinx.serialization.Serializable
@@ -17,7 +17,6 @@ import kotlin.test.assertEquals
 
 // Using the post extension function defined in InputTest.kt
 
-@Endpoint
 class ClientTestApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()
@@ -93,7 +92,6 @@ class ClientTest {
 
     @Test
     fun testClientRequestWithNullableParameters() = testApplication {
-        @Endpoint
         class NullableParamsApi(api: EndpointAPI) {
             val id: Int by api.path<Int>()
             val name: String? by api.query<String?>()
@@ -106,8 +104,14 @@ class ClientTest {
             val name: String?,
             val header: String?
         ) {
-            fun request(): Request<NullableParams, NullableParamsApi> =
-                Request(this, ::NullableParamsApi)
+            fun request(): Request<NullableParams, NullableParamsApi> {
+                val properties = mapOf(
+                    "id" to NullableParams::id,
+                    "name" to NullableParams::name,
+                    "header" to NullableParams::header
+                )
+                return Request(this, ::NullableParamsApi, properties)
+            }
         }
 
         @Serializable

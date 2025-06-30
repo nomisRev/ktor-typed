@@ -19,7 +19,6 @@ The Ktor Typed API module extends the core Typed API module to provide integrati
 ### Server-side
 
 ```kotlin
-@Endpoint
 class UserApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()

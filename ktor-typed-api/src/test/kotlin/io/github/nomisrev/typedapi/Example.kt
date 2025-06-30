@@ -5,7 +5,8 @@ import io.ktor.http.HttpMethod
 import io.github.nomisrev.typedapi.ktor.route
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
-import io.github.nomisrev.typedapi.ktor.Request
+import io.github.nomisrev.typedapi.Request
+import io.github.nomisrev.typedapi.properties
 import io.github.nomisrev.typedapi.ktor.get
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
@@ -46,8 +47,6 @@ private val profileProperties: Map<String, KProperty1<Profile, *>> = properties(
     Profile::json
 )
 
-fun <A> properties(vararg properties: KProperty1<A, *>): Map<String, KProperty1<A, *>> =
-    properties.associateBy { it.name }
 
 @Serializable
 data class TestBody(val value: String)

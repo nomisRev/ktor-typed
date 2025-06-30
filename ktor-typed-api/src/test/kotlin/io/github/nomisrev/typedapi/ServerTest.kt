@@ -7,15 +7,16 @@ import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.github.nomisrev.typedapi.ktor.Request
+import io.github.nomisrev.typedapi.Request
+import io.github.nomisrev.typedapi.properties
 import io.github.nomisrev.typedapi.ktor.get
 import io.github.nomisrev.typedapi.ktor.post
 import io.github.nomisrev.typedapi.ktor.route
 import kotlinx.serialization.Serializable
+import kotlin.reflect.full.memberProperties
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@Endpoint
 class ServerTestApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()
@@ -26,8 +27,13 @@ data class ServerTestParams(
     val id: Int,
     val name: String
 ) {
-    fun request(): Request<ServerTestParams, ServerTestApi> =
-        Request(this, ::ServerTestApi)
+    fun request(): Request<ServerTestParams, ServerTestApi> {
+        val props = properties(
+            ServerTestParams::id,
+            ServerTestParams::name
+        )
+        return Request(this, ::ServerTestApi, props)
+    }
 }
 
 @Serializable
@@ -68,26 +74,28 @@ class ServerTest {
     
     @Test
     fun testMultipleRoutes() = testApplication {
-        @Endpoint
         class Route1Api(api: EndpointAPI) {
             val id: Int by api.path<Int>()
         }
         
-        @Endpoint
         class Route2Api(api: EndpointAPI) {
             val name: String by api.query<String>()
         }
         
         @Serializable
         data class Route1Params(val id: Int) {
-            fun request(): Request<Route1Params, Route1Api> =
-                Request(this, ::Route1Api)
+            fun request(): Request<Route1Params, Route1Api> {
+                val props = properties(Route1Params::id)
+                return Request(this, ::Route1Api, props)
+            }
         }
         
         @Serializable
         data class Route2Params(val name: String) {
-            fun request(): Request<Route2Params, Route2Api> =
-                Request(this, ::Route2Api)
+            fun request(): Request<Route2Params, Route2Api> {
+                val props = properties(Route2Params::name)
+                return Request(this, ::Route2Api, props)
+            }
         }
         
         @Serializable
@@ -131,12 +139,10 @@ class ServerTest {
         @Serializable
         data class ServerTestBody(val value: String)
         
-        @Endpoint
         class GetApi(api: EndpointAPI) {
             val id: Int by api.path<Int>()
         }
         
-        @Endpoint
         class PostApi(api: EndpointAPI) {
             val id: Int by api.path<Int>()
             val body: ServerTestBody by api.body<ServerTestBody>()
@@ -145,13 +151,13 @@ class ServerTest {
         @Serializable
         data class GetParams(val id: Int) {
             fun request(): Request<GetParams, GetApi> =
-                Request(this, ::GetApi)
+                Request(this, ::GetApi, properties(GetParams::id))
         }
         
         @Serializable
         data class PostParams(val id: Int, val body: ServerTestBody) {
             fun request(): Request<PostParams, PostApi> =
-                Request(this, ::PostApi)
+                Request(this, ::PostApi, properties(PostParams::id, PostParams::body))
         }
         
         @Serializable
