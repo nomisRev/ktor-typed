@@ -459,7 +459,7 @@ Add to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation(project(":ktor-route-delegation-api"))
+    implementation(project(":ktor-typed-api"))
 }
 ```
 

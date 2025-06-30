@@ -1,4 +1,3 @@
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -11,10 +10,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ktor-tapir"
-//include("ktor-route-simple")
-//include("ktor-route-fastapi")
-include("ktor-route-delegation-api")
-include("ktor-route-fast-api")
-include("ktor-auth")
-include("ktor-yaml-converter")
+rootProject.name = "ktor-typed-api"
+include("ktor-typed-api")

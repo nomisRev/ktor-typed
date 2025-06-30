@@ -32,5 +32,5 @@ koverReport {
 }
 
 dependencies {
-    kover(project(":ktor-route-delegation-api"))
+    kover(project(":ktor-typed-api"))
 }
