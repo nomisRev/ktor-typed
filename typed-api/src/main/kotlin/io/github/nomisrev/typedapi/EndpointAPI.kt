@@ -1,5 +1,7 @@
 package io.github.nomisrev.typedapi
 
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 interface EndpointAPI {
@@ -31,3 +33,7 @@ inline fun <reified A> EndpointAPI.header(
 inline fun <reified A> EndpointAPI.body(
     info: Info<A>? = null
 ): DelegateProvider<A> = input(Input.Body(A::class, typeOf<A>(), info))
+
+fun interface DelegateProvider<A> {
+    operator fun provideDelegate(thisRef: Any?, prop: KProperty<*>): ReadOnlyProperty<Any?, A>
+}

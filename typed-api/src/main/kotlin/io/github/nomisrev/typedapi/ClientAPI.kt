@@ -10,10 +10,13 @@ class Request<A, B>(val value: A, val create: (EndpointAPI) -> B, val properties
                 val name = input.name() ?: prop.name
                 val property =
                     properties[prop.name] ?: throw IllegalArgumentException("Property ${prop.name} not found")
+
+                @Suppress("UNCHECKED_CAST")
                 val value = property.get(value) as? A
                 builder(name, value, input)
 
                 ReadOnlyProperty { _, _ ->
+                    @Suppress("UNCHECKED_CAST")
                     if (value == null && input.kType.isMarkedNullable) null as A
                     else value ?: throw IllegalStateException(name)
                 }
