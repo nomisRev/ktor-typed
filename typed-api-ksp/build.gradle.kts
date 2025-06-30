@@ -1,7 +1,5 @@
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization")
-    kotlin("plugin.power-assert")
     id("org.jetbrains.kotlinx.kover")
 }
 
@@ -15,8 +13,9 @@ java {
 }
 
 dependencies {
-    api(libs.kotlinx.serialization)
-    api(libs.kotlinx.coroutines)
+    implementation(libs.ksp.api)
+    implementation("com.squareup:kotlinpoet:1.16.0")
+    implementation("com.squareup:kotlinpoet-ksp:1.16.0")
     
     testImplementation(kotlin("test"))
     testImplementation("org.junit.platform:junit-platform-launcher:1.10.1")

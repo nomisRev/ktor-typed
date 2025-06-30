@@ -4,6 +4,7 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
@@ -13,3 +14,4 @@ dependencyResolutionManagement {
 rootProject.name = "typed-api"
 include("typed-api")
 include("ktor-typed-api")
+include("typed-api-ksp")

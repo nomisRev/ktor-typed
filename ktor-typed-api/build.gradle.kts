@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.serialization")
     kotlin("plugin.power-assert")
     id("org.jetbrains.kotlinx.kover")
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -20,6 +21,7 @@ dependencies {
     api("io.ktor:ktor-client-core:3.1.3")
     api("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
 
+    kspTest(project(":typed-api-ksp"))
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:3.1.3")
     testImplementation("io.ktor:ktor-client-content-negotiation:3.1.3")
