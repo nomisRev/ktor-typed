@@ -1,4 +1,4 @@
-package io.ktor.route.fastapi
+package io.github.nomisrev.typedapi.ktor
 
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.MissingRequestParameterException
@@ -6,57 +6,16 @@ import io.ktor.server.plugins.ParameterConversionException
 import io.ktor.server.routing.RoutingContext
 import io.ktor.util.converters.DefaultConversionService
 import io.ktor.util.reflect.TypeInfo
+import io.github.nomisrev.typedapi.Info
+import io.github.nomisrev.typedapi.Validation
+import io.github.nomisrev.typedapi.ValidationBuilder
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.collections.mutableListOf
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-
-sealed interface Input<A> {
-    val kClass: KClass<*>
-    val kType: KType
-    val info: Info<A>?
-
-    class Path<A>(
-        val name: String?,
-        val validation: Validation<A>?,
-        override val kClass: KClass<*>,
-        override val kType: KType,
-        override val info: Info<A>?,
-    ) : Input<A>
-
-    class Query<A>(
-        val name: String?,
-        val validation: Validation<A>?,
-        override val kClass: KClass<*>,
-        override val kType: KType,
-        override val info: Info<A>?,
-    ) : Input<A>
-
-    class Header<A>(
-        val name: String?,
-        val casing: (String) -> String,
-        val validation: Validation<A>?,
-        override val kClass: KClass<*>,
-        override val kType: KType,
-        override val info: Info<A>?,
-    ) : Input<A>
-
-    class Body<A>(
-        override val kClass: KClass<*>,
-        override val kType: KType,
-        override val info: Info<A>?,
-    ) : Input<A>
-
-    fun name(): String? =
-        when (this) {
-            is Path<*> -> name
-            is Query<*> -> name
-            is Body<*> -> null
-            is Header<*> -> name
-        }
-}
 
 interface InputDelegate<A> : ReadOnlyProperty<Any?, A> {
     val kClass: KClass<*>

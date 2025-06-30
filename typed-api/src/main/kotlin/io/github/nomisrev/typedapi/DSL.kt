@@ -1,10 +1,8 @@
-package io.ktor.route.fastapi
+package io.github.nomisrev.typedapi
 
-import io.ktor.route.fastapi.Input.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
-import kotlin.text.split
 
 @DslMarker
 annotation class Endpoint
@@ -30,7 +28,7 @@ inline fun <reified A> EndpointAPI.path(
     validation: Validation<A>? = null,
     info: Info<A>? = null
 ): DelegateProvider<A> =
-    input(Path(name, validation, A::class, typeOf<A>(), info))
+    input(Input.Path(name, validation, A::class, typeOf<A>(), info))
 
 @Endpoint
 inline fun <reified A> EndpointAPI.query(
@@ -38,7 +36,7 @@ inline fun <reified A> EndpointAPI.query(
     validation: Validation<A>? = null,
     info: Info<A>? = null
 ): DelegateProvider<A> =
-    input(Query(name, validation, A::class, typeOf<A>(), info))
+    input(Input.Query(name, validation, A::class, typeOf<A>(), info))
 
 @Endpoint
 inline fun <reified A> EndpointAPI.header(
@@ -47,9 +45,9 @@ inline fun <reified A> EndpointAPI.header(
         { it.split(Regex("(?=[A-Z])")).joinToString("-") { it.replaceFirstChar { c -> c.uppercase() } } },
     validation: Validation<A>? = null,
     info: Info<A>? = null
-): DelegateProvider<A> = input(Header(name, toHeaderCase, validation, A::class, typeOf<A>(), info))
+): DelegateProvider<A> = input(Input.Header(name, toHeaderCase, validation, A::class, typeOf<A>(), info))
 
 @Endpoint
 inline fun <reified A> EndpointAPI.body(
     info: Info<A>? = null
-): DelegateProvider<A> = input(Body(A::class, typeOf<A>(), info))
+): DelegateProvider<A> = input(Input.Body(A::class, typeOf<A>(), info))

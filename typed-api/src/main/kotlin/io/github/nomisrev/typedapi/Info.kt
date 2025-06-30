@@ -1,4 +1,4 @@
-package io.ktor.route.fastapi
+package io.github.nomisrev.typedapi
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer

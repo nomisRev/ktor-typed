@@ -1,13 +1,16 @@
-package io.ktor.route.fastapi
+package io.github.nomisrev.typedapi
 
 import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
 import io.ktor.server.testing.testApplication
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.github.nomisrev.typedapi.ktor.Request
+import io.github.nomisrev.typedapi.ktor.get
+import io.github.nomisrev.typedapi.ktor.post
+import io.github.nomisrev.typedapi.ktor.route
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +26,7 @@ data class ServerTestParams(
     val id: Int,
     val name: String
 ) {
-    fun request(): Request<ServerTestParams, ServerTestApi> = 
+    fun request(): Request<ServerTestParams, ServerTestApi> =
         Request(this, ::ServerTestApi)
 }
 
@@ -77,13 +80,13 @@ class ServerTest {
         
         @Serializable
         data class Route1Params(val id: Int) {
-            fun request(): Request<Route1Params, Route1Api> = 
+            fun request(): Request<Route1Params, Route1Api> =
                 Request(this, ::Route1Api)
         }
         
         @Serializable
         data class Route2Params(val name: String) {
-            fun request(): Request<Route2Params, Route2Api> = 
+            fun request(): Request<Route2Params, Route2Api> =
                 Request(this, ::Route2Api)
         }
         
@@ -106,7 +109,7 @@ class ServerTest {
             install(ClientContentNegotiation) { json() }
         }
         
-        // Test route1
+        // io.github.nomisrev.typedapi.Test route1
         val route1Params = Route1Params(123)
         val route1Response = client.get("/route1/{id}", route1Params.request())
             .body<RouteResponse>()
@@ -114,7 +117,7 @@ class ServerTest {
         assertEquals("route1", route1Response.route)
         assertEquals("123", route1Response.value)
         
-        // Test route2
+        // io.github.nomisrev.typedapi.Test route2
         val route2Params = Route2Params("test-name")
         val route2Response = client.get("/route2", route2Params.request())
             .body<RouteResponse>()
@@ -141,13 +144,13 @@ class ServerTest {
         
         @Serializable
         data class GetParams(val id: Int) {
-            fun request(): Request<GetParams, GetApi> = 
+            fun request(): Request<GetParams, GetApi> =
                 Request(this, ::GetApi)
         }
         
         @Serializable
         data class PostParams(val id: Int, val body: ServerTestBody) {
-            fun request(): Request<PostParams, PostApi> = 
+            fun request(): Request<PostParams, PostApi> =
                 Request(this, ::PostApi)
         }
         
@@ -170,7 +173,7 @@ class ServerTest {
             install(ClientContentNegotiation) { json() }
         }
         
-        // Test GET
+        // io.github.nomisrev.typedapi.Test GET
         val getParams = GetParams(123)
         val getResponse = client.get("/method-test/{id}", getParams.request())
             .body<MethodResponse>()
@@ -178,7 +181,7 @@ class ServerTest {
         assertEquals("GET", getResponse.method)
         assertEquals(123, getResponse.id)
         
-        // Test POST
+        // io.github.nomisrev.typedapi.Test POST
         val postBody = ServerTestBody("test-value")
         val postParams = PostParams(456, postBody)
         val postResponse = client.post("/method-test/{id}", postParams.request())

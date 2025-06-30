@@ -1,15 +1,12 @@
+package io.github.nomisrev.typedapi
+
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
-import io.ktor.route.fastapi.EndpointAPI
-import io.ktor.route.fastapi.header
-import io.ktor.route.fastapi.path
-import io.ktor.route.fastapi.query
-import io.ktor.route.fastapi.route
+import io.github.nomisrev.typedapi.ktor.route
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
-import io.ktor.route.fastapi.Request
-import io.ktor.route.fastapi.body
-import io.ktor.route.fastapi.get
+import io.github.nomisrev.typedapi.ktor.Request
+import io.github.nomisrev.typedapi.ktor.get
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.testing.testApplication
@@ -34,7 +31,11 @@ data class Profile(
     val userAgent: String,
     val json: TestBody
 ) {
-    fun request(): Request<Profile, ProfileApi> = Request(this, ::ProfileApi, profileProperties)
+    fun request(): Request<Profile, ProfileApi> = Request(
+        this,
+        ::ProfileApi,
+        profileProperties
+    )
 }
 
 private val profileProperties: Map<String, KProperty1<Profile, *>> = properties(

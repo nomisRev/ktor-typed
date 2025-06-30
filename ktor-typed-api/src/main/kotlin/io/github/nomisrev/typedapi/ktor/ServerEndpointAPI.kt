@@ -1,13 +1,17 @@
-package io.ktor.route.fastapi
+package io.github.nomisrev.typedapi.ktor
 
 import io.ktor.http.HttpMethod
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.route
 import io.ktor.util.reflect.TypeInfo
+import io.github.nomisrev.typedapi.DelegateProvider
+import io.github.nomisrev.typedapi.EndpointAPI
+import io.github.nomisrev.typedapi.Info
+import io.github.nomisrev.typedapi.Input
+import io.github.nomisrev.typedapi.Validation
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.completeWith
-import kotlin.properties.ReadOnlyProperty
 
 private class ServerEndpointAPI(private val context: RoutingContext) : EndpointAPI {
     val body: CompletableDeferred<Any?> = CompletableDeferred()

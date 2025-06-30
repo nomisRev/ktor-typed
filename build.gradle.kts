@@ -32,5 +32,6 @@ koverReport {
 }
 
 dependencies {
+    kover(project(":typed-api"))
     kover(project(":ktor-typed-api"))
 }

@@ -1,4 +1,4 @@
-package io.ktor.route.fastapi
+package io.github.nomisrev.typedapi.ktor
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
@@ -12,6 +12,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.ktor.server.plugins.MissingRequestParameterException
+import io.github.nomisrev.typedapi.DelegateProvider
+import io.github.nomisrev.typedapi.EndpointAPI
+import io.github.nomisrev.typedapi.Input
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
@@ -60,6 +63,13 @@ inline fun <reified A : Any, B> Request(input: A, noinline create: (EndpointAPI)
 suspend fun <A : Any, B : Any> HttpClient.get(path: String, request: Request<A, B>): HttpResponse {
     return request {
         method = HttpMethod.Get
+        ClientAPI(request, path, this).build()
+    }
+}
+
+suspend fun <A : Any, B : Any> HttpClient.post(path: String, request: Request<A, B>): HttpResponse {
+    return request {
+        method = HttpMethod.Post
         ClientAPI(request, path, this).build()
     }
 }

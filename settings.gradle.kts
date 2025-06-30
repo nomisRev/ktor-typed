@@ -10,5 +10,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ktor-typed-api"
+rootProject.name = "typed-api"
+include("typed-api")
 include("ktor-typed-api")
