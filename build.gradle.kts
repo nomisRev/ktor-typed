@@ -33,4 +33,5 @@ koverReport {
 dependencies {
     kover(project(":typed-api"))
     kover(project(":ktor-typed-api"))
+    kover(project(":spring-webflux-typed-api"))
 }

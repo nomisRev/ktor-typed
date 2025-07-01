@@ -36,12 +36,11 @@ public fun <A : Any> Route.route(
         ?: typeInfo.type.findAnnotation<Endpoint>())?.path
         ?: throw IllegalArgumentException("Missing @Endpoint annotation")
 
-    val api = ServerEndpointAPI(path)
-    val value = endpoint(api)
-    route(api.path, method) {
+    route(path, method) {
         handle {
+            val api = ServerEndpointAPI(this)
+            val value = endpoint(api)
             runCatching {
-                api.context = this
                 api.bodyInput?.let { input ->
                     api.body.completeWith(runCatching { call.receiveNullable(TypeInfo(input.kClass, input.kType)) })
                 }
@@ -74,10 +73,9 @@ public inline fun <reified A : Any> Route.route(
     noinline block: suspend RoutingContext.(A) -> Unit,
 ) = route(typeInfo<A>(), method, endpoint, block)
 
-private class ServerEndpointAPI(var path: String) : EndpointAPI {
+private class ServerEndpointAPI(private val context: RoutingContext) : EndpointAPI {
     val body: CompletableDeferred<Any?> = CompletableDeferred()
     var bodyInput: Input.Body<*>? = null
-    var context: RoutingContext by Delegates.notNull()
 
     override fun <A> input(input: Input<A>): DelegateProvider<A> =
         DelegateProvider { _, _ ->
@@ -103,7 +101,6 @@ private class ServerEndpointAPI(var path: String) : EndpointAPI {
                 is Input.Path<*> -> ReadOnlyProperty<Any?, A> { _, property ->
                     val name = input.name ?: property.name
                     val values = context.call.pathParameters.getAll(name)
-                    path.replace("{${name}}", values!!.single())
                     getParameter<A>(
                         values,
                         name,
