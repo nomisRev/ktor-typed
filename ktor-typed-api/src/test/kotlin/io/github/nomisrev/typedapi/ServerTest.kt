@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@Endpoint
+@Endpoint(path = "/server-test/{id}")
 class SimpleTestApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()
@@ -27,22 +27,22 @@ data class ServerTestResponse(
     val message: String
 )
 
-@Endpoint
+@Endpoint(path = "/route1/{id}")
 class Route1Api(api: EndpointAPI) {
     val id: Int by api.path<Int>()
 }
 
-@Endpoint
+@Endpoint(path = "/route2")
 class Route2Api(api: EndpointAPI) {
     val name: String by api.query<String>()
 }
 
-@Endpoint
+@Endpoint(path = "/method-test/{id}")
 class GetApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
 }
 
-@Endpoint
+@Endpoint(path = "/method-test/{id}")
 class PostApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val body: ServerTestBody by api.body<ServerTestBody>()
@@ -58,7 +58,7 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            route("/server-test/{id}", HttpMethod.Get, ::SimpleTestApi) { api ->
+            get( ::SimpleTestApi) { api ->
                 call.respond(
                     ServerTestResponse(
                         id = api.id,
@@ -74,7 +74,7 @@ class ServerTest {
         }
 
         val params = SimpleTest(123, "test-name")
-        val response = client.get("/server-test/{id}", params.request())
+        val response = client.get(params.request())
             .body<ServerTestResponse>()
 
         assertEquals(123, response.id)
@@ -90,11 +90,11 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            route("/route1/{id}", HttpMethod.Get, ::Route1Api) { api ->
+            get( ::Route1Api) { api ->
                 call.respond(RouteResponse("route1", api.id.toString()))
             }
 
-            route("/route2", HttpMethod.Get, ::Route2Api) { api ->
+            get( ::Route2Api) { api ->
                 call.respond(RouteResponse("route2", api.name))
             }
         }
@@ -105,7 +105,7 @@ class ServerTest {
 
         // io.github.nomisrev.typedapi.Test route1
         val route1Params = Route1(123)
-        val route1Response = client.get("/route1/{id}", route1Params.request())
+        val route1Response = client.get(route1Params.request())
             .body<RouteResponse>()
 
         assertEquals("route1", route1Response.route)
@@ -113,7 +113,7 @@ class ServerTest {
 
         // io.github.nomisrev.typedapi.Test route2
         val route2Params = Route2("test-name")
-        val route2Response = client.get("/route2", route2Params.request())
+        val route2Response = client.get(route2Params.request())
             .body<RouteResponse>()
 
         assertEquals("route2", route2Response.route)
@@ -128,11 +128,11 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            route("/method-test/{id}", HttpMethod.Get, ::GetApi) { api ->
+            get( ::GetApi) { api ->
                 call.respond(MethodResponse("GET", api.id))
             }
 
-            route("/method-test/{id}", HttpMethod.Post, ::PostApi) { api ->
+            post( ::PostApi) { api ->
                 call.respond(MethodResponse("POST", api.id, api.body))
             }
         }
@@ -143,7 +143,7 @@ class ServerTest {
 
         // io.github.nomisrev.typedapi.Test GET
         val getParams = Get(123)
-        val getResponse = client.get("/method-test/{id}", getParams.request())
+        val getResponse = client.get(getParams.request())
             .body<MethodResponse>()
 
         assertEquals("GET", getResponse.method)
@@ -152,7 +152,7 @@ class ServerTest {
         // io.github.nomisrev.typedapi.Test POST
         val postBody = ServerTestBody("test-value")
         val postParams = Post(456, postBody)
-        val postResponse = client.post("/method-test/{id}", postParams.request())
+        val postResponse = client.post(postParams.request())
             .body<MethodResponse>()
 
         assertEquals("POST", postResponse.method)

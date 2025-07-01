@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@Endpoint
+@Endpoint(path = "/client-test/{id}")
 class SimpleClientApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()
@@ -32,7 +32,7 @@ data class ClientTestResponse(
     val body: ClientTestBody
 )
 
-@Endpoint
+@Endpoint(path = "/nullable-test/{id}")
 class NullableParamsApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String? by api.query<String?>()
@@ -46,7 +46,7 @@ class ClientTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            route("/client-test/{id}", HttpMethod.Get, ::SimpleClientApi) { api ->
+            get( ::SimpleClientApi) { api ->
                 call.respond(
                     ClientTestResponse(
                         id = api.id,
@@ -65,7 +65,7 @@ class ClientTest {
         val testBody = ClientTestBody("test-value")
         val testParams = SimpleClient(123, "test-name", "test-header", testBody)
 
-        val response = client.get("/client-test/{id}", testParams.request())
+        val response = client.get(testParams.request())
             .body<ClientTestResponse>()
 
         assertEquals(123, response.id)
@@ -86,7 +86,7 @@ class ClientTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            route("/nullable-test/{id}", HttpMethod.Get, ::NullableParamsApi) { api ->
+            get( ::NullableParamsApi) { api ->
                 call.respond(
                     NullableResponse(
                         id = api.id,
@@ -104,7 +104,7 @@ class ClientTest {
         // io.github.nomisrev.typedapi.Test with null values
         val nullParams = NullableParams(123, null, null)
 
-        val nullResponse = client.get("/nullable-test/{id}", nullParams.request())
+        val nullResponse = client.get(nullParams.request())
             .body<NullableResponse>()
 
         assertEquals(123, nullResponse.id)
@@ -114,7 +114,7 @@ class ClientTest {
         // io.github.nomisrev.typedapi.Test with non-null values
         val nonNullParams = NullableParams(456, "test-name", "test-header")
 
-        val nonNullResponse = client.get("/nullable-test/{id}", nonNullParams.request())
+        val nonNullResponse = client.get(nonNullParams.request())
             .body<NullableResponse>()
 
         assertEquals(456, nonNullResponse.id)

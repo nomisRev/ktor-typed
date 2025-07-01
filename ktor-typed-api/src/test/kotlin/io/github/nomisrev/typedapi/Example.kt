@@ -12,7 +12,7 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
 
-@Endpoint
+@Endpoint(path = "/profile/{profileId}")
 class ProfileApi(api: EndpointAPI) {
     val profileId: Int by api.path<Int>()
     val name by api.query<String>()
@@ -29,13 +29,13 @@ class Test {
     fun example() = testApplication {
         routing {
             install(ContentNegotiation) { json() }
-            route("/profile/{profileId}", HttpMethod.Get, ::ProfileApi) { api ->
+            route(HttpMethod.Get, ::ProfileApi) { api ->
                 call.respond(Profile(api.profileId, api.name, api.email, api.userAgent, api.json))
             }
         }
         createClient {
             install(ClientContentNegotiation) { json() }
-        }.get("/profile/{profileId}", Profile(1, "name", null, "userAgent", TestBody("test")).request())
+        }.get(Profile(1, "name", null, "userAgent", TestBody("test")).request())
             .body<Profile>()
     }
 }

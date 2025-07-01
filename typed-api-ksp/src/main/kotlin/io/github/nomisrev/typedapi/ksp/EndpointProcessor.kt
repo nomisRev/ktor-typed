@@ -8,6 +8,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.util.*
+import com.google.devtools.ksp.getAnnotationsByType
 
 val Endpoint = ClassName("io.github.nomisrev.typedapi", "Endpoint")
 val EndpointAPI = ClassName("io.github.nomisrev.typedapi", "EndpointAPI")
@@ -36,6 +37,14 @@ class EndpointProcessor(
     private fun processEndpointClass(classDeclaration: KSClassDeclaration) {
         val className = classDeclaration.simpleName.asString()
         val packageName = classDeclaration.packageName.asString()
+
+        // Extract path from the Endpoint annotation
+        val path = classDeclaration.annotations
+            .filter { it.shortName.asString() == "Endpoint" }
+            .firstOrNull()
+            ?.arguments
+            ?.find { it.name?.asString() == "path" }
+            ?.value as? String ?: ""
 
         // Get all properties from the class
         val properties = classDeclaration.getAllProperties()
@@ -90,12 +99,14 @@ class EndpointProcessor(
                 return %T(
                     this,
                     ::%L,
-                    %LProperties
+                    %LProperties,
+                    %S
                 )
                 """.trimIndent(),
                 ClassName("io.github.nomisrev.typedapi", "Request"),
                 className,
-                dataClassName.replaceFirstChar { it.lowercase(Locale.getDefault()) }
+                dataClassName.replaceFirstChar { it.lowercase(Locale.getDefault()) },
+                path
             )
 
         dataClassBuilder.addFunction(requestFunctionBuilder.build())

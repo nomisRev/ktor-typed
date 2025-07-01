@@ -12,17 +12,18 @@ import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.Request
+import io.ktor.client.plugins.pluginOrNull
 
 suspend fun <A, B> HttpClient.request(
     request: Request<A, B>,
-    path: String,
     method: HttpMethod,
 ): HttpResponse = request {
-    var currentUrl = path
+    var currentUrl = request.path
     request.build { name, value, input ->
+
         when (input) {
-            // TODO: How to parameterise ContentType.
             is Input.Body<*> -> value?.let {
+                // TODO parameterise, or collect from ContentNegotiation
                 contentType(ContentType.Application.Json)
                 setBody(value)
             }
@@ -36,10 +37,8 @@ suspend fun <A, B> HttpClient.request(
     this.method = method
 }
 
-suspend fun <A : Any, B : Any> HttpClient.get(path: String, request: Request<A, B>): HttpResponse =
-    request(request, path, HttpMethod.Get)
+suspend fun <A : Any, B : Any> HttpClient.get(request: Request<A, B>): HttpResponse =
+    request(request, HttpMethod.Get)
 
-suspend fun <A : Any, B : Any> HttpClient.post(path: String, request: Request<A, B>): HttpResponse =
-    request(request, path, HttpMethod.Post)
-
-// TODO Add missing overloads
+suspend fun <A : Any, B : Any> HttpClient.post(request: Request<A, B>): HttpResponse =
+    request(request, HttpMethod.Post)
