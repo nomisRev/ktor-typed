@@ -51,6 +51,9 @@ class EndpointProcessor(
             .filter { it.extensionReceiver == null }
             .toList()
 
+        // Validate path parameters match property names
+        validatePathParameters(path, properties, classDeclaration)
+
         // Generate the data class name (remove "Api" suffix if present)
         val dataClassName = if (className.endsWith("Api", ignoreCase = true)) {
             className.substring(0, className.length - 3)
@@ -149,6 +152,45 @@ class EndpointProcessor(
             .build()
 
         fileSpec.writeTo(codeGenerator, Dependencies(true, classDeclaration.containingFile!!))
+    }
+
+    private fun validatePathParameters(path: String, properties: List<KSPropertyDeclaration>, classDeclaration: KSClassDeclaration) {
+        // Extract path parameter names from the path (e.g., "{profileId}" -> "profileId")
+        val pathParameterNames = extractPathParameterNames(path)
+        
+        if (pathParameterNames.isEmpty()) {
+            return // No path parameters to validate
+        }
+
+        // Get all property names from the class
+        val propertyNames = properties.map { it.simpleName.asString() }.toSet()
+
+        // Find path parameters that don't have corresponding properties
+        val missingProperties = pathParameterNames.filter { paramName ->
+            paramName !in propertyNames
+        }
+
+        if (missingProperties.isNotEmpty()) {
+            val className = classDeclaration.simpleName.asString()
+            val missingPropsStr = missingProperties.joinToString(", ")
+            val foundPropsStr = propertyNames.joinToString(", ")
+            
+            logger.error(
+                "Path parameter validation failed for class $className:\n" +
+                "Path: '$path'\n" +
+                "Missing properties for path parameters: [$missingPropsStr]\n" +
+                "Available properties: [$foundPropsStr]\n" +
+                "Each path parameter in the @Endpoint path must have a corresponding property with the same name.",
+                classDeclaration
+            )
+        }
+    }
+
+    private fun extractPathParameterNames(path: String): List<String> {
+        val parameterRegex = Regex("\\{([^}]+)\\}")
+        return parameterRegex.findAll(path)
+            .map { it.groupValues[1] }
+            .toList()
     }
 }
 
