@@ -1,8 +1,7 @@
 package io.github.nomisrev.typedapi
 
-import io.github.nomisrev.typedapi.spring.get
+import io.github.nomisrev.typedapi.spring.GET
 import kotlinx.serialization.Serializable
-import org.springframework.http.HttpMethod
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
@@ -23,9 +22,9 @@ class Test {
     @Test
     fun example() {
         val router = router {
-            add(get(::ProfileApi) { api ->
+            GET(::ProfileApi) { api ->
                 ServerResponse.ok().bodyValue(Profile(api.profileId, api.name, api.email, api.userAgent))
-            })
+            }
         }
 
         val client = WebTestClient.bindToRouterFunction(router).build()

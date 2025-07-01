@@ -33,10 +33,10 @@ suspend fun <A, B> WebClient.request(
     return builder.uri(currentUrl).retrieve()
 }
 
-suspend fun <A : Any, B : Any> WebClient.get(request: Request<A, B>): WebClient.ResponseSpec =
+suspend fun <A : Any, B : Any> WebClient.GET(request: Request<A, B>): WebClient.ResponseSpec =
     request(request, HttpMethod.GET)
 
-suspend fun <A : Any, B : Any> WebClient.post(request: Request<A, B>): WebClient.ResponseSpec =
+suspend fun <A : Any, B : Any> WebClient.POST(request: Request<A, B>): WebClient.ResponseSpec =
     request(request, HttpMethod.POST)
 
 suspend fun <A : Any, B : Any> WebClient.put(request: Request<A, B>): WebClient.ResponseSpec =

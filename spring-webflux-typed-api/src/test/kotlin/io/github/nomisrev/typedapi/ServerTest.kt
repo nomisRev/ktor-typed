@@ -1,13 +1,13 @@
 package io.github.nomisrev.typedapi
 
-import io.github.nomisrev.typedapi.spring.get
-import io.github.nomisrev.typedapi.spring.post
+import io.github.nomisrev.typedapi.spring.GET
+import io.github.nomisrev.typedapi.spring.POST
 import kotlinx.serialization.Serializable
-import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.http.MediaType
+import org.springframework.test.web.reactive.server.WebTestClient.bindToRouterFunction
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @Endpoint(path = "/server-test/{id}")
 class SimpleTestApi(api: EndpointAPI) {
@@ -51,29 +51,21 @@ class ServerTest {
     @Test
     fun testBasicRouteHandling() {
         val router = router {
-            add(get(::SimpleTestApi) { api ->
-                ServerResponse.ok().bodyValue(
-                    ServerTestResponse(
-                        id = api.id,
-                        name = api.name,
-                        message = "Success"
-                    )
-                )
-            })
+            GET(::SimpleTestApi) { api ->
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(ServerTestResponse(id = api.id, name = api.name, message = "Success"))
+            }
         }
 
-        val client = WebTestClient.bindToRouterFunction(router).build()
+        val client = bindToRouterFunction(router).build()
 
         client.get()
             .uri("/server-test/123?name=test-name")
             .exchange()
             .expectStatus().isOk
             .expectBody(ServerTestResponse::class.java)
-            .value { response ->
-                assertEquals(123, response.id)
-                assertEquals("test-name", response.name)
-                assertEquals("Success", response.message)
-            }
+            .isEqualTo(ServerTestResponse(id = 123, name = "test-name", message = "Success"))
     }
 
     @Test
@@ -82,16 +74,20 @@ class ServerTest {
         data class RouteResponse(val route: String, val value: String)
 
         val router = router {
-            add(get(::Route1Api) { api ->
-                ServerResponse.ok().bodyValue(RouteResponse("route1", api.id.toString()))
-            })
+            GET(::Route1Api) { api ->
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(RouteResponse("route1", api.id.toString()))
+            }
 
-            add(get(::Route2Api) { api ->
-                ServerResponse.ok().bodyValue(RouteResponse("route2", api.name))
-            })
+            GET(::Route2Api) { api ->
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(RouteResponse("route2", api.name))
+            }
         }
 
-        val client = WebTestClient.bindToRouterFunction(router).build()
+        val client = bindToRouterFunction(router).build()
 
         // Test route1
         client.get()
@@ -99,21 +95,14 @@ class ServerTest {
             .exchange()
             .expectStatus().isOk
             .expectBody(RouteResponse::class.java)
-            .value { response ->
-                assertEquals("route1", response.route)
-                assertEquals("123", response.value)
-            }
+            .isEqualTo(RouteResponse("route1", "123"))
 
-        // Test route2
         client.get()
             .uri("/route2?name=test-name")
             .exchange()
             .expectStatus().isOk
             .expectBody(RouteResponse::class.java)
-            .value { response ->
-                assertEquals("route2", response.route)
-                assertEquals("test-name", response.value)
-            }
+            .isEqualTo(RouteResponse("route2", "test-name"))
     }
 
     @Test
@@ -122,29 +111,28 @@ class ServerTest {
         data class MethodResponse(val method: String, val id: Int, val body: ServerTestBody? = null)
 
         val router = router {
-            add(get(::GetApi) { api ->
-                ServerResponse.ok().bodyValue(MethodResponse("GET", api.id))
-            })
+            GET(::GetApi) { api ->
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(MethodResponse("GET", api.id))
+            }
 
-            add(post(::PostApi) { api ->
-                ServerResponse.ok().bodyValue(MethodResponse("POST", api.id, api.body))
-            })
+            POST(::PostApi) { api ->
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(MethodResponse("POST", api.id, api.body))
+            }
         }
 
-        val client = WebTestClient.bindToRouterFunction(router).build()
+        val client = bindToRouterFunction(router).build()
 
-        // Test GET
         client.get()
             .uri("/method-test/123")
             .exchange()
             .expectStatus().isOk
             .expectBody(MethodResponse::class.java)
-            .value { response ->
-                assertEquals("GET", response.method)
-                assertEquals(123, response.id)
-            }
+            .isEqualTo(MethodResponse("GET", 123))
 
-        // Test POST
         val postBody = ServerTestBody("test-value")
         client.post()
             .uri("/method-test/456")
@@ -152,10 +140,6 @@ class ServerTest {
             .exchange()
             .expectStatus().isOk
             .expectBody(MethodResponse::class.java)
-            .value { response ->
-                assertEquals("POST", response.method)
-                assertEquals(456, response.id)
-                assertEquals(postBody, response.body)
-            }
+            .isEqualTo(MethodResponse("POST", 456, postBody))
     }
 }

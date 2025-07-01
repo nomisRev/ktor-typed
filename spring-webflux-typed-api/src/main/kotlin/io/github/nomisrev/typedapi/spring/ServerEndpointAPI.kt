@@ -9,21 +9,19 @@ import io.github.nomisrev.typedapi.ValidationBuilder
 import kotlinx.coroutines.reactor.mono
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.web.reactive.function.server.HandlerFunction
 import org.springframework.web.reactive.function.server.RequestPredicate
 import org.springframework.web.reactive.function.server.RequestPredicates
 import org.springframework.web.reactive.function.server.RouterFunction
+import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.reactive.function.server.RouterFunctions
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.core.publisher.Mono
-import kotlin.properties.Delegates
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.typeOf
 
 public fun <A : Any> route(
     typeInfo: KClass<A>,
@@ -44,7 +42,7 @@ public fun <A : Any> route(
         HttpMethod.PATCH -> RequestPredicates.PATCH(fullPath)
         HttpMethod.HEAD -> RequestPredicates.HEAD(fullPath)
         HttpMethod.OPTIONS -> RequestPredicates.OPTIONS(fullPath)
-        else -> RequestPredicates.method(method).and(RequestPredicates.path(fullPath))
+        else -> throw IllegalStateException("")
     }
 
     return RouterFunctions.route(predicate) { request ->
@@ -56,25 +54,32 @@ public fun <A : Any> route(
             request.bodyToMono(bodyClass)
         } ?: Mono.empty()
 
-        bodyMono.flatMap { body ->
+        if (api.bodyInput == null) {
+            // No body expected, just execute the block
             mono {
-                api.body = body
                 request.block(value)
             }.flatMap { it }
+        } else {
+            // Body expected, wait for it
+            bodyMono.flatMap { body ->
+                mono {
+                    api.body = body
+                    request.block(value)
+                }.flatMap { it }
+            }
         }
     }
 }
 
-public inline fun <reified A : Any> get(
+public inline fun <reified A : Any> RouterFunctionDsl.GET(
     noinline endpoint: (EndpointAPI) -> A,
     noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-): RouterFunction<ServerResponse> =
-    route(A::class, HttpMethod.GET, endpoint, block)
+) = add(route(A::class, HttpMethod.GET, endpoint, block))
 
-public inline fun <reified A : Any> post(
+public inline fun <reified A : Any> RouterFunctionDsl.POST(
     noinline endpoint: (EndpointAPI) -> A,
     noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-): RouterFunction<ServerResponse> = route(A::class, HttpMethod.POST, endpoint, block)
+) = add(route(A::class, HttpMethod.POST, endpoint, block))
 
 public inline fun <reified A : Any> route(
     method: HttpMethod,

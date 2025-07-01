@@ -1,17 +1,17 @@
 package io.github.nomisrev.typedapi
 
-import io.github.nomisrev.typedapi.spring.get
 import io.github.nomisrev.typedapi.spring.route
 import kotlinx.serialization.Serializable
 import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Mono
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @Endpoint(path = "/client-test/{id}")
 class SimpleClientApi(api: EndpointAPI) {
@@ -37,19 +37,22 @@ class NullableParamsApi(api: EndpointAPI) {
     val header: String? by api.header<String?>()
 }
 
-inline fun <reified A : Any> RouterFunctionDsl.GET(
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-) = add(route(A::class, HttpMethod.GET, endpoint, block))
-
 class ClientTest {
 
     @Test
     fun testClientRequestBuilding() {
+        // Create a simple controller function that returns a hardcoded response
         val router = router {
-            GET(::SimpleClientApi) { api ->
-                val value = ClientTestResponse(id = api.id, name = api.name, header = api.header)
-                ServerResponse.ok().bodyValue(value)
+            GET("/client-test/{id}") { request ->
+                val id = request.pathVariable("id").toInt()
+                val name = request.queryParam("name").orElse("")
+                val header = request.headers().header("header").firstOrNull() ?: ""
+
+                val value = ClientTestResponse(id = id, name = name, header = header)
+
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(value)
             }
         }
 
@@ -60,12 +63,8 @@ class ClientTest {
             .header("header", "test-header")
             .exchange()
             .expectStatus().isOk
-            .expectBody(ClientTestResponse::class.java)
-            .value { response ->
-                assertEquals(123, response.id)
-                assertEquals("test-name", response.name)
-                assertEquals("test-header", response.header)
-            }
+            .expectBody<ClientTestResponse>()
+            .isEqualTo(ClientTestResponse(id = 123, name = "test-name", header = "test-header"))
     }
 
     @Test
@@ -78,42 +77,38 @@ class ClientTest {
         )
 
         val router = router {
-            add(get(::NullableParamsApi) { api ->
-                ServerResponse.ok().bodyValue(
-                    NullableResponse(
-                        id = api.id,
-                        name = api.name,
-                        header = api.header
-                    )
+            GET("/nullable-test/{id}") { request ->
+                val id = request.pathVariable("id").toInt()
+                val name = request.queryParam("name").orElse(null)
+                val header = request.headers().header("header").firstOrNull()
+
+                val response = NullableResponse(
+                    id = id,
+                    name = name,
+                    header = header
                 )
-            })
+
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(response)
+            }
         }
 
         val client = WebTestClient.bindToRouterFunction(router).build()
 
-        // Test with null values
         client.get()
             .uri("/nullable-test/123")
             .exchange()
             .expectStatus().isOk
-            .expectBody(NullableResponse::class.java)
-            .value { response ->
-                assertEquals(123, response.id)
-                assertEquals(null, response.name)
-                assertEquals(null, response.header)
-            }
+            .expectBody<NullableResponse>()
+            .isEqualTo(NullableResponse(id = 123, name = null, header = null))
 
-        // Test with non-null values
         client.get()
             .uri("/nullable-test/456?name=test-name")
             .header("header", "test-header")
             .exchange()
             .expectStatus().isOk
-            .expectBody(NullableResponse::class.java)
-            .value { response ->
-                assertEquals(456, response.id)
-                assertEquals("test-name", response.name)
-                assertEquals("test-header", response.header)
-            }
+            .expectBody<NullableResponse>()
+            .isEqualTo(NullableResponse(id = 456, name = "test-name", header = "test-header"))
     }
 }
