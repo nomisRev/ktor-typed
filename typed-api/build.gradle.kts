@@ -5,15 +5,6 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
-kotlin {
-    jvmToolchain(21)
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
 dependencies {
     api(libs.kotlinx.serialization)
     api(libs.kotlinx.coroutines)

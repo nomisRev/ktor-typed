@@ -60,7 +60,6 @@ public inline fun <reified A : Any> Route.post(
     noinline block: suspend RoutingContext.(A) -> Unit,
 ) = route(typeInfo<A>(), HttpMethod.Post, endpoint, block)
 
-
 public inline fun <reified A : Any> Route.route(
     method: HttpMethod,
     noinline endpoint: (EndpointAPI) -> A,
