@@ -1,11 +1,11 @@
-# Ktor-Tapir
+# Ktor-Typed
 
 A type-safe API framework for Ktor applications, inspired by Tapir and FastAPI, providing automatic parameter
 extraction, validation, and serialization.
 
 ## Overview
 
-Ktor-Tapir is a library that enables you to define type-safe APIs in Kotlin with a focus on:
+Ktor-Typed is a library that enables you to define type-safe APIs in Kotlin with a focus on:
 
 - **Type Safety**: Compile-time type checking for all API parameters
 - **Automatic Validation**: Built-in validation for parameters with clear error messages
