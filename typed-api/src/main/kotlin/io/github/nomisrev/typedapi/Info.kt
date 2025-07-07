@@ -5,6 +5,7 @@ import kotlinx.serialization.serializer
 
 data class Example<T>(val value: T, val serializer: KSerializer<T>)
 
+// TODO Flatten these into Input
 data class Info<T>(
     val title: String? = null,
     val description: String? = null,
@@ -12,6 +13,9 @@ data class Info<T>(
     val regex: String? = null,
     val deprecated: Boolean = false,
 )
+
+inline fun <reified T> example(value: T): Example<T> =
+    Example(value, serializer<T>())
 
 inline fun <reified T> Info<T>.example(value: T) =
     example(value, serializer<T>())

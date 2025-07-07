@@ -8,4 +8,6 @@ plugins {
 dependencies {
     api(projects.typedApi)
     api(projects.parser)
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    testImplementation(libs.kotlin.test)
 }

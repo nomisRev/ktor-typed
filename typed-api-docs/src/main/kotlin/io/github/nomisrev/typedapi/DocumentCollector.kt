@@ -5,11 +5,18 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-data class Route(val path: String, val inputs: List<Input<*>>)
+data class Route(
+    val path: String,
+    val inputs: List<Input<*>>
+)
 
 inline fun <reified A> collect(
-    kType: KType = typeOf<A>(),
-    kClass: KClass<*> = A::class,
+    noinline block: (EndpointAPI) -> A
+): Route =  collect(typeOf<A>(), A::class, block)
+
+fun <A> collect(
+    kType: KType,
+    kClass: KClass<*>,
     block: (EndpointAPI) -> A
 ): Route {
     val path = kType.annotations.filterIsInstance<Endpoint>().firstOrNull()?.path

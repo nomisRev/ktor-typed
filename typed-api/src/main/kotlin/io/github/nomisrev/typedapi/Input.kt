@@ -8,6 +8,13 @@ sealed interface Input<A> {
     val kType: KType
     val info: Info<A>?
 
+    fun withName(newName: String): Input<A> = when (this) {
+        is Body<A> -> this
+        is Header<A> -> Header(newName, casing, validation, kClass, kType, info)
+        is Path<A> -> Path(newName, validation, kClass, kType, info)
+        is Query<A> -> Query(newName, validation, kClass, kType, info)
+    }
+
     class Path<A>(
         val name: String?,
         val validation: Validation<A>?,

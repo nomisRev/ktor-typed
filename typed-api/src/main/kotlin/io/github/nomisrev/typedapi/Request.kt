@@ -29,3 +29,7 @@ class Request<A, B>(
         })
     }
 }
+
+/** Used to conveniently construct [Request.properties] */
+fun <T> properties(vararg properties: KProperty1<T, *>): Map<String, KProperty1<T, *>> =
+    properties.associateBy { it.name }

@@ -19,12 +19,10 @@ import io.ktor.util.reflect.typeInfo
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.completeWith
 import kotlin.collections.mutableListOf
-import kotlin.properties.Delegates
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.typeOf
 
 public fun <A : Any> Route.route(
     typeInfo: TypeInfo,
@@ -87,7 +85,7 @@ private class ServerEndpointAPI(private val context: RoutingContext) : EndpointA
                 is Input.Header<*> -> ReadOnlyProperty<Any?, A> { _, property ->
                     val name = input.name ?: input.casing(property.name)
                     val values = context.call.request.headers.getAll(name)
-                    getParameter<A>(
+                    getParameter(
                         values,
                         name,
                         input.kClass,
@@ -100,7 +98,7 @@ private class ServerEndpointAPI(private val context: RoutingContext) : EndpointA
                 is Input.Path<*> -> ReadOnlyProperty<Any?, A> { _, property ->
                     val name = input.name ?: property.name
                     val values = context.call.pathParameters.getAll(name)
-                    getParameter<A>(
+                    getParameter(
                         values,
                         name,
                         input.kClass,
@@ -113,7 +111,7 @@ private class ServerEndpointAPI(private val context: RoutingContext) : EndpointA
                 is Input.Query<*> -> ReadOnlyProperty<Any?, A> { _, property ->
                     val name = input.name ?: property.name
                     val values = context.call.queryParameters.getAll(name)
-                    getParameter<A>(
+                    getParameter(
                         values,
                         name,
                         input.kClass,
