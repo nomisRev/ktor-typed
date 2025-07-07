@@ -3,7 +3,6 @@ plugins {
     kotlin("plugin.power-assert") version "2.1.21"
     kotlin("plugin.serialization") version "2.1.21"
     id("org.jetbrains.kotlinx.kover") version "0.7.5"
-//    id("de.infix.testBalloon") version "0.3.0-K2.1.21"
 }
 
 group = "com.example"
@@ -24,18 +23,15 @@ koverReport {
     defaults {
         html { onCheck = true }
     }
-
-    // TODO remove ApplicationKt example, and move to docs / KotlinX Knit
-    filters {
-        excludes {
-            // Exclude Application.kt from coverage as it's the entry point
-            classes("com.example.ApplicationKt")
+    verify {
+        rule {
+            minBound(80)
         }
     }
+}
 
-//    verify {
-//        rule {
-//            minBound(70) // Minimum 70% line coverage
-//        }
-//    }
+dependencies {
+    kover(project(":typed-api"))
+    kover(project(":ktor-typed-api"))
+    kover(project(":spring-webflux-typed-api"))
 }
