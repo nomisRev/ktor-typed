@@ -1,0 +1,64 @@
+FILE fqName:my.test fileName:/hello.kt
+  CLASS CLASS name:MyEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any]
+    annotations:
+      Endpoint(path = "/")
+    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:my.test.MyEndpoint
+    PROPERTY name:age visibility:public modality:FINAL [delegated,val]
+      FIELD PROPERTY_DELEGATE name:age$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
+            $this: CALL 'public final fun query <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.query>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.Int> origin=null
+              <A>: kotlin.Int
+              $receiver: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.MyEndpoint.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            thisRef: GET_VAR '<this>: my.test.MyEndpoint declared in my.test.MyEndpoint' type=my.test.MyEndpoint origin=null
+            prop: PROPERTY_REFERENCE 'public final age: kotlin.Int declared in my.test.MyEndpoint' field=null getter='public final fun <get-age> (): kotlin.Int declared in my.test.MyEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.MyEndpoint, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-age> visibility:public modality:FINAL <> ($this:my.test.MyEndpoint) returnType:kotlin.Int
+        correspondingProperty: PROPERTY name:age visibility:public modality:FINAL [delegated,val]
+        $this: VALUE_PARAMETER name:<this> type:my.test.MyEndpoint
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-age> (): kotlin.Int declared in my.test.MyEndpoint'
+            CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadOnlyProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadOnlyProperty declared in kotlin.properties.ReadOnlyProperty' type=kotlin.Int origin=null
+              $this: GET_FIELD 'FIELD PROPERTY_DELEGATE name:age$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> visibility:private [final] declared in my.test.MyEndpoint' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
+                receiver: GET_VAR '<this>: my.test.MyEndpoint declared in my.test.MyEndpoint.<get-age>' type=my.test.MyEndpoint origin=null
+              thisRef: GET_VAR '<this>: my.test.MyEndpoint declared in my.test.MyEndpoint.<get-age>' type=my.test.MyEndpoint origin=null
+              property: PROPERTY_REFERENCE 'public final age: kotlin.Int declared in my.test.MyEndpoint' field=null getter='public final fun <get-age> (): kotlin.Int declared in my.test.MyEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.MyEndpoint, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public <> (age:kotlin.Int) returnType:my.test.MyEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:age index:0 type:kotlin.Int
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.MyEndpoint'
+          api: CONSTRUCTOR_CALL 'public constructor <init> (values: kotlin.collections.Map<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
+            values: CALL 'public final fun mapOf <K, V> (vararg pairs: kotlin.Pair<K of kotlin.collections.mapOf, V of kotlin.collections.mapOf>): kotlin.collections.Map<K of kotlin.collections.mapOf, V of kotlin.collections.mapOf> declared in kotlin.collections' type=kotlin.collections.Map<K of kotlin.collections.mapOf, V of kotlin.collections.mapOf> origin=null
+              <K>: kotlin.String
+              <V>: kotlin.Any?
+              pairs: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
+                CALL 'public final fun to <A, B> (that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
+                  <A>: kotlin.String
+                  <B>: kotlin.Any?
+                  $receiver: CONST String type=kotlin.String value="age"
+                  that: GET_VAR 'age: kotlin.Int declared in my.test.MyEndpoint.<init>' type=kotlin.Int origin=null
+    CONSTRUCTOR visibility:public <> (api:io.github.nomisrev.typedapi.EndpointAPI) returnType:my.test.MyEndpoint [primary]
+      VALUE_PARAMETER name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.Unit
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+      VALUE_PARAMETER name:other index:0 type:kotlin.Any?
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+  FUN name:box visibility:public modality:FINAL <> () returnType:kotlin.String
+    BLOCK_BODY
+      TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+        CONSTRUCTOR_CALL 'public constructor <init> (age: kotlin.Int) declared in my.test.MyEndpoint' type=my.test.MyEndpoint origin=null
+          age: CONST Int type=kotlin.Int value=31
+      RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+        CONST String type=kotlin.String value="OK"
+FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt

@@ -5,18 +5,12 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.7.5"
 }
 
-group = "com.example"
+group = "io.github.nomisrev.typedapi"
 version = "0.0.1"
 
 
 kotlin {
     compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
-    jvmToolchain(21)
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
 }
 
 koverReport {
