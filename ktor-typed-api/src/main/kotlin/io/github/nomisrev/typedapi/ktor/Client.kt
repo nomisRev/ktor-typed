@@ -12,7 +12,6 @@ import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.Request
-import io.ktor.client.plugins.pluginOrNull
 
 suspend fun <A, B> HttpClient.request(
     request: Request<A, B>,

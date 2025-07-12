@@ -22,6 +22,15 @@ FILE fqName:my.test fileName:/hello.kt
                 receiver: GET_VAR '<this>: my.test.MyEndpoint declared in my.test.MyEndpoint.<get-age>' type=my.test.MyEndpoint origin=null
               thisRef: GET_VAR '<this>: my.test.MyEndpoint declared in my.test.MyEndpoint.<get-age>' type=my.test.MyEndpoint origin=null
               property: PROPERTY_REFERENCE 'public final age: kotlin.Int declared in my.test.MyEndpoint' field=null getter='public final fun <get-age> (): kotlin.Int declared in my.test.MyEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.MyEndpoint, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+    PROPERTY GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:_age visibility:public modality:FINAL [val]
+      FIELD PROPERTY_BACKING_FIELD name:_age type:io.github.nomisrev.typedapi.Input visibility:private [final]
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-_age> visibility:public modality:FINAL <> ($this:my.test.MyEndpoint) returnType:io.github.nomisrev.typedapi.Input
+        correspondingProperty: PROPERTY GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:_age visibility:public modality:FINAL [val]
+        $this: VALUE_PARAMETER name:<this> type:my.test.MyEndpoint
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-_age> (): io.github.nomisrev.typedapi.Input declared in my.test.MyEndpoint'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:_age type:io.github.nomisrev.typedapi.Input visibility:private [final]' type=io.github.nomisrev.typedapi.Input origin=null
+              receiver: GET_VAR '<this>: my.test.MyEndpoint declared in my.test.MyEndpoint.<get-_age>' type=my.test.MyEndpoint origin=null
     CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public <> (age:kotlin.Int) returnType:my.test.MyEndpoint
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:age index:0 type:kotlin.Int
       BLOCK_BODY

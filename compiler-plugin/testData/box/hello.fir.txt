@@ -11,6 +11,9 @@ FILE: hello.kt
                 ^ this@R|my/test/MyEndpoint|.D|my/test/MyEndpoint.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/MyEndpoint|, ::R|my/test/MyEndpoint.age|)
             }
 
+        public final val _age: R|io/github/nomisrev/typedapi/Input|
+            public get(): R|io/github/nomisrev/typedapi/Input|
+
         public constructor(age: R|kotlin/Int|): R|my/test/MyEndpoint|
 
     }
@@ -20,3 +23,4 @@ FILE: hello.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
+

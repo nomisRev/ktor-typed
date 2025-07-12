@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConstructor
+import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
@@ -18,6 +19,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.toLookupTag
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
@@ -53,6 +55,24 @@ class MyCodeGenerationExtension(
         return listOf(constructor.symbol)
     }
 
+    override fun generateProperties(
+        callableId: CallableId,
+        context: MemberGenerationContext?
+    ): List<FirPropertySymbol> {
+        module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
+        val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
+            ?: return emptyList()
+
+        return listOf(
+            createMemberProperty(
+                endpoint,
+                Key,
+                callableId.callableName,
+                module.classIds.input.defaultType()
+            ).symbol
+        )
+    }
+
     @ExperimentalTopLevelDeclarationsGenerationApi
     override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*>? {
         module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
@@ -60,7 +80,11 @@ class MyCodeGenerationExtension(
     }
 
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> =
-        if (matchedClasses.contains(classSymbol)) setOf(SpecialNames.INIT)
+        if (matchedClasses.contains(classSymbol)) setOf(SpecialNames.INIT) + classSymbol
+            .declarationSymbols
+            .filterIsInstance<FirPropertySymbol>()
+            .filter { it.hasDelegate }
+            .map { Name.identifier("_${it.name.asString()}") }
         else super.getCallableNamesForClass(classSymbol, context)
 
     @ExperimentalTopLevelDeclarationsGenerationApi

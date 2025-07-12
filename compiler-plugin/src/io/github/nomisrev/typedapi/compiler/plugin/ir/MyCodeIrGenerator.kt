@@ -3,54 +3,32 @@ package io.github.nomisrev.typedapi.compiler.plugin.ir
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
 import io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
-import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.IrElement
-import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.IrGeneratorContext
-import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
-import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irCall
-import org.jetbrains.kotlin.ir.builders.irConstantPrimitive
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.builders.irGet
-import org.jetbrains.kotlin.ir.builders.irGetObject
 import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.builders.irVararg
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
-import org.jetbrains.kotlin.ir.declarations.IrFactory
-import org.jetbrains.kotlin.ir.declarations.IrFile
+import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
-import org.jetbrains.kotlin.ir.expressions.IrConst
-import org.jetbrains.kotlin.ir.expressions.IrConstantValue
-import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
-import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionExpressionImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
-import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
-import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
-import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.isVararg
-import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
-import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.ir.util.toIrConst
 import org.jetbrains.kotlin.ir.visitors.IrVisitor
 import org.jetbrains.kotlin.name.CallableId
@@ -99,6 +77,11 @@ class MyCodeIrGenerator(
         it.typeWith(listOf(stringType, anyNullableType))
     } ?: error("Couldn't find Pair class")
 
+    // Reference to the query function (lowercase)
+    val Query = pluginContext.referenceFunctions(
+        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Query"))
+    ).singleOrNull() ?: error("Couldn't find query function")
+
     override fun visitConstructor(declaration: IrConstructor, data: Nothing?) {
         val keyOrNull =
             (declaration.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey as? MyCodeGenerationExtension.Key
@@ -133,4 +116,91 @@ class MyCodeIrGenerator(
 
         super.visitConstructor(declaration, data)
     }
+
+    override fun visitClass(declaration: IrClass, data: Nothing?) {
+        val members = declaration.declarations
+            .filter { (it.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey is MyCodeGenerationExtension.Key }
+            .filterIsInstance<IrFunction>()
+        val apiParameter = declaration.primaryConstructor?.valueParameters?.firstOrNull() ?: return
+
+        if (members.isNotEmpty()) {
+            module.logger.log { "Generating class: ${declaration.name}. $members" }
+            members.forEach {
+                val returnType = it.returnType
+                val irBuilder = pluginContext.createIrBuilder(it.symbol)
+
+                val queryCall = irBuilder.irCall(Query).apply {
+                    extensionReceiver = irBuilder.irGet(apiParameter)
+                    putTypeArgument(0, returnType)
+                }
+                it.body = irBuilder.irBlockBody {
+                    +irReturn(queryCall)
+                }
+            }
+        } else {
+            module.logger.log { "Skipping class: ${declaration.name}" }
+        }
+        super.visitClass(declaration, data)
+    }
+
+//    override fun visitFunction(declaration: IrFunction, data: Nothing?) {
+//        // Check if the function is an IrSimpleFunction
+//        val simpleFunction = declaration as? IrSimpleFunction ?: return super.visitFunction(declaration, data)
+//
+//        // Check if the function is in an endpoint class
+//        val parentClass = simpleFunction.parent as? IrClass ?: return super.visitFunction(declaration, data)
+//        val isEndpoint = parentClass.constructors.toList().any {
+//            (it.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey as? MyCodeGenerationExtension.Key != null
+//        }
+//
+//        if (isEndpoint) {
+//            // Get the function name
+//            val functionName = simpleFunction.name.asString()
+//
+//            // Skip standard methods like equals, hashCode, toString
+//            if (functionName == "equals" || functionName == "hashCode" || functionName == "toString") {
+//                return super.visitFunction(declaration, data)
+//            }
+//
+//            // Check if it's a property getter (starts with "<get-")
+//            if (functionName.startsWith("<get-")) {
+//                // Extract the property name from the getter name (remove "<get-" and ">")
+//                val propertyName = functionName.substring(5, functionName.length - 1)
+//
+//                // Skip standard Object properties and other special properties
+//                if (propertyName == "class" || propertyName == "javaClass") {
+//                    return super.visitFunction(declaration, data)
+//                }
+//
+//                // Only generate code for properties that are delegated using functions from io.github.nomisrev.typedapi
+//                // For now, we only know that the 'age' property is delegated using functions from io.github.nomisrev.typedapi
+//                if (propertyName == "age") {
+//                    // Get the first parameter which should be the api: EndpointAPI
+//                    val apiParameter = parentClass.primaryConstructor?.valueParameters?.firstOrNull()
+//                    if (apiParameter != null) {
+//                        val irBuilder = pluginContext.createIrBuilder(simpleFunction.symbol)
+//
+//                        // Extract the type from the function's return type
+//                        val returnType = simpleFunction.returnType
+//
+//                        // Create a call to api.query<Type>()
+//                        val queryCall = irBuilder.irCall(Query).apply {
+//                            extensionReceiver = irBuilder.irGet(apiParameter)
+//                            putTypeArgument(0, returnType)
+//
+//                        }
+//
+//                        // Return the result of the query call
+//                        simpleFunction.body = irBuilder.irBlockBody {
+//                            +irReturn(queryCall)
+//                        }
+//
+//                        module.logger.log { "Generated property delegation with query for: ${functionName}" }
+//                    }
+//                }
+//            }
+//        }
+//
+//        super.visitFunction(declaration, data)
+//    }
 }

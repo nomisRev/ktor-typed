@@ -22,6 +22,13 @@ inline fun <reified A> EndpointAPI.query(
 ): DelegateProvider<A> =
     input(Input.Query(name, validation, A::class, typeOf<A>(), info))
 
+inline fun <reified A> EndpointAPI.Query(
+    name: String? = null,
+    validation: Validation<A>? = null,
+    info: Info<A>? = null
+): Input.Query<A> =
+    Input.Query(name, validation, A::class, typeOf<A>(), info)
+
 inline fun <reified A> EndpointAPI.header(
     name: String? = null,
     noinline toHeaderCase: (String) -> String =

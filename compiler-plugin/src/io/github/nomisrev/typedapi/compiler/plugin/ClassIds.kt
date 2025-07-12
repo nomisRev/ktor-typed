@@ -11,4 +11,8 @@ class ClassIds(
         FqName("io.github.nomisrev.typedapi"),
         Name.identifier("MapEndpointAPI"),
     ),
+    val input: ClassId = ClassId(
+        FqName("io.github.nomisrev.typedapi"),
+        Name.identifier("Input"),
+    )
 )
