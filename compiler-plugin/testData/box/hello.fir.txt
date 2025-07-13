@@ -1,14 +1,14 @@
 FILE: hello.kt
     package my.test
 
-    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class MyEndpoint : R|kotlin/Any| {
-        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/MyEndpoint| {
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class Hello : R|kotlin/Any| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/Hello| {
             super<R|kotlin/Any|>()
         }
 
-        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/MyEndpoint|, ::R|my/test/MyEndpoint.age|)
+        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/Hello|, ::R|my/test/Hello.age|)
             public get(): R|kotlin/Int| {
-                ^ this@R|my/test/MyEndpoint|.D|my/test/MyEndpoint.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/MyEndpoint|, ::R|my/test/MyEndpoint.age|)
+                ^ this@R|my/test/Hello|.D|my/test/Hello.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/Hello|, ::R|my/test/Hello.age|)
             }
 
         public final fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
@@ -22,13 +22,12 @@ FILE: hello.kt
 
         public final fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
-        public constructor(age: R|kotlin/Int|): R|my/test/MyEndpoint|
+        public constructor(age: R|kotlin/Int|): R|my/test/Hello|
 
     }
     public final fun box(): R|kotlin/String| {
-        R|my/test/MyEndpoint|(Int(31))
+        R|my/test/Hello|(Int(31))
         ^box String(OK)
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-

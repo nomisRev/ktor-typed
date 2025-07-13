@@ -7,15 +7,12 @@ import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGener
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
-import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
-import org.jetbrains.kotlin.fir.resolve.createFunctionType
 import org.jetbrains.kotlin.fir.resolve.defaultType
-import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
@@ -24,14 +21,11 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.toLookupTag
-import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImpl.createTypeParameter
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.name.StandardClassIds
-import org.jetbrains.kotlin.name.callableIdForConstructor
 
 class MyCodeGenerationExtension(
     session: FirSession,
@@ -42,6 +36,12 @@ class MyCodeGenerationExtension(
     private val matchedClasses by lazy {
         predicateBasedProvider.getSymbolsByPredicate(predicate).filterIsInstance<FirRegularClassSymbol>()
     }
+    private val conversionFns = listOf(
+        Name.identifier("query"),
+        Name.identifier("path"),
+        Name.identifier("header"),
+        Name.identifier("body"),
+    )
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(predicate)
@@ -59,7 +59,7 @@ class MyCodeGenerationExtension(
                 valueParameter(prop.name, prop.resolvedReturnType)
             }
         }
-        module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}, and adding ${constructor.valueParameters.joinToString { it.name.asString() }}" }
+        module.logger.log { "Generating constructor for $endpoint: (${constructor.valueParameters.joinToString { it.name.asString() }})" }
         return listOf(constructor.symbol)
     }
 
@@ -67,7 +67,6 @@ class MyCodeGenerationExtension(
         callableId: CallableId,
         context: MemberGenerationContext?
     ): List<FirNamedFunctionSymbol> {
-        module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
         val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
             ?: return emptyList()
         return if (conversionFns.contains(callableId.callableName)) {
@@ -89,7 +88,7 @@ class MyCodeGenerationExtension(
                 valueParameter(Name.identifier("block"), lambdaType)
             }
 
-            module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}, and adding ${member.name}" }
+            module.logger.log { "Generating 'Inspectable' for $endpoint.${member.name}" }
 
             listOf(member.symbol)
         } else {
@@ -101,7 +100,10 @@ class MyCodeGenerationExtension(
         callableId: CallableId,
         context: MemberGenerationContext?
     ): List<FirPropertySymbol> {
-        val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
+        val endpoint = context
+            ?.declaredScope
+            ?.classId
+            ?.let { classId -> matchedClasses.find { it.classId == classId } }
             ?: return emptyList()
 
         if (conversionFns.contains(callableId.callableName)) return emptyList()
@@ -118,23 +120,10 @@ class MyCodeGenerationExtension(
                 callableId.callableName,
                 module.classIds.input.constructClassLikeType(arrayOf(prop.resolvedReturnType))
             ).also {
-                module.logger.log { "generateProperties for $endpoint. ${it.name}" }
+                module.logger.log { "generateProperties for $endpoint.${it.name}" }
             }.symbol
         )
     }
-
-    @ExperimentalTopLevelDeclarationsGenerationApi
-    override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*>? {
-        module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
-        return super.generateTopLevelClassLikeDeclaration(classId)
-    }
-
-    val conversionFns = listOf(
-        Name.identifier("query"),
-        Name.identifier("path"),
-        Name.identifier("header"),
-        Name.identifier("body"),
-    )
 
     /**
      * Generates:
@@ -143,22 +132,27 @@ class MyCodeGenerationExtension(
      *      => TODO: In IR we should rewrite the body to use input(_input) for the original param.
      *  - query { value: Any?, input: Input<Any?> - > }
      */
-    override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> =
-        if (matchedClasses.contains(classSymbol)) setOf(SpecialNames.INIT) + classSymbol
-            .declarationSymbols
-            .filterIsInstance<FirPropertySymbol>()
-            .filter { it.hasDelegate }
-            .map { underscored(it) } + conversionFns
-        else super.getCallableNamesForClass(classSymbol, context)
+    override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
+        return if (matchedClasses.contains(classSymbol)) {
+            val callables = setOf(SpecialNames.INIT) + classSymbol
+                .declarationSymbols
+                .filterIsInstance<FirPropertySymbol>()
+                .filter { it.hasDelegate }
+                .map { underscored(it) } + conversionFns
+            module.logger.log { "getCallableNamesForClass for ${classSymbol.classId}: $callables" }
+            callables
+        } else super.getCallableNamesForClass(classSymbol, context)
+    }
 
     private fun underscored(symbol: FirPropertySymbol): Name =
         Name.identifier("_${symbol.name.asString()}")
 
     @ExperimentalTopLevelDeclarationsGenerationApi
-    override fun getTopLevelClassIds(): Set<ClassId> =
-        matchedClasses.mapTo(mutableSetOf()) {
+    override fun getTopLevelClassIds(): Set<ClassId> {
+        val topLevelIds = matchedClasses.mapTo(mutableSetOf()) {
             it.classId
         }
+        module.logger.log { "Generating code for: ${topLevelIds.joinToString { it.shortClassName.asString() }}" }
+        return topLevelIds
+    }
 }
-
-fun ClassId.defaultType(): ConeClassLikeType = defaultType(emptyList())

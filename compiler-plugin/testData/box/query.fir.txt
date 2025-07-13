@@ -1,14 +1,14 @@
 FILE: query.kt
     package my.test
 
-    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class MyEndpoint : R|kotlin/Any| {
-        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/MyEndpoint| {
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class Query : R|kotlin/Any| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/Query| {
             super<R|kotlin/Any|>()
         }
 
-        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/MyEndpoint|, ::R|my/test/MyEndpoint.age|)
+        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/Query|, ::R|my/test/Query.age|)
             public get(): R|kotlin/Int| {
-                ^ this@R|my/test/MyEndpoint|.D|my/test/MyEndpoint.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/MyEndpoint|, ::R|my/test/MyEndpoint.age|)
+                ^ this@R|my/test/Query|.D|my/test/Query.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/Query|, ::R|my/test/Query.age|)
             }
 
         public final fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
@@ -22,20 +22,20 @@ FILE: query.kt
 
         public final fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
-        public constructor(age: R|kotlin/Int|): R|my/test/MyEndpoint|
+        public constructor(age: R|kotlin/Int|): R|my/test/Query|
 
     }
     public final fun box(): R|kotlin/String| {
-        lval value: R|my/test/MyEndpoint| = R|my/test/MyEndpoint|(Int(32))
+        lval value: R|my/test/Query| = R|my/test/Query|(Int(32))
         lval map: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
-            R|<local>/value|.R|my/test/MyEndpoint.query|(<L> = query@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
+            R|<local>/value|.R|my/test/Query.query|(<L> = query@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
                 this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
             }
             )
         }
         )
         ^box when () {
-            R|<local>/map|.R|kotlin/collections/isNotEmpty|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>() ->  {
+            ==(R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|, Int(1)) ->  {
                 String(OK)
             }
             else ->  {

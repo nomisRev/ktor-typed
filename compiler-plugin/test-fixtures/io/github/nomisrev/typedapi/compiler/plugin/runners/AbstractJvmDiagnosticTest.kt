@@ -32,7 +32,7 @@ open class AbstractJvmDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
              * All of them are located in `org.jetbrains.kotlin.test.directives` package
              */
             defaultDirectives {
-                JVM_TARGET.with(JvmTarget.JVM_11)
+                JVM_TARGET.with(JvmTarget.JVM_17)
                 +FirDiagnosticsDirectives.FIR_DUMP
                 +JvmEnvironmentConfigurationDirectives.FULL_JDK
 
