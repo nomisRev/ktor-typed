@@ -1,5 +1,6 @@
 import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
+import io.github.nomisrev.typedapi.Inspectable
 import io.github.nomisrev.typedapi.body
 import io.github.nomisrev.typedapi.query
 
@@ -11,14 +12,4 @@ class MyEndpoint(api: EndpointAPI) {
 }
 
 fun main() {
-    val value = MyEndpoint("Simon", 32, "Body")
-    value.query { any, input ->
-        println("any: $any, input: $input")
-    }
-    value.header { any, input ->
-        println("any: $any, input: $input")
-    }
-    value.body { any, input ->
-        println("any: $any, input: $input")
-    }
 }

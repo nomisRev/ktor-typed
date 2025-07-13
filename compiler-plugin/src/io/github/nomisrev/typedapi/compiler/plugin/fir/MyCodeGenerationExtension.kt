@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
+import org.jetbrains.kotlin.ir.backend.js.utils.TODO
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
@@ -69,12 +70,21 @@ class MyCodeGenerationExtension(
     ): List<FirNamedFunctionSymbol> {
         val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
             ?: return emptyList()
+        val name = callableId.callableName.asString()
+        val inputType = when {
+            name == "query" -> module.classIds.inputQuery
+            name == "path" -> module.classIds.inputPath
+            name == "header" -> module.classIds.inputHeader
+            name == "body" -> module.classIds.inputBody
+            else -> return emptyList()
+        }
+
         return if (conversionFns.contains(callableId.callableName)) {
             // query { value: Any?, input: Input<Any?> -> ... }
             val lambdaType = StandardClassIds.FunctionN(2).constructClassLikeType(
                 arrayOf(
                     session.builtinTypes.nullableAnyType.coneType,
-                    module.classIds.input.constructClassLikeType(typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType)),
+                    inputType.constructClassLikeType(typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType)),
                     session.builtinTypes.unitType.coneType
                 )
             )
@@ -86,6 +96,9 @@ class MyCodeGenerationExtension(
                 session.builtinTypes.unitType.coneType
             ) {
                 valueParameter(Name.identifier("block"), lambdaType)
+                status {
+                    isOverride = true
+                }
             }
 
             module.logger.log { "Generating 'Inspectable' for $endpoint.${member.name}" }
