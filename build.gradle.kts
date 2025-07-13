@@ -11,6 +11,7 @@ version = "0.0.1"
 
 kotlin {
     compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
+    jvmToolchain(11)
 }
 
 koverReport {

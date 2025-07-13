@@ -1,4 +1,4 @@
-FILE fqName:my.test fileName:/hello.kt
+FILE fqName:my.test fileName:/newConstructor.kt
   CLASS CLASS name:MyEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any]
     annotations:
       Endpoint(path = "/")

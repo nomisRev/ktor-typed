@@ -26,10 +26,4 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
   public void testClassInsteadOfDataClassExpected() {
     runTest("compiler-plugin/testData/diagnostics/classInsteadOfDataClassExpected.kt");
   }
-
-  @Test
-  @TestMetadata("newConstructor.kt")
-  public void testNewConstructor() {
-    runTest("compiler-plugin/testData/diagnostics/newConstructor.kt");
-  }
 }

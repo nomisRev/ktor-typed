@@ -1,4 +1,4 @@
-FILE: hello.kt
+FILE: query.kt
     package my.test
 
     @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class MyEndpoint : R|kotlin/Any| {
@@ -20,9 +20,23 @@ FILE: hello.kt
 
     }
     public final fun box(): R|kotlin/String| {
-        R|my/test/MyEndpoint|(Int(31))
-        ^box String(OK)
+        lval value: R|my/test/MyEndpoint| = R|my/test/MyEndpoint|(Int(32))
+        lval map: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
+            R|<local>/value|.R|my/test/MyEndpoint.query|(<L> = query@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
+                this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
+            }
+            )
+        }
+        )
+        ^box when () {
+            R|<local>/map|.R|kotlin/collections/isNotEmpty|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>() ->  {
+                String(OK)
+            }
+            else ->  {
+                String(fail)
+            }
+        }
+
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-

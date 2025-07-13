@@ -11,19 +11,26 @@ import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConstructor
+import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
+import org.jetbrains.kotlin.fir.resolve.createFunctionType
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.toLookupTag
+import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImpl.createTypeParameter
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
+import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.name.callableIdForConstructor
 
 class MyCodeGenerationExtension(
@@ -45,6 +52,7 @@ class MyCodeGenerationExtension(
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
         val endpoint = context.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
             ?: return emptyList()
+        if (endpoint.rawStatus.isData) return emptyList()
         val properties = endpoint.declarationSymbols.filterIsInstance<FirPropertySymbol>()
         val constructor = createConstructor(endpoint, Key) {
             properties.forEach { prop ->
@@ -55,12 +63,54 @@ class MyCodeGenerationExtension(
         return listOf(constructor.symbol)
     }
 
+    override fun generateFunctions(
+        callableId: CallableId,
+        context: MemberGenerationContext?
+    ): List<FirNamedFunctionSymbol> {
+        module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
+        val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
+            ?: return emptyList()
+        return if (callableId.callableName.asString() == "query") {
+            // query { value: Any?, input: Input<Any?> -> ... }
+            val lambdaType = StandardClassIds.FunctionN(2).constructClassLikeType(
+                arrayOf(
+                    session.builtinTypes.nullableAnyType.coneType,
+                    module.classIds.input.constructClassLikeType(
+                        typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType),
+                    ),
+                    session.builtinTypes.unitType.coneType
+                )
+            )
+
+            val member = createMemberFunction(
+                endpoint,
+                Key,
+                callableId.callableName,
+                session.builtinTypes.unitType.coneType
+            ) {
+                valueParameter(Name.identifier("block"), lambdaType)
+            }
+
+            module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}, and adding ${member.name}" }
+
+            listOf(member.symbol)
+        } else {
+            super.generateFunctions(callableId, context)
+        }
+    }
+
     override fun generateProperties(
         callableId: CallableId,
         context: MemberGenerationContext?
     ): List<FirPropertySymbol> {
-        module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
         val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
+            ?: return emptyList()
+
+        if (callableId.callableName.asString() == "query") return emptyList()
+
+        val prop = endpoint.declarationSymbols
+            .filterIsInstance<FirPropertySymbol>()
+            .find { it.name.asString() == callableId.callableName.asString().drop(1) }
             ?: return emptyList()
 
         return listOf(
@@ -68,8 +118,10 @@ class MyCodeGenerationExtension(
                 endpoint,
                 Key,
                 callableId.callableName,
-                module.classIds.input.defaultType()
-            ).symbol
+                module.classIds.input.constructClassLikeType(arrayOf(prop.resolvedReturnType))
+            ).also {
+                module.logger.log { "generateProperties for $endpoint. ${it.name}" }
+            }.symbol
         )
     }
 
@@ -79,13 +131,23 @@ class MyCodeGenerationExtension(
         return super.generateTopLevelClassLikeDeclaration(classId)
     }
 
+    /**
+     * Generates:
+     *  - constructor(inputs...) : this(MapEnpointAPI(name1 to input1, name2 to input2, etc)
+     *  - For every input by input(..) it generates _input = Input()
+     *      => TODO: In IR we should rewrite the body to use input(_input) for the original param.
+     *  - query { value: Any?, input: Input<Any?> - > }
+     */
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> =
         if (matchedClasses.contains(classSymbol)) setOf(SpecialNames.INIT) + classSymbol
             .declarationSymbols
             .filterIsInstance<FirPropertySymbol>()
             .filter { it.hasDelegate }
-            .map { Name.identifier("_${it.name.asString()}") }
+            .map { underscored(it) } + Name.identifier("query")
         else super.getCallableNamesForClass(classSymbol, context)
+
+    private fun underscored(symbol: FirPropertySymbol): Name =
+        Name.identifier("_${symbol.name.asString()}")
 
     @ExperimentalTopLevelDeclarationsGenerationApi
     override fun getTopLevelClassIds(): Set<ClassId> =

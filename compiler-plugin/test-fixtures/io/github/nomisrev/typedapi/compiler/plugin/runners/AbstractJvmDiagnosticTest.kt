@@ -3,11 +3,13 @@ package io.github.nomisrev.typedapi.compiler.plugin.runners
 import io.github.nomisrev.typedapi.compiler.plugin.services.ExtensionRegistrarConfigurator
 import io.github.nomisrev.typedapi.compiler.plugin.services.PluginAnnotationsProvider
 import io.github.nomisrev.typedapi.compiler.plugin.services.RuntimeClassPathProvider
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
+import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives.JVM_TARGET
 import org.jetbrains.kotlin.test.runners.AbstractFirPhasedDiagnosticTest
 import org.jetbrains.kotlin.test.services.EnvironmentBasedStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
@@ -30,6 +32,7 @@ open class AbstractJvmDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
              * All of them are located in `org.jetbrains.kotlin.test.directives` package
              */
             defaultDirectives {
+                JVM_TARGET.with(JvmTarget.JVM_11)
                 +FirDiagnosticsDirectives.FIR_DUMP
                 +JvmEnvironmentConfigurationDirectives.FULL_JDK
 

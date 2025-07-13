@@ -1,4 +1,4 @@
-FILE: hello.kt
+FILE: newConstructor.kt
     package my.test
 
     @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class MyEndpoint : R|kotlin/Any| {
@@ -25,4 +25,3 @@ FILE: hello.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-
