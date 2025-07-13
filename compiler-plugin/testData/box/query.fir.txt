@@ -11,6 +11,12 @@ FILE: query.kt
                 ^ this@R|my/test/MyEndpoint|.D|my/test/MyEndpoint.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/MyEndpoint|, ::R|my/test/MyEndpoint.age|)
             }
 
+        public final fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
         public final val _age: R|io/github/nomisrev/typedapi/Input<kotlin/Int>|
             public get(): R|io/github/nomisrev/typedapi/Input<kotlin/Int>|
 

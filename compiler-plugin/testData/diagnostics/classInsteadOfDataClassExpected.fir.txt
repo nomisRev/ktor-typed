@@ -18,6 +18,12 @@ FILE: classInsteadOfDataClassExpected.kt
 
         public final fun copy(name: R|kotlin/String| = this@R|my/test/MyEndpoint|.R|my/test/MyEndpoint.name|, age: R|kotlin/Int| = this@R|my/test/MyEndpoint|.R|my/test/MyEndpoint.age|): R|my/test/MyEndpoint|
 
+        public final fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
         public final fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
     }

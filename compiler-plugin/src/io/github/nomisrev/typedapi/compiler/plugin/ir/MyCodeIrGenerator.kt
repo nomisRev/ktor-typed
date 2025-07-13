@@ -20,6 +20,9 @@ import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrPropertyImpl
+import org.jetbrains.kotlin.ir.expressions.IrBlockBody
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrExpressionBodyImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrSimpleType
@@ -86,6 +89,18 @@ class MyCodeIrGenerator(
         CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Query"))
     ).singleOrNull() ?: error("Couldn't find query function")
 
+    val Path = pluginContext.referenceFunctions(
+        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Path"))
+    ).singleOrNull() ?: error("Couldn't find path function")
+
+    val Header = pluginContext.referenceFunctions(
+        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Header"))
+    ).singleOrNull() ?: error("Couldn't find path function")
+
+    val Body = pluginContext.referenceFunctions(
+        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Body"))
+    ).singleOrNull() ?: error("Couldn't find path function")
+
     override fun visitConstructor(declaration: IrConstructor, data: Nothing?) {
         val keyOrNull =
             (declaration.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey as? MyCodeGenerationExtension.Key
@@ -126,7 +141,12 @@ class MyCodeIrGenerator(
             .filter { (it.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey is MyCodeGenerationExtension.Key }
         val members = generated.filterIsInstance<IrPropertyImpl>()
         val functions = generated.filterIsInstance<IrFunction>()
+
         val query = functions.firstOrNull { it.name.asString() == "query" }
+        val path = functions.firstOrNull { it.name.asString() == "path" }
+        val header = functions.firstOrNull { it.name.asString() == "header" }
+        val body = functions.firstOrNull { it.name.asString() == "body" }
+
         val apiParameter = declaration.primaryConstructor?.valueParameters?.firstOrNull() ?: return
 
         if (members.isNotEmpty()) {
@@ -138,10 +158,10 @@ class MyCodeIrGenerator(
                 val queryCall = irBuilder.irCall(Query).apply {
                     extensionReceiver = irBuilder.irGet(apiParameter)
                     putTypeArgument(0, returnType)
-                // TODO pass parameters
-                //                    it.valueParameters.forEach { param ->
-                //                        putValueArgument(param.index, irBuilder.irGet(param))
-                //                    }
+                    // TODO pass parameters
+                    //                    it.valueParameters.forEach { param ->
+                    //                        putValueArgument(param.index, irBuilder.irGet(param))
+                    //                    }
                 }
                 it.backingField?.initializer = irBuilder.irExprBody(queryCall)
 //                it.body = irBuilder.irBlockBody {
@@ -154,50 +174,87 @@ class MyCodeIrGenerator(
             // TODO Inside of the `query(block: (Any?, Input<Any?>) -> Unit)` body
             //   We need to call the block lambda for every member we generated in the previous step.
             //   So for `MyEndpoint.age` & its generated `MyEndpoint._api` we need to call `block(MyEndpoint.age, MyEndpoint._age)`.
-            query.body = builder.irBlockBody {
-                val block = query.valueParameters.singleOrNull()
-                val dispatchReceiver = query.dispatchReceiverParameter!!
-                val irClass = query.parentAsClass
-                val generatedInputProperties = irClass.properties
-                    .filter { (it.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey == MyCodeGenerationExtension.Key }
-                    .associateBy { it.name.asString().removePrefix("_") }
-                val delegatedProperties = irClass.properties.filter { it.isDelegated }
-                val blockType = block?.type as? IrSimpleType
-                    ?: error("Lambda parameter is not a simple type")
-                val invokeFun = blockType.classOrNull?.functions
-                    ?.single { it.owner.name.asString() == "invoke" }
-                    ?: error("Cannot find 'invoke' function on lambda type")
+            query.body = body(builder, query, declaration, "query")
+        }
+        if (path != null && path.valueParameters.singleOrNull() != null) {
+            val builder = pluginContext.createIrBuilder(path.symbol)
+            // TODO Inside of the `query(block: (Any?, Input<Any?>) -> Unit)` body
+            //   We need to call the block lambda for every member we generated in the previous step.
+            //   So for `MyEndpoint.age` & its generated `MyEndpoint._api` we need to call `block(MyEndpoint.age, MyEndpoint._age)`.
+            path.body = body(builder, path, declaration, "path")
+        }
 
-                // For each delegated property, find its generated counterpart and call the block.
-                for (delegatedProp in delegatedProperties) {
-                    val generatedInputProp = generatedInputProperties[delegatedProp.name.asString()] ?: continue
-
-                    // Generate the call to `block.invoke(this.age, this._age)`.
-                    +irCall(invokeFun).apply {
-                        // The receiver for `invoke` is the lambda object itself.
-                        this.dispatchReceiver = irGet(block)
-
-                        // Argument 1: The value of the delegated property (e.g., `this.age`).
-                        val delegatedPropValue = irCall(delegatedProp.getter!!).apply {
-                            // The receiver for the getter is the class instance (`this`).
-                            this.dispatchReceiver = irGet(dispatchReceiver)
-                        }
-                        putValueArgument(0, delegatedPropValue)
-
-                        // Argument 2: The value of the generated input property (e.g., `this._age`).
-                        val generatedInputPropValue = irCall(generatedInputProp.getter!!).apply {
-                            this.dispatchReceiver = irGet(dispatchReceiver)
-                        }
-                        putValueArgument(1, generatedInputPropValue)
-                    }
-                }
-
-
-                module.logger.log { "Generated query for: ${declaration.name} with lambda: ${block.name}" }
-            }
+        if (header != null && header.valueParameters.singleOrNull() != null) {
+            val builder = pluginContext.createIrBuilder(header.symbol)
+            // TODO Inside of the `query(block: (Any?, Input<Any?>) -> Unit)` body
+            //   We need to call the block lambda for every member we generated in the previous step.
+            //   So for `MyEndpoint.age` & its generated `MyEndpoint._api` we need to call `block(MyEndpoint.age, MyEndpoint._age)`.
+            header.body = body(builder, header, declaration, "header")
+        }
+        if (body != null && body.valueParameters.singleOrNull() != null) {
+            val builder = pluginContext.createIrBuilder(body.symbol)
+            // TODO Inside of the `query(block: (Any?, Input<Any?>) -> Unit)` body
+            //   We need to call the block lambda for every member we generated in the previous step.
+            //   So for `MyEndpoint.age` & its generated `MyEndpoint._api` we need to call `block(MyEndpoint.age, MyEndpoint._age)`.
+            body.body = body(builder, body, declaration, "body")
         }
 
         super.visitClass(declaration, data)
+    }
+
+    private fun body(
+        builder: DeclarationIrBuilder,
+        query: IrFunction,
+        declaration: IrClass,
+        type: String
+    ): IrBlockBody = builder.irBlockBody {
+        val block = query.valueParameters.singleOrNull()
+        val dispatchReceiver = query.dispatchReceiverParameter!!
+        val irClass = query.parentAsClass
+        val generatedInputProperties = irClass.properties
+            .filter { (it.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey == MyCodeGenerationExtension.Key }
+            .associateBy { it.name.asString().removePrefix("_") }
+
+        // ((definedProperties.single().backingField?.initializer?.expression as IrCallImpl).dispatchReceiver as? IrSimpleFunctionSymbolImpl)?.owner?.name
+
+        val defined = irClass.properties.filter {
+            (((irClass.properties.first().backingField?.initializer as? IrExpressionBodyImpl)?.expression as? IrCallImpl)?.dispatchReceiver as? IrCallImpl)?.symbol?.owner?.name?.identifier == type
+        }
+
+        val propToActual = defined.mapNotNull { prop ->
+            generatedInputProperties[prop.name.asString()]?.let { prop to it }
+        }
+
+        val blockType = block?.type as? IrSimpleType
+            ?: error("Lambda parameter is not a simple type")
+        val invokeFun = blockType.classOrNull?.functions
+            ?.single { it.owner.name.asString() == "invoke" }
+            ?: error("Cannot find 'invoke' function on lambda type")
+
+        // For each delegated property, find its generated counterpart and call the block.
+        for ((defined, generated) in propToActual) {
+            // Generate the call to `block.invoke(this.age, this._age)`.
+            +irCall(invokeFun).apply {
+                // The receiver for `invoke` is the lambda object itself.
+                this.dispatchReceiver = irGet(block)
+
+                // Argument 1: The value of the delegated property (e.g., `this.age`).
+                val delegatedPropValue = irCall(defined.getter!!).apply {
+                    // The receiver for the getter is the class instance (`this`).
+                    this.dispatchReceiver = irGet(dispatchReceiver)
+                }
+                putValueArgument(0, delegatedPropValue)
+
+                // Argument 2: The value of the generated input property (e.g., `this._age`).
+                val generatedInputPropValue = irCall(generated.getter!!).apply {
+                    this.dispatchReceiver = irGet(dispatchReceiver)
+                }
+                putValueArgument(1, generatedInputPropValue)
+            }
+        }
+
+
+        module.logger.log { "Generated query for: ${declaration.name} with lambda: ${block.name}" }
     }
 
 //    override fun visitFunction(declaration: IrFunction, data: Nothing?) {

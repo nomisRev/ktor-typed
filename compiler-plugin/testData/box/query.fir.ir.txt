@@ -67,6 +67,18 @@ FILE fqName:my.test fileName:/query.kt
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
       $this: VALUE_PARAMETER name:<this> type:kotlin.Any
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL <> ($this:my.test.MyEndpoint, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:my.test.MyEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL <> ($this:my.test.MyEndpoint, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:my.test.MyEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL <> ($this:my.test.MyEndpoint, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      $this: VALUE_PARAMETER name:<this> type:my.test.MyEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      BLOCK_BODY
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL <> ($this:my.test.MyEndpoint, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
       $this: VALUE_PARAMETER name:<this> type:my.test.MyEndpoint
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>

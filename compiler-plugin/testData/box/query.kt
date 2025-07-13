@@ -19,5 +19,5 @@ fun box(): String {
             put(any, input)
         }
     }
-    return if (map.isNotEmpty()) "OK" else "fail"
+    return if (map.size == 1) "OK" else "fail"
 }

@@ -70,14 +70,12 @@ class MyCodeGenerationExtension(
         module.logger.log { "matchedClasses: ${matchedClasses.map { it.classId }}" }
         val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
             ?: return emptyList()
-        return if (callableId.callableName.asString() == "query") {
+        return if (conversionFns.contains(callableId.callableName)) {
             // query { value: Any?, input: Input<Any?> -> ... }
             val lambdaType = StandardClassIds.FunctionN(2).constructClassLikeType(
                 arrayOf(
                     session.builtinTypes.nullableAnyType.coneType,
-                    module.classIds.input.constructClassLikeType(
-                        typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType),
-                    ),
+                    module.classIds.input.constructClassLikeType(typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType)),
                     session.builtinTypes.unitType.coneType
                 )
             )
@@ -106,7 +104,7 @@ class MyCodeGenerationExtension(
         val endpoint = context?.declaredScope?.classId?.let { classId -> matchedClasses.find { it.classId == classId } }
             ?: return emptyList()
 
-        if (callableId.callableName.asString() == "query") return emptyList()
+        if (conversionFns.contains(callableId.callableName)) return emptyList()
 
         val prop = endpoint.declarationSymbols
             .filterIsInstance<FirPropertySymbol>()
@@ -131,6 +129,13 @@ class MyCodeGenerationExtension(
         return super.generateTopLevelClassLikeDeclaration(classId)
     }
 
+    val conversionFns = listOf(
+        Name.identifier("query"),
+        Name.identifier("path"),
+        Name.identifier("header"),
+        Name.identifier("body"),
+    )
+
     /**
      * Generates:
      *  - constructor(inputs...) : this(MapEnpointAPI(name1 to input1, name2 to input2, etc)
@@ -143,7 +148,7 @@ class MyCodeGenerationExtension(
             .declarationSymbols
             .filterIsInstance<FirPropertySymbol>()
             .filter { it.hasDelegate }
-            .map { underscored(it) } + Name.identifier("query")
+            .map { underscored(it) } + conversionFns
         else super.getCallableNamesForClass(classSymbol, context)
 
     private fun underscored(symbol: FirPropertySymbol): Name =
