@@ -2,6 +2,7 @@ plugins {
     id(libs.plugins.kotlin.multiplatform.get().pluginId)
     alias(libs.plugins.serialization)
     id("org.jetbrains.kotlinx.kover")
+    alias(libs.plugins.buildconfig)
 }
 
 kotlin {
@@ -12,12 +13,11 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-//                api(libs.kotlinx.serialization)
                 api(libs.kotlinx.serialization.json)
                 api(libs.kaml)
             }
         }
-        commonTest {
+        jvmTest {
             dependencies {
                 implementation(libs.kotlin.test)
             }
