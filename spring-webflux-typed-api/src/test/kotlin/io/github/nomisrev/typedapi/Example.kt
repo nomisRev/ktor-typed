@@ -49,6 +49,9 @@ class ProfileApi(api: EndpointAPI) : HttpRequestValue {
 @Serializable
 data class TestBody(val value: String)
 
+@Serializable
+data class Profile(val id: Int, val name: String, val email: String?, val userAgent: String)
+
 class Test {
     @Test
     fun example() {
