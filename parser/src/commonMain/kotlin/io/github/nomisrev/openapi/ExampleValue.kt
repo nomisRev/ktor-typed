@@ -4,6 +4,7 @@ import com.charleskorn.kaml.YamlInput
 import com.charleskorn.kaml.YamlList
 import com.charleskorn.kaml.YamlNode
 import com.charleskorn.kaml.YamlScalar
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.KSerializer
@@ -42,7 +43,7 @@ public sealed interface ExampleValue {
             private val multipleSerializer = ListSerializer(String.serializer())
 
             // TODO implement proper SerialDescriptor
-            @InternalSerializationApi
+            @OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class)
             override val descriptor: SerialDescriptor =
                 buildSerialDescriptor("io.github.nomisrev.openapi.ExampleValueSerializer", SerialKind.CONTEXTUAL)
 

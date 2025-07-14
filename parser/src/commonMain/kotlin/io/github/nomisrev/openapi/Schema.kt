@@ -4,6 +4,7 @@ import com.charleskorn.kaml.YamlInput
 import com.charleskorn.kaml.YamlList
 import com.charleskorn.kaml.YamlNode
 import com.charleskorn.kaml.YamlScalar
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -119,7 +120,7 @@ public data class Schema(
 
         public object Serializer : KSerializer<Type> {
             // TODO fix descriptor
-            @OptIn(InternalSerializationApi::class)
+            @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
             override val descriptor: SerialDescriptor =
                 buildSerialDescriptor("io.github.nomisrev.openapi.Schema.Type", SerialKind.CONTEXTUAL)
 

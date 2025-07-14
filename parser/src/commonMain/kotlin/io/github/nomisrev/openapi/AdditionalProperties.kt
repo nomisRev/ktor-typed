@@ -4,6 +4,7 @@ import com.charleskorn.kaml.YamlInput
 import com.charleskorn.kaml.YamlMap
 import com.charleskorn.kaml.YamlNode
 import com.charleskorn.kaml.YamlScalar
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.KSerializer
@@ -29,7 +30,7 @@ public sealed interface AdditionalProperties {
 
   public companion object {
     internal object Serializer : KSerializer<AdditionalProperties> {
-      @OptIn(InternalSerializationApi::class)
+      @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
       override val descriptor =
         buildSerialDescriptor("io.github.nomisrev.openapi.AdditionalProperties", SerialKind.CONTEXTUAL)
 

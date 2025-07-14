@@ -9,7 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(libs.kotlinx.serialization)
+//                api(libs.kotlinx.serialization)
                 api(libs.kotlinx.coroutines)
             }
         }

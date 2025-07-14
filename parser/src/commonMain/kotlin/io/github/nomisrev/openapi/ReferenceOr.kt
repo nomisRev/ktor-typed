@@ -4,6 +4,7 @@ import com.charleskorn.kaml.YamlInput
 import com.charleskorn.kaml.YamlMap
 import com.charleskorn.kaml.YamlNode
 import com.charleskorn.kaml.yamlScalar
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.KSerializer
@@ -54,7 +55,7 @@ public sealed interface ReferenceOr<out A> {
 
         internal class Serializer<T>(private val dataSerializer: KSerializer<T>) :
             KSerializer<ReferenceOr<T>> {
-            @OptIn(InternalSerializationApi::class)
+            @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
             override val descriptor: SerialDescriptor =
                 buildSerialDescriptor("io.github.nomisrev.openapi.ReferenceOr", SerialKind.CONTEXTUAL)
 
