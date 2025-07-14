@@ -1,0 +1,46 @@
+FILE: pathWithParams.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/path/{param1}/second/{param2})) public final class Paths : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/Paths| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val param1: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param1|)
+            public get(): R|kotlin/Int| {
+                ^ this@R|my/test/Paths|.D|my/test/Paths.param1|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param1|)
+            }
+
+        public final val param2: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param2|)
+            public get(): R|kotlin/String| {
+                ^ this@R|my/test/Paths|.D|my/test/Paths.param2|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param2|)
+            }
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(param1: R|kotlin/Int|, param2: R|kotlin/String|): R|my/test/Paths|
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval value: R|my/test/Paths| = R|my/test/Paths|(Int(1), String(2))
+        lval path: R|kotlin/String| = R|<local>/value|.R|my/test/Paths.path|()
+        ^box when () {
+            ==(R|<local>/path|, String(/path/1/second/2)) ->  {
+                String(OK)
+            }
+            else ->  {
+                String(fail)
+            }
+        }
+
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test

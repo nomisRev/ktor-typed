@@ -67,8 +67,8 @@ jobs:
       - name: Check root project
         run: ./gradlew check --continue --quiet
 
-#      - name: Check samples
-#        run: ./gradlew -p samples check --continue --quiet
+      - name: Check samples
+        run: ./gradlew -p samples check --continue --quiet
 
       - name: (Fail-only) Upload reports
         if: failure()

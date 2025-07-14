@@ -147,6 +147,7 @@ private class ServerEndpointAPI(var path: String, private val request: ServerReq
         }
 }
 
+@Suppress("UNCHECKED_CAST")
 private fun <A> getParameter(
     values: List<String>?,
     name: String,

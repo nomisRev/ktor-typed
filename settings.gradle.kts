@@ -1,4 +1,3 @@
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -10,6 +9,12 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
     }
+
+    versionCatalogs {
+        create("ktorLibs") {
+            from("io.ktor:ktor-version-catalog:3.2.1")
+        }
+    }
 }
 
 rootProject.name = "typed-api-root"
@@ -18,4 +23,5 @@ include("typed-api-docs")
 include("parser")
 include("ktor-typed-api")
 include("spring-webflux-typed-api")
-include("typed-api-ksp")
+include("compiler-plugin")
+include("gradle-plugin")
