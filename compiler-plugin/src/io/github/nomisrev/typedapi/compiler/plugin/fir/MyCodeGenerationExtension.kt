@@ -1,8 +1,15 @@
 package io.github.nomisrev.typedapi.compiler.plugin.fir
 
+import com.intellij.openapi.progress.Task
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
 import org.jetbrains.kotlin.GeneratedDeclarationKey
+import org.jetbrains.kotlin.analysis.decompiler.stub.flags.VISIBILITY
+import org.jetbrains.kotlin.descriptors.Modality
+import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.containingClassForStaticMemberAttr
+import org.jetbrains.kotlin.fir.declarations.builder.buildProperty
+import org.jetbrains.kotlin.fir.declarations.impl.FirDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
@@ -12,6 +19,7 @@ import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
+import org.jetbrains.kotlin.fir.render
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
@@ -59,6 +67,8 @@ class MyCodeGenerationExtension(
             properties.forEach { prop ->
                 valueParameter(prop.name, prop.resolvedReturnType)
             }
+        }.apply {
+            containingClassForStaticMemberAttr = endpoint.toLookupTag()
         }
         module.logger.log { "Generating constructor for $endpoint: (${constructor.valueParameters.joinToString { it.name.asString() }})" }
         return listOf(constructor.symbol)
@@ -99,6 +109,8 @@ class MyCodeGenerationExtension(
                 status {
                     isOverride = true
                 }
+            }.apply {
+                containingClassForStaticMemberAttr = endpoint.toLookupTag()
             }
 
             module.logger.log { "Generating 'Inspectable' for $endpoint.${member.name}" }
@@ -109,34 +121,35 @@ class MyCodeGenerationExtension(
         }
     }
 
-    override fun generateProperties(
-        callableId: CallableId,
-        context: MemberGenerationContext?
-    ): List<FirPropertySymbol> {
-        val endpoint = context
-            ?.declaredScope
-            ?.classId
-            ?.let { classId -> matchedClasses.find { it.classId == classId } }
-            ?: return emptyList()
-
-        if (conversionFns.contains(callableId.callableName)) return emptyList()
-
-        val prop = endpoint.declarationSymbols
-            .filterIsInstance<FirPropertySymbol>()
-            .find { it.name.asString() == callableId.callableName.asString().drop(1) }
-            ?: return emptyList()
-
-        return listOf(
-            createMemberProperty(
-                endpoint,
-                Key,
-                callableId.callableName,
-                module.classIds.input.constructClassLikeType(arrayOf(prop.resolvedReturnType))
-            ).also {
-                module.logger.log { "generateProperties for $endpoint.${it.name}" }
-            }.symbol
-        )
-    }
+//    override fun generateProperties(
+//        callableId: CallableId,
+//        context: MemberGenerationContext?
+//    ): List<FirPropertySymbol> {
+//        val endpoint = context
+//            ?.declaredScope
+//            ?.classId
+//            ?.let { classId -> matchedClasses.find { it.classId == classId } }
+//            ?: return emptyList()
+//
+//        if (conversionFns.contains(callableId.callableName)) return emptyList()
+//
+//        val prop = endpoint.declarationSymbols
+//            .filterIsInstance<FirPropertySymbol>()
+//            .find { it.name.asString() == callableId.callableName.asString().drop(1) }
+//            ?: return emptyList()
+//
+//        return listOf(
+//            createMemberProperty(
+//                endpoint,
+//                Key,
+//                callableId.callableName,
+//                module.classIds.input.constructClassLikeType(arrayOf(prop.resolvedReturnType))
+//            ).apply {
+//                containingClassForStaticMemberAttr = endpoint.toLookupTag()
+//                module.logger.log { "generateProperties for $endpoint.$name" }
+//            }.symbol
+//        )
+//    }
 
     /**
      * Generates:
@@ -147,11 +160,11 @@ class MyCodeGenerationExtension(
      */
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         return if (matchedClasses.contains(classSymbol)) {
-            val callables = setOf(SpecialNames.INIT) + classSymbol
+            val callables = setOf(SpecialNames.INIT) /*+ classSymbol
                 .declarationSymbols
                 .filterIsInstance<FirPropertySymbol>()
                 .filter { it.hasDelegate }
-                .map { underscored(it) } + conversionFns
+                .map { underscored(it) }*/ + conversionFns
             module.logger.log { "getCallableNamesForClass for ${classSymbol.classId}: $callables" }
             callables
         } else super.getCallableNamesForClass(classSymbol, context)
