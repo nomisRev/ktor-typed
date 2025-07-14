@@ -16,7 +16,7 @@ class Option<A : Any>(
 ) : AbstractCliOption {
     val key = CompilerConfigurationKey<A>(name)
     override val optionName: String
-        inline get() = name
+        get() = name
 
     companion object {
         val Debug =

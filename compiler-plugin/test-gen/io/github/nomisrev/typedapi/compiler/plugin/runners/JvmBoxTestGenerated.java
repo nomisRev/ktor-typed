@@ -34,6 +34,12 @@ public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
   }
 
   @Test
+  @TestMetadata("pathWithParams.kt")
+  public void testPathWithParams() {
+    runTest("compiler-plugin/testData/box/pathWithParams.kt");
+  }
+
+  @Test
   @TestMetadata("query.kt")
   public void testQuery() {
     runTest("compiler-plugin/testData/box/query.kt");

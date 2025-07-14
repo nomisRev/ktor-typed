@@ -35,6 +35,7 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.psi.KtPsiFactory
 
 class MyCodeGenerationExtension(
     session: FirSession,
@@ -115,11 +116,25 @@ class MyCodeGenerationExtension(
 
             module.logger.log { "Generating 'Inspectable' for $endpoint.${member.name}" }
 
-            listOf(member.symbol)
+            listOfNotNull(member.symbol, pathStringOrNull(callableId, endpoint)?.symbol)
         } else {
             super.generateFunctions(callableId, context)
         }
     }
+
+    private fun pathStringOrNull(callableId: CallableId, endpoint: FirRegularClassSymbol) =
+        if (callableId.callableName.asString() == "path") {
+            createMemberFunction(
+                endpoint,
+                Key,
+                callableId.callableName,
+                session.builtinTypes.stringType.coneType
+            ) {
+                status { isOverride = true }
+            }.apply {
+                containingClassForStaticMemberAttr = endpoint.toLookupTag()
+            }
+        } else null
 
 //    override fun generateProperties(
 //        callableId: CallableId,

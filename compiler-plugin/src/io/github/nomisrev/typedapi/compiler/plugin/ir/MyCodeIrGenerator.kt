@@ -10,27 +10,36 @@ import org.jetbrains.kotlin.ir.builders.IrGeneratorContext
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irCall
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
+import org.jetbrains.kotlin.ir.builders.irExprBody
 import org.jetbrains.kotlin.ir.builders.irGet
+import org.jetbrains.kotlin.ir.builders.irString
 import org.jetbrains.kotlin.ir.builders.irVararg
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrPropertyImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
+import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrExpressionBodyImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrStringConcatenationImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.isString
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.functions
+import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
 import org.jetbrains.kotlin.ir.util.isVararg
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
@@ -137,26 +146,128 @@ class MyCodeIrGenerator(
     override fun visitFunction(declaration: IrFunction, data: Nothing?) {
         if (declaration.origin is IrDeclarationOrigin.GeneratedByPlugin) {
             module.logger.log { "Generating function: ${declaration.name}" }
-            when(declaration.name.asString()) {
-               "query" -> {
-                   val builder = pluginContext.createIrBuilder(declaration.symbol)
-                   declaration.body = body(builder, declaration, declaration.parentAsClass, "query", declaration.valueParameters.single())
-               }
-               "path" -> {
-                   val builder = pluginContext.createIrBuilder(declaration.symbol)
-                   declaration.body = body(builder, declaration, declaration.parentAsClass, "path", declaration.valueParameters.single())
-               }
-               "header" -> {
-                   val builder = pluginContext.createIrBuilder(declaration.symbol)
-                   declaration.body = body(builder, declaration, declaration.parentAsClass, "header", declaration.valueParameters.single())
-               }
+            when (declaration.name.asString()) {
+                "query" -> {
+                    val builder = pluginContext.createIrBuilder(declaration.symbol)
+                    declaration.body = body(
+                        builder,
+                        declaration,
+                        declaration.parentAsClass,
+                        "query"
+                    )
+                }
+
+                "path" -> {
+                    val builder = pluginContext.createIrBuilder(declaration.symbol)
+                    if (declaration.valueParameters.size == 0) declaration.body = buildPathString(builder, declaration)
+                    else declaration.body = body(
+                        builder,
+                        declaration,
+                        declaration.parentAsClass,
+                        "path"
+                    )
+                }
+
+                "header" -> {
+                    val builder = pluginContext.createIrBuilder(declaration.symbol)
+                    declaration.body = body(
+                        builder,
+                        declaration,
+                        declaration.parentAsClass,
+                        "header"
+                    )
+                }
+
                 "body" -> {
-                   val builder = pluginContext.createIrBuilder(declaration.symbol)
-                   declaration.body = body(builder, declaration, declaration.parentAsClass, "body", declaration.valueParameters.single())
+                    val builder = pluginContext.createIrBuilder(declaration.symbol)
+                    declaration.body = body(
+                        builder,
+                        declaration,
+                        declaration.parentAsClass,
+                        "body"
+                    )
                 }
             }
         }
         super.visitFunction(declaration, data)
+    }
+
+    /**
+     * Builds String template from @Endpoint(path) where path needs to replace {{propName}} with propName values.
+     * So for "/user/{userId}/other/{value}" it needs to replace {userId} and {value} with ${this.userId} and ${this.value}.
+     */
+    fun buildPathString(builder: DeclarationIrBuilder, declaration: IrFunction): IrExpressionBody {
+        val parentClass = declaration.parentAsClass
+        val annotation = parentClass.annotations.find { it.isAnnotationWithEqualFqName(module.classIds.annotation) }
+            ?: error("Endpoint annotation not found on ${parentClass.name}")
+
+        val pathArgument = annotation.getValueArgument(0) as? IrConstImpl
+            ?: error("Expected annotation argument to be a string literal")
+        val pathString = pathArgument.value as? String
+            ?: error("Expected annotation argument to be a string")
+
+        val propertiesByName = parentClass.declarations
+            .filterIsInstance<IrProperty>()
+            .associateBy { it.name.asString() }
+
+        val irExpressions = mutableListOf<IrExpression>()
+        val regex = """\{([^}]+)\}""".toRegex()
+        var lastIndex = 0
+
+        regex.findAll(pathString).forEach { matchResult ->
+            // Add the static part of the string before the placeholder.
+            if (matchResult.range.first > lastIndex) {
+                val staticPart = pathString.substring(lastIndex, matchResult.range.first)
+                irExpressions.add(builder.irString(staticPart))
+            }
+
+            // Handle the placeholder.
+            val propertyName = matchResult.groupValues[1]
+            val property = propertiesByName[propertyName]
+                ?: error("Cannot find property '$propertyName' in class '${parentClass.name.asString()}' for path template.")
+
+            // Create an expression to get the property value, e.g., `this.userId`.
+            val propertyGetterCall = builder.irCall(property.getter!!).apply {
+                dispatchReceiver = builder.irGet(declaration.dispatchReceiverParameter!!)
+            }
+            irExpressions.add(propertyGetterCall)
+
+            lastIndex = matchResult.range.last + 1
+        }
+
+        if (lastIndex < pathString.length) {
+            val staticPart = pathString.substring(lastIndex)
+            irExpressions.add(builder.irString(staticPart))
+        }
+
+        val finalExpression = when {
+            // Path was empty or contained no placeholders
+            irExpressions.isEmpty() -> builder.irString(pathString)
+            // Path is a single element, e.g. "{userId}" or "just-a-string"
+            irExpressions.size == 1 -> {
+                val expr = irExpressions.single()
+                if (expr !is IrConstImpl && !expr.type.isString()) {
+                    val toStringSymbol = pluginContext.irBuiltIns.anyClass.functions.single {
+                        it.owner.name.asString() == "toString" && it.owner.valueParameters.isEmpty()
+                    }
+                    builder.irCall(toStringSymbol).apply {
+                        dispatchReceiver = expr
+                    }
+                } else {
+                    expr
+                }
+            }
+            // Path is a combination of strings and properties, build a string concatenation
+            else -> IrStringConcatenationImpl(
+                builder.startOffset,
+                builder.endOffset,
+                pluginContext.symbols.string.defaultType,
+                irExpressions
+            )
+        }
+
+
+        return builder.irExprBody(finalExpression)
     }
 
     /**
@@ -167,8 +278,7 @@ class MyCodeIrGenerator(
         builder: DeclarationIrBuilder,
         function: IrFunction,
         endpoint: IrClass,
-        type: String,
-        api: IrValueParameter
+        type: String
     ): IrBlockBody = builder.irBlockBody {
         val block = function.valueParameters.singleOrNull()
         val inputType = when (type) {
@@ -184,28 +294,28 @@ class MyCodeIrGenerator(
             ?.single { it.owner.name.asString() == "invoke" }
             ?: error("Cannot find 'invoke' function on lambda type")
 
-        val props = endpoint.declarations
+        val inputs = endpoint.declarations
             .filterIsInstance<IrPropertyImpl>()
             .filter {
                 ((it.backingField?.initializer?.expression as IrCallImpl).dispatchReceiver as IrCallImpl).symbol.owner.name.asString() == type
             }
-        val api = endpoint.primaryConstructor!!.valueParameters.single()
-            // backinfField.initializer.expression.dispatchReceiver
-        // For each delegated property, find its generated counterpart and call the block.
-        for (defined in props) {
+
+        for (input in inputs) {
             // Generate the call to `block.invoke(this.age, Input.Query<String>())`.
             +irCall(invokeFun).apply {
                 // Receiver: set the `block` function parameter as receiver for the lambda invocation
                 dispatchReceiver = irGet(block)
 
                 // Argument 1: Get the actual value `this.age`
-                putValueArgument(0, irCall(defined.getter!!).apply {
+                putValueArgument(0, irCall(input.getter!!).apply {
                     this.dispatchReceiver = irGet(function.dispatchReceiverParameter!!)
                 })
 
-                // Argument 2: The value of the generated input property (e.g., `Query<String>()`).
+                // Argument 2: The value of the generated input property (e.g., `Query<String>(name)`).
                 putValueArgument(1, irCall(inputType).apply {
-                    putTypeArgument(0, defined.getter!!.returnType)
+                    putTypeArgument(0, input.getter!!.returnType)
+                    // TODO: consider the specified name!
+                    putValueArgument(0, irString(input.name.asString()))
                     // TODO pass parameters
                     //   it.valueParameters.forEach { param ->
                     //       putValueArgument(param.index, irBuilder.irGet(param))

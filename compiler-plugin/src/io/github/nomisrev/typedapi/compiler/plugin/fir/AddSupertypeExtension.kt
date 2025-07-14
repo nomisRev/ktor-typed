@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 
 class AddSupertypeExtension(session: FirSession, module: PluginContext) : FirSupertypeGenerationExtension(session) {
     private val annotation = module.classIds.annotation
-    private val inspectable = module.classIds.inspectable
+    private val httpRequestValue = module.classIds.httpRequestValue
 
     override fun needTransformSupertypes(declaration: FirClassLikeDeclaration): Boolean =
         declaration.annotations.any { it.fqName(session) == annotation }
@@ -21,5 +21,5 @@ class AddSupertypeExtension(session: FirSession, module: PluginContext) : FirSup
         resolvedSupertypes: List<FirResolvedTypeRef>,
         typeResolver: TypeResolveService
     ): List<ConeKotlinType> =
-        listOf(inspectable.defaultType(emptyList()))
+        listOf(httpRequestValue.defaultType(emptyList()))
 }

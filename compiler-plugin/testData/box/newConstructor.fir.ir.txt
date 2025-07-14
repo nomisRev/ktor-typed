@@ -1,5 +1,5 @@
 FILE fqName:my.test fileName:/newConstructor.kt
-  CLASS CLASS name:NewConstructor modality:FINAL visibility:public superTypes:[kotlin.Any]
+  CLASS CLASS name:NewConstructor modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
     annotations:
       Endpoint(path = "/")
     $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:my.test.NewConstructor
@@ -22,19 +22,6 @@ FILE fqName:my.test fileName:/newConstructor.kt
                 receiver: GET_VAR '<this>: my.test.NewConstructor declared in my.test.NewConstructor.<get-age>' type=my.test.NewConstructor origin=null
               thisRef: GET_VAR '<this>: my.test.NewConstructor declared in my.test.NewConstructor.<get-age>' type=my.test.NewConstructor origin=null
               property: PROPERTY_REFERENCE 'public final age: kotlin.Int declared in my.test.NewConstructor' field=null getter='public final fun <get-age> (): kotlin.Int declared in my.test.NewConstructor' setter=null type=kotlin.reflect.KProperty1<my.test.NewConstructor, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
-    PROPERTY GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:_age visibility:public modality:FINAL [val]
-      FIELD PROPERTY_BACKING_FIELD name:_age type:io.github.nomisrev.typedapi.Input<kotlin.Int> visibility:private [final]
-        EXPRESSION_BODY
-          CALL 'public final fun Query <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Query>?): io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> origin=null
-            <A>: io.github.nomisrev.typedapi.Input<kotlin.Int>
-            $receiver: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.NewConstructor.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
-      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-_age> visibility:public modality:FINAL <> ($this:my.test.NewConstructor) returnType:io.github.nomisrev.typedapi.Input<kotlin.Int>
-        correspondingProperty: PROPERTY GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:_age visibility:public modality:FINAL [val]
-        $this: VALUE_PARAMETER name:<this> type:my.test.NewConstructor
-        BLOCK_BODY
-          RETURN type=kotlin.Nothing from='public final fun <get-_age> (): io.github.nomisrev.typedapi.Input<kotlin.Int> declared in my.test.NewConstructor'
-            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:_age type:io.github.nomisrev.typedapi.Input<kotlin.Int> visibility:private [final]' type=io.github.nomisrev.typedapi.Input<kotlin.Int> origin=null
-              receiver: GET_VAR '<this>: my.test.NewConstructor declared in my.test.NewConstructor.<get-_age>' type=my.test.NewConstructor origin=null
     CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public <> (age:kotlin.Int) returnType:my.test.NewConstructor
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:age index:0 type:kotlin.Int
       BLOCK_BODY
@@ -53,42 +40,60 @@ FILE fqName:my.test fileName:/newConstructor.kt
       VALUE_PARAMETER name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:NewConstructor modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.Unit
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:NewConstructor modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:kotlin.Any
       VALUE_PARAMETER name:other index:0 type:kotlin.Any?
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
       overridden:
         public open fun hashCode (): kotlin.Int declared in kotlin.Any
+        public open fun hashCode (): kotlin.Int declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:kotlin.Any
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
+        public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:kotlin.Any
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      overridden:
+        public abstract fun body (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:my.test.NewConstructor
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      overridden:
+        public abstract fun header (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:my.test.NewConstructor
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL <> ($this:my.test.NewConstructor) returnType:kotlin.String
+      overridden:
+        public abstract fun path (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:my.test.NewConstructor
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      EXPRESSION_BODY
+        CONST String type=kotlin.String value="/"
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      overridden:
+        public abstract fun path (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      $this: VALUE_PARAMETER name:<this> type:my.test.NewConstructor
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL <> ($this:my.test.NewConstructor, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+      overridden:
+        public abstract fun query (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       $this: VALUE_PARAMETER name:<this> type:my.test.NewConstructor
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit>
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
         CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=R of kotlin.Function2 origin=null
-          $this: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit> declared in my.test.NewConstructor.query' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>, kotlin.Unit> origin=null
+          $this: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> declared in my.test.NewConstructor.query' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> origin=null
           p1: CALL 'public final fun <get-age> (): kotlin.Int declared in my.test.NewConstructor' type=kotlin.Int origin=null
             $this: GET_VAR '<this>: my.test.NewConstructor declared in my.test.NewConstructor.query' type=my.test.NewConstructor origin=null
-          p2: CALL 'public final fun <get-_age> (): io.github.nomisrev.typedapi.Input<kotlin.Int> declared in my.test.NewConstructor' type=io.github.nomisrev.typedapi.Input<kotlin.Int> origin=null
-            $this: GET_VAR '<this>: my.test.NewConstructor declared in my.test.NewConstructor.query' type=my.test.NewConstructor origin=null
+          p2: CALL 'public final fun Query <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Query>?): io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> origin=null
+            <A>: kotlin.Int
+            name: CONST String type=kotlin.String value="age"
   FUN name:box visibility:public modality:FINAL <> () returnType:kotlin.String
     BLOCK_BODY
       TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit

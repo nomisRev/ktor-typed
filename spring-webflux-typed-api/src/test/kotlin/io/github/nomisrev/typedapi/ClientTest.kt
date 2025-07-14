@@ -14,10 +14,38 @@ import reactor.core.publisher.Mono
 import kotlin.test.Test
 
 @Endpoint(path = "/client-test/{id}")
-class SimpleClientApi(api: EndpointAPI) {
+class SimpleClientApi(api: EndpointAPI) : HttpRequestValue {
+
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()
     val header: String by api.header<String>()
+
+    // Compiler plugin generates everything below
+    constructor(id: Int, name: String, header: String) : this(
+        MapEndpointAPI(
+            mapOf(
+                "id" to id,
+                "name" to name,
+                "header" to header
+            )
+        )
+    )
+
+    override fun path(): String = "/client-test/$id"
+
+    override fun query(block: (Any?, Input.Query<Any?>) -> Unit) {
+        block(name, Query<String>() as Input.Query<Any?>)
+    }
+
+    override fun path(block: (Any?, Input.Path<Any?>) -> Unit) {
+        block(id, Path<String>() as Input.Path<Any?>)
+    }
+
+    override fun header(block: (Any?, Input.Header<Any?>) -> Unit) {
+        block(header, Header<String>() as Input.Header<Any?>)
+    }
+
+    override fun body(block: (Any?, Input.Body<Any?>) -> Unit) {}
 }
 
 @Serializable
@@ -31,10 +59,36 @@ data class ClientTestResponse(
 )
 
 @Endpoint(path = "/nullable-test/{id}")
-class NullableParamsApi(api: EndpointAPI) {
+class NullableParamsApi(api: EndpointAPI) : HttpRequestValue {
     val id: Int by api.path<Int>()
     val name: String? by api.query<String?>()
     val header: String? by api.header<String?>()
+
+    // Compiler plugin generates everything below
+    constructor(id: Int, name: String?, header: String?) : this(
+        MapEndpointAPI(
+            mapOf(
+                "id" to id,
+                "name" to name,
+                "header" to header
+            )
+        )
+    )
+    override fun path(): String = "/nullable-test/$id"
+
+    override fun query(block: (Any?, Input.Query<Any?>) -> Unit) {
+        block(name, Query<String>() as Input.Query<Any?>)
+    }
+
+    override fun path(block: (Any?, Input.Path<Any?>) -> Unit) {
+        block(id, Path<String>() as Input.Path<Any?>)
+    }
+
+    override fun header(block: (Any?, Input.Header<Any?>) -> Unit) {
+        block(header, Header<String>() as Input.Header<Any?>)
+    }
+
+    override fun body(block: (Any?, Input.Body<Any?>) -> Unit) {}
 }
 
 class ClientTest {

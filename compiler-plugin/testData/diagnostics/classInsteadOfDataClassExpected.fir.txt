@@ -1,7 +1,7 @@
 FILE: classInsteadOfDataClassExpected.kt
     package my.test
 
-    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final data class MyEndpoint : R|kotlin/Any| {
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final data class MyEndpoint : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
         public constructor(name: R|kotlin/String|, age: R|kotlin/Int|): R|my/test/MyEndpoint| {
             super<R|kotlin/Any|>()
         }
@@ -18,13 +18,15 @@ FILE: classInsteadOfDataClassExpected.kt
 
         public final fun copy(name: R|kotlin/String| = this@R|my/test/MyEndpoint|.R|my/test/MyEndpoint.name|, age: R|kotlin/Int| = this@R|my/test/MyEndpoint|.R|my/test/MyEndpoint.age|): R|my/test/MyEndpoint|
 
-        public final fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
-        public final fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+        public final override fun path(): R|kotlin/String|
 
-        public final fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
-        public final fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
     }
 FILE: __GENERATED DECLARATIONS__.kt

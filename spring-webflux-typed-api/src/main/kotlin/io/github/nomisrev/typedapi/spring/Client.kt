@@ -1,49 +1,60 @@
 package io.github.nomisrev.typedapi.spring
 
-import io.github.nomisrev.typedapi.Input
-import io.github.nomisrev.typedapi.Request
+import io.github.nomisrev.typedapi.HttpRequestValue
 import org.springframework.http.HttpMethod
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import reactor.core.publisher.Mono
+import org.springframework.web.reactive.function.client.awaitExchange
 
-suspend fun <A, B> WebClient.request(
-    request: Request<A, B>,
+suspend fun <A : HttpRequestValue, T : Any> WebClient.request(
     method: HttpMethod,
-): WebClient.ResponseSpec {
-    var currentUrl = request.path
-    val builder = method(method)
-
-    request.build { name, value, input ->
-        when (input) {
-            is Input.Body<*> -> value?.let {
-                builder.bodyValue(value)
-            }
-
-            is Input.Path<*> -> currentUrl = currentUrl.replace("{${name}}", value.toString())
-            is Input.Header<*> -> builder.header(name, value?.toString())
-            is Input.Query<*> -> value?.let {
-                builder.uri { uriBuilder ->
-                    uriBuilder.queryParam(name, value.toString()).build()
-                }
-            }
+    value: A,
+    responseHandler: suspend (ClientResponse) -> T
+): T {
+    val uri = value.path()
+    val bodySpec = method(method).uri { uriBuilder ->
+        uriBuilder.path(uri)
+        value.query { value, input ->
+            if (value != null) uriBuilder.queryParam(input.name, value.toString()).build()
         }
+        uriBuilder.build()
     }
 
-    return builder.uri(currentUrl).retrieve()
+    var headersSpec: WebClient.RequestHeadersSpec<*>? = null
+    value.body { value, _ ->
+        if (value != null) {
+            headersSpec = bodySpec.bodyValue(value)
+        } else {
+            headersSpec = bodySpec
+        }
+    }
+    value.header { value, input ->
+        headersSpec?.header(input.name, value?.toString())
+    }
+    requireNotNull(headersSpec) { "Cannot be null" }
+    return headersSpec.awaitExchange(responseHandler)
 }
 
-suspend fun <A : Any, B : Any> WebClient.GET(request: Request<A, B>): WebClient.ResponseSpec =
-    request(request, HttpMethod.GET)
+suspend fun <A : HttpRequestValue, T : Any> WebClient.GET(value: A, responseHandler: suspend (ClientResponse) -> T): T =
+    request(HttpMethod.GET, value, responseHandler)
 
-suspend fun <A : Any, B : Any> WebClient.POST(request: Request<A, B>): WebClient.ResponseSpec =
-    request(request, HttpMethod.POST)
+suspend fun <A : HttpRequestValue, T : Any> WebClient.POST(
+    value: A,
+    responseHandler: suspend (ClientResponse) -> T
+): T =
+    request(HttpMethod.POST, value, responseHandler)
 
-suspend fun <A : Any, B : Any> WebClient.put(request: Request<A, B>): WebClient.ResponseSpec =
-    request(request, HttpMethod.PUT)
+suspend fun <A : HttpRequestValue, T : Any> WebClient.PUT(value: A, responseHandler: suspend (ClientResponse) -> T): T =
+    request(HttpMethod.PUT, value, responseHandler)
 
-suspend fun <A : Any, B : Any> WebClient.delete(request: Request<A, B>): WebClient.ResponseSpec =
-    request(request, HttpMethod.DELETE)
+suspend fun <A : HttpRequestValue, T : Any> WebClient.DELETE(
+    value: A,
+    responseHandler: suspend (ClientResponse) -> T
+): T =
+    request(HttpMethod.DELETE, value, responseHandler)
 
-suspend fun <A : Any, B : Any> WebClient.patch(request: Request<A, B>): WebClient.ResponseSpec =
-    request(request, HttpMethod.PATCH)
+suspend fun <A : HttpRequestValue, T : Any> WebClient.PATCH(
+    value: A,
+    responseHandler: suspend (ClientResponse) -> T
+): T =
+    request(HttpMethod.PATCH, value, responseHandler)

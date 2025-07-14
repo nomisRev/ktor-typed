@@ -1,6 +1,5 @@
 import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
-import io.github.nomisrev.typedapi.Inspectable
 import io.github.nomisrev.typedapi.body
 import io.github.nomisrev.typedapi.header
 import io.github.nomisrev.typedapi.query

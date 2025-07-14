@@ -3,10 +3,10 @@ package io.github.nomisrev.typedapi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 
-data class Example<T>(val value: T, val serializer: KSerializer<T>)
+data class Example<out T>(val value: T, val serializer: KSerializer<out T>)
 
 // TODO Flatten these into Input
-data class Info<T>(
+data class Info<out T>(
     val title: String? = null,
     val description: String? = null,
     val example: Example<T>? = null,

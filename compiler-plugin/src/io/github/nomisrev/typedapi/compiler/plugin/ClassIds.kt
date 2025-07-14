@@ -1,6 +1,5 @@
 package io.github.nomisrev.typedapi.compiler.plugin
 
-import io.github.nomisrev.typedapi.Inspectable
 import org.jetbrains.kotlin.fir.extensions.AnnotationFqn
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -20,8 +19,8 @@ class ClassIds(
     val inputHeader: ClassId = input.createNestedClassId(Name.identifier("Header")),
     val inputPath: ClassId = input.createNestedClassId(Name.identifier("Path")),
     val inputBody: ClassId = input.createNestedClassId(Name.identifier("Body")),
-    val inspectable: ClassId = ClassId(
+    val httpRequestValue: ClassId = ClassId(
         FqName("io.github.nomisrev.typedapi"),
-        Name.identifier("Inspectable"),
+        Name.identifier("HttpRequestValue"),
     )
 )
