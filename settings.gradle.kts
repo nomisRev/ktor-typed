@@ -1,4 +1,3 @@
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -24,6 +23,5 @@ include("typed-api-docs")
 include("parser")
 include("ktor-typed-api")
 include("spring-webflux-typed-api")
-include("typed-api-ksp")
 include("compiler-plugin")
 include("gradle-plugin")
