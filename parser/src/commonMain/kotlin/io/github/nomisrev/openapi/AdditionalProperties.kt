@@ -1,10 +1,16 @@
 package io.github.nomisrev.openapi
 
+import com.charleskorn.kaml.YamlInput
+import com.charleskorn.kaml.YamlMap
+import com.charleskorn.kaml.YamlNode
+import com.charleskorn.kaml.YamlScalar
+import kotlinx.serialization.InternalSerializationApi
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.descriptors.SerialKind
+import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
@@ -23,21 +29,37 @@ public sealed interface AdditionalProperties {
 
   public companion object {
     internal object Serializer : KSerializer<AdditionalProperties> {
+      @OptIn(InternalSerializationApi::class)
       override val descriptor =
-        buildClassSerialDescriptor("io.github.nomisrev.openapi.AdditionalProperties")
+        buildSerialDescriptor("io.github.nomisrev.openapi.AdditionalProperties", SerialKind.CONTEXTUAL)
 
-      override fun deserialize(decoder: Decoder): AdditionalProperties {
-        decoder as JsonDecoder
-        val json = decoder.decodeSerializableValue(JsonElement.serializer())
-        return when {
-          json is JsonPrimitive && json.booleanOrNull != null -> Allowed(json.boolean)
-          json is JsonObject ->
-            PSchema(
-              decoder.json.decodeFromJsonElement(ReferenceOr.serializer(Schema.serializer()), json)
-            )
-          else ->
-            throw SerializationException("AdditionalProperties can only be a boolean or a schema")
+      override fun deserialize(decoder: Decoder): AdditionalProperties = when {
+        decoder is JsonDecoder -> {
+          val json = decoder.decodeSerializableValue(JsonElement.serializer())
+          when {
+            json is JsonPrimitive && json.booleanOrNull != null -> Allowed(json.boolean)
+            json is JsonObject ->
+              PSchema(
+                decoder.json.decodeFromJsonElement(ReferenceOr.serializer(Schema.serializer()), json)
+              )
+
+            else ->
+              throw SerializationException("AdditionalProperties can only be a boolean or a schema")
+          }
         }
+        decoder is YamlInput -> {
+            val node = decoder.decodeSerializableValue(YamlNode.serializer())
+            when {
+                node is YamlScalar -> Allowed(node.content.toBooleanStrict())
+                node is YamlMap ->
+                    PSchema(
+                        ReferenceOr.serializer(Schema.serializer()).deserialize(decoder)
+                    )
+
+                else -> throw SerializationException("AdditionalProperties can only be a boolean or a schema")
+            }
+        }
+        else -> error("Unknown decoder ($decoder) cannot deserialise AdditionalProperties.")
       }
 
       override fun serialize(encoder: Encoder, value: AdditionalProperties) {
