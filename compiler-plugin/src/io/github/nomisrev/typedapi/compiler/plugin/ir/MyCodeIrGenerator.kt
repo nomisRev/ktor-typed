@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
 import io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension
+import io.github.nomisrev.typedapi.compiler.plugin.fir.httpRequestValueIdentifiers
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.builders.IrGeneratorContext
 import org.jetbrains.kotlin.ir.builders.irBlockBody
@@ -31,18 +32,12 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrStringConcatenationImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
-import org.jetbrains.kotlin.ir.types.IrSimpleType
-import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isString
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.dump
-import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
 import org.jetbrains.kotlin.ir.util.isVararg
 import org.jetbrains.kotlin.ir.util.parentAsClass
@@ -54,7 +49,6 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
-import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.valueParameterPosition
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 class MyCodeIrGenerationExtension(private val module: PluginContext) : IrGenerationExtension {
@@ -100,19 +94,19 @@ class MyCodeIrGenerator(
     } ?: error("Couldn't find Pair class")
 
     // TODO Support all inputs
-    val Query = pluginContext.referenceFunctions(
+    val query = pluginContext.referenceFunctions(
         CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Query"))
     ).singleOrNull() ?: error("Couldn't find query function")
 
-    val Path = pluginContext.referenceFunctions(
+    val path = pluginContext.referenceFunctions(
         CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Path"))
     ).singleOrNull() ?: error("Couldn't find path function")
 
-    val Header = pluginContext.referenceFunctions(
+    val header = pluginContext.referenceFunctions(
         CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Header"))
     ).singleOrNull() ?: error("Couldn't find path function")
 
-    val Body = pluginContext.referenceFunctions(
+    val body = pluginContext.referenceFunctions(
         CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Body"))
     ).singleOrNull() ?: error("Couldn't find path function")
 
@@ -152,49 +146,31 @@ class MyCodeIrGenerator(
         super.visitConstructor(declaration, data)
     }
 
+//    override fun visitSimpleFunction(declaration: IrSimpleFunction, data: Nothing?) {
+//        super.visitSimpleFunction(declaration, data)
+//
+//    }
+
     override fun visitFunction(declaration: IrFunction, data: Nothing?) {
         if (declaration.origin is IrDeclarationOrigin.GeneratedByPlugin) {
+            if (!httpRequestValueIdentifiers.contains(declaration.name)) {
+                return
+            }
+
             module.logger.log { "Generating function: ${declaration.name}" }
             when (declaration.name.asString()) {
-                "query" -> {
+                "path" if (declaration.parameters.size == 1) -> {
+                    val builder = pluginContext.createIrBuilder(declaration.symbol)
+                    declaration.body = buildPathString(builder, declaration)
+                }
+
+                else -> {
                     val builder = pluginContext.createIrBuilder(declaration.symbol)
                     declaration.body = body(
                         builder,
                         declaration,
                         declaration.parentAsClass,
-                        "query"
-                    )
-                }
-
-                "path" -> {
-                    val builder = pluginContext.createIrBuilder(declaration.symbol)
-                    if (declaration.parameters.size == 1) {
-                        declaration.body = buildPathString(builder, declaration)
-                    } else declaration.body = body(
-                        builder,
-                        declaration,
-                        declaration.parentAsClass,
-                        "path"
-                    )
-                }
-
-                "header" -> {
-                    val builder = pluginContext.createIrBuilder(declaration.symbol)
-                    declaration.body = body(
-                        builder,
-                        declaration,
-                        declaration.parentAsClass,
-                        "header"
-                    )
-                }
-
-                "body" -> {
-                    val builder = pluginContext.createIrBuilder(declaration.symbol)
-                    declaration.body = body(
-                        builder,
-                        declaration,
-                        declaration.parentAsClass,
-                        "body"
+                        declaration.name.asString()
                     )
                 }
             }
@@ -276,14 +252,9 @@ class MyCodeIrGenerator(
             )
         }
 
-
         return builder.irExprBody(finalExpression)
     }
 
-    /**
-     * TODO replace _prop with just inlining the Input.Query (etc)
-     *   calls inside of the builder making everything lazy-and memoryless
-     */
     private fun body(
         builder: DeclarationIrBuilder,
         function: IrFunction,
@@ -292,29 +263,16 @@ class MyCodeIrGenerator(
     ): IrBlockBody = builder.irBlockBody {
         val block = function.parameters.firstOrNull { it.name.asString() == "block" } ?: return@irBlockBody
         val inputType = when (type) {
-            "query" -> Query
-            "path" -> Path
-            "header" -> Header
-            "body" -> Body
+            "query" -> query
+            "path" -> path
+            "header" -> header
+            "body" -> body
             else -> error("Unknown type: $type")
         }
-
-        module.logger.log {
-            """
-                Searching for invoke:
-                ${block?.dump()}
-            """.trimIndent()
-        }
-
 
         val invokeFun = function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
             ?.first { it.name == OperatorNameConventions.INVOKE }
             ?: error("No invoke function found")
-
-
-//        val invokeFun = block?.type?.classOrNull?.functions?.first {
-//            it.owner.name == OperatorNameConventions.INVOKE
-//        } ?: error("No invoke function found")
 
         val inputs = endpoint.declarations
             .filterIsInstance<IrPropertyImpl>()
@@ -326,7 +284,7 @@ class MyCodeIrGenerator(
             // Generate the call to `block.invoke(this.age, Input.Query<String>())`.
             +irCall(invokeFun).apply {
                 // Receiver: set the `block` function parameter as receiver for the lambda invocation
-                dispatchReceiver = irGet(block ?: error("No block parameter found"))
+                dispatchReceiver = irGet(block)
 
                 // Argument 1: Get the actual value `this.age`
                 arguments[1] = irCall(input.getter!!).apply {
