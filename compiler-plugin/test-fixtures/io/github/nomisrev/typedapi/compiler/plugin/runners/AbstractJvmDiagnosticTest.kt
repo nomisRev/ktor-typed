@@ -32,8 +32,9 @@ open class AbstractJvmDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
              * All of them are located in `org.jetbrains.kotlin.test.directives` package
              */
             defaultDirectives {
-                JVM_TARGET.with(JvmTarget.JVM_17)
+                JVM_TARGET.with(JvmTarget.JVM_11)
                 +FirDiagnosticsDirectives.FIR_DUMP
+                +CodegenTestDirectives.DUMP_IR
                 +JvmEnvironmentConfigurationDirectives.FULL_JDK
 
                 +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.

@@ -9,7 +9,6 @@ class SimplePluginRegistrar(
     val context: PluginContext,
 ) : FirExtensionRegistrar() {
     override fun ExtensionRegistrarContext.configurePlugin() {
-        +::FirCheckers.bind(context)
         +::AddSupertypeExtension.bind(context)
         +::MyCodeGenerationExtension.bind(context)
     }

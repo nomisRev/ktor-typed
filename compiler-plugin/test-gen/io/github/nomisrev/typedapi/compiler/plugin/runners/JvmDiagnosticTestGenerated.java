@@ -22,8 +22,8 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
   }
 
   @Test
-  @TestMetadata("classInsteadOfDataClassExpected.kt")
-  public void testClassInsteadOfDataClassExpected() {
-    runTest("compiler-plugin/testData/diagnostics/classInsteadOfDataClassExpected.kt");
+  @TestMetadata("pathWithParams.kt")
+  public void testPathWithParams() {
+    runTest("compiler-plugin/testData/diagnostics/pathWithParams.kt");
   }
 }

@@ -1,11 +1,14 @@
 plugins {
-    id(libs.plugins.kotlin.multiplatform.get().pluginId)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.serialization)
-    id("org.jetbrains.kotlinx.kover")
+    alias(libs.plugins.kover)
     alias(libs.plugins.buildconfig)
 }
 
 kotlin {
+    explicitApi()
+    jvmToolchain(11)
+
     jvm()
     macosArm64()
     linuxX64()

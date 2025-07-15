@@ -5,6 +5,10 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     api(project(":typed-api"))
     api(project(":parser"))

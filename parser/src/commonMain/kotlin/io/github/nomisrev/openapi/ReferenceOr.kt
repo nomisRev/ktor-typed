@@ -87,11 +87,9 @@ public sealed interface ReferenceOr<out A> {
                         val node = decoder.decodeSerializableValue(YamlNode.serializer())
                         val map = node as? YamlMap
 
-                        val refContentOrNull = map?.entries?.firstNotNullOfOrNull { (key, value) ->
-                            if (key.content == RefKey) value else null
-                        }?.yamlScalar?.content ?: map?.entries?.firstNotNullOfOrNull { (key, value) ->
-                            if (key.content == RecursiveRefKey) value else null
-                        }?.yamlScalar?.content
+                        val refContentOrNull =
+                            map?.getOrNull(RefKey)?.yamlScalar?.content
+                                ?: map?.getOrNull(RecursiveRefKey)?.yamlScalar?.content
 
                         when {
                             refContentOrNull != null -> Reference(refContentOrNull)
