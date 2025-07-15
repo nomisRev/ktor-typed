@@ -33,7 +33,7 @@ FILE: pathWithParams.kt
     }
     public final fun box(): R|kotlin/String| {
         lval value: R|my/test/Paths| = R|my/test/Paths|(Int(1), String(2))
-        lval path: R|kotlin/String| = R|<local>/value|.R|my/test/Paths.path|() ?: String(empty path)
+        lval path: R|kotlin/String| = R|<local>/value|.R|my/test/Paths.path|()
         ^box when () {
             ==(R|<local>/path|, String(/path/1/second/2)) ->  {
                 String(OK)

@@ -48,6 +48,8 @@ internal abstract class KSerializerWithExtensions<T>(
             val extensions = buildMap<String, JsonElement> {
                 map.entries.forEach { (key, value) ->
                     if (key.content.startsWith("x-")) {
+// TODO
+//  For OpenAI: Caused by: MissingTypeTagException at paths./assistants.get.x-oaiMeta on line 104, column 9: Value is missing a type tag (eg. !<type>)
 //                        put(key.content, decoder.yaml.decodeFromYamlNode(JsonElement.serializer(), value))
                     }
                 }

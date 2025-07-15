@@ -113,7 +113,7 @@ public data class Schema(
             String("string");
 
             public companion object {
-                fun fromString(value: String): Basic? =
+                public fun fromString(value: String): Basic? =
                     entries.find { it.value.equals(value, ignoreCase = true) }
             }
         }

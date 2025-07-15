@@ -1,9 +1,14 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
-    kotlin("plugin.power-assert")
-    id("org.jetbrains.kotlinx.kover")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.power.assert)
+    alias(libs.plugins.kover)
 }
+
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     api(project(":typed-api"))
     api("org.springframework.boot:spring-boot-starter-webflux:3.4.0")

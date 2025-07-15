@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    `java-test-fixtures`
     alias(libs.plugins.buildconfig)
+    `java-test-fixtures`
     idea
 }
 
@@ -77,6 +77,7 @@ tasks.test {
 }
 
 kotlin {
+    jvmToolchain(11)
     compilerOptions {
         optIn.add("org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
         optIn.add("org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI")

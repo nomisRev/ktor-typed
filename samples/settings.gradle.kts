@@ -21,5 +21,4 @@ dependencyResolutionManagement {
 rootProject.name = "samples"
 
 include("app")
-
 includeBuild("..")

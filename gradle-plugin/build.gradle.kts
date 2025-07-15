@@ -1,7 +1,7 @@
 plugins {
+    id("java-gradle-plugin")
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.buildconfig)
-    id("java-gradle-plugin")
 }
 
 sourceSets {
@@ -15,9 +15,12 @@ sourceSets {
     }
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
     implementation(libs.kotlin.gradle.plugin.api)
-
     testImplementation(libs.kotlin.test.junit5)
 }
 
@@ -31,11 +34,11 @@ buildConfig {
     buildConfigField("String", "KOTLIN_PLUGIN_NAME", "\"${pluginProject.name}\"")
     buildConfigField("String", "KOTLIN_PLUGIN_VERSION", "\"${pluginProject.version}\"")
 
-    val annotationsProject = project(":typed-api")
+    val coreProject = project(":typed-api")
     buildConfigField(
         type = "String",
         name = "ANNOTATIONS_LIBRARY_COORDINATES",
-        expression = "\"${annotationsProject.group}:${annotationsProject.name}:${annotationsProject.version}\"",
+        expression = "\"${coreProject.group}:${coreProject.name}:${coreProject.version}\"",
     )
 }
 

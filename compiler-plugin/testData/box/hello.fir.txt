@@ -11,6 +11,8 @@ FILE: hello.kt
                 ^ this@R|my/test/Hello|.D|my/test/Hello.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/Hello|, ::R|my/test/Hello.age|)
             }
 
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
         public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
         public final override fun path(): R|kotlin/String|
@@ -19,9 +21,9 @@ FILE: hello.kt
 
         public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
-        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
-
-        public constructor(age: R|kotlin/Int|): R|my/test/Hello|
+        public constructor(age: R|kotlin/Int|): R|my/test/Hello| {
+            this<R|my/test/Hello|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(age).R|kotlin/to|(R|<local>/age|)))
+        }
 
     }
     public final fun box(): R|kotlin/String| {

@@ -1,18 +1,13 @@
 plugins {
-    kotlin("jvm") version "2.1.21"
-    kotlin("plugin.power-assert") version "2.1.21"
-    kotlin("plugin.serialization") version "2.1.21"
-    id("org.jetbrains.kotlinx.kover") version "0.7.5"
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.power.assert) apply false
+    alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.kover)
 }
 
 group = "io.github.nomisrev.typedapi"
 version = "0.0.1"
-
-
-kotlin {
-    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
-    jvmToolchain(11)
-}
 
 koverReport {
     defaults {

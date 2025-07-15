@@ -1,15 +1,17 @@
 plugins {
     id("kotlin-multiplatform-common")
-    kotlin("plugin.serialization")
-    kotlin("plugin.power-assert")
-    id("org.jetbrains.kotlinx.kover")
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.power.assert)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
+    jvmToolchain(11)
+
     sourceSets {
         commonMain {
             dependencies {
-//                api(libs.kotlinx.serialization)
+                api(libs.kotlinx.serialization)
                 api(libs.kotlinx.coroutines)
             }
         }

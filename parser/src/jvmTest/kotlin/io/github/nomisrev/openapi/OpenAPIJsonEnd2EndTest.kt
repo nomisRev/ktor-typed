@@ -1,10 +1,10 @@
 package io.github.nomisrev.openapi
 
-import java.io.BufferedReader
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.serialization.json.Json
+import java.io.BufferedReader
 
 class OpenAPIJsonEnd2EndTest {
   @Test

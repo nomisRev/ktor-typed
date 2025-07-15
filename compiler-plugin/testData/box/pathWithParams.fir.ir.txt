@@ -2,153 +2,163 @@ FILE fqName:my.test fileName:/pathWithParams.kt
   CLASS CLASS name:Paths modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
     annotations:
       Endpoint(path = "/path/{param1}/second/{param2}")
-    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:my.test.Paths
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.Paths
     PROPERTY name:param1 visibility:public modality:FINAL [delegated,val]
       FIELD PROPERTY_DELEGATE name:param1$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> visibility:private [final]
         EXPRESSION_BODY
           CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
-            $this: CALL 'public final fun path <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.path>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.Int> origin=null
-              <A>: kotlin.Int
-              $receiver: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Paths.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
-            thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths' type=my.test.Paths origin=null
-            prop: PROPERTY_REFERENCE 'public final param1: kotlin.Int declared in my.test.Paths' field=null getter='public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
-      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-param1> visibility:public modality:FINAL <> ($this:my.test.Paths) returnType:kotlin.Int
+            ARG <this>: CALL 'public final fun path <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.path>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.Int> origin=null
+              TYPE_ARG A: kotlin.Int
+              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Paths.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths' type=my.test.Paths origin=null
+            ARG prop: PROPERTY_REFERENCE 'public final param1: kotlin.Int declared in my.test.Paths' field=null getter='public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-param1> visibility:public modality:FINAL returnType:kotlin.Int
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
         correspondingProperty: PROPERTY name:param1 visibility:public modality:FINAL [delegated,val]
-        $this: VALUE_PARAMETER name:<this> type:my.test.Paths
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun <get-param1> (): kotlin.Int declared in my.test.Paths'
             CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadOnlyProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadOnlyProperty declared in kotlin.properties.ReadOnlyProperty' type=kotlin.Int origin=null
-              $this: GET_FIELD 'FIELD PROPERTY_DELEGATE name:param1$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> visibility:private [final] declared in my.test.Paths' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
-                receiver: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param1>' type=my.test.Paths origin=null
-              thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param1>' type=my.test.Paths origin=null
-              property: PROPERTY_REFERENCE 'public final param1: kotlin.Int declared in my.test.Paths' field=null getter='public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_DELEGATE name:param1$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> visibility:private [final] declared in my.test.Paths' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
+                receiver: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param1>' type=my.test.Paths origin=IMPLICIT_ARGUMENT
+              ARG thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param1>' type=my.test.Paths origin=null
+              ARG property: PROPERTY_REFERENCE 'public final param1: kotlin.Int declared in my.test.Paths' field=null getter='public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
     PROPERTY name:param2 visibility:public modality:FINAL [delegated,val]
       FIELD PROPERTY_DELEGATE name:param2$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> visibility:private [final]
         EXPRESSION_BODY
           CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
-            $this: CALL 'public final fun path <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.path>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.String> origin=null
-              <A>: kotlin.String
-              $receiver: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Paths.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
-            thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths' type=my.test.Paths origin=null
-            prop: PROPERTY_REFERENCE 'public final param2: kotlin.String declared in my.test.Paths' field=null getter='public final fun <get-param2> (): kotlin.String declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
-      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-param2> visibility:public modality:FINAL <> ($this:my.test.Paths) returnType:kotlin.String
+            ARG <this>: CALL 'public final fun path <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.path>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.String> origin=null
+              TYPE_ARG A: kotlin.String
+              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Paths.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths' type=my.test.Paths origin=null
+            ARG prop: PROPERTY_REFERENCE 'public final param2: kotlin.String declared in my.test.Paths' field=null getter='public final fun <get-param2> (): kotlin.String declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-param2> visibility:public modality:FINAL returnType:kotlin.String
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
         correspondingProperty: PROPERTY name:param2 visibility:public modality:FINAL [delegated,val]
-        $this: VALUE_PARAMETER name:<this> type:my.test.Paths
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun <get-param2> (): kotlin.String declared in my.test.Paths'
             CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadOnlyProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadOnlyProperty declared in kotlin.properties.ReadOnlyProperty' type=kotlin.String origin=null
-              $this: GET_FIELD 'FIELD PROPERTY_DELEGATE name:param2$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> visibility:private [final] declared in my.test.Paths' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
-                receiver: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param2>' type=my.test.Paths origin=null
-              thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param2>' type=my.test.Paths origin=null
-              property: PROPERTY_REFERENCE 'public final param2: kotlin.String declared in my.test.Paths' field=null getter='public final fun <get-param2> (): kotlin.String declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
-    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public <> (param1:kotlin.Int, param2:kotlin.String) returnType:my.test.Paths
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:param1 index:0 type:kotlin.Int
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:param2 index:1 type:kotlin.String
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_DELEGATE name:param2$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> visibility:private [final] declared in my.test.Paths' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
+                receiver: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param2>' type=my.test.Paths origin=IMPLICIT_ARGUMENT
+              ARG thisRef: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.<get-param2>' type=my.test.Paths origin=null
+              ARG property: PROPERTY_REFERENCE 'public final param2: kotlin.String declared in my.test.Paths' field=null getter='public final fun <get-param2> (): kotlin.String declared in my.test.Paths' setter=null type=kotlin.reflect.KProperty1<my.test.Paths, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public returnType:my.test.Paths
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:param1 index:0 type:kotlin.Int
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:param2 index:1 type:kotlin.String
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.Paths'
-          api: CONSTRUCTOR_CALL 'public constructor <init> (values: kotlin.collections.Map<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
-            values: CALL 'public final fun mapOf <K, V> (vararg pairs: kotlin.Pair<K of kotlin.collections.mapOf, V of kotlin.collections.mapOf>): kotlin.collections.Map<K of kotlin.collections.mapOf, V of kotlin.collections.mapOf> declared in kotlin.collections' type=kotlin.collections.Map<K of kotlin.collections.mapOf, V of kotlin.collections.mapOf> origin=null
-              <K>: kotlin.String
-              <V>: kotlin.Any?
-              pairs: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
-                CALL 'public final fun to <A, B> (that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
-                  <A>: kotlin.String
-                  <B>: kotlin.Any?
-                  $receiver: CONST String type=kotlin.String value="param1"
-                  that: GET_VAR 'param1: kotlin.Int declared in my.test.Paths.<init>' type=kotlin.Int origin=null
-                CALL 'public final fun to <A, B> (that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
-                  <A>: kotlin.String
-                  <B>: kotlin.Any?
-                  $receiver: CONST String type=kotlin.String value="param2"
-                  that: GET_VAR 'param2: kotlin.String declared in my.test.Paths.<init>' type=kotlin.String origin=null
-    CONSTRUCTOR visibility:public <> (api:io.github.nomisrev.typedapi.EndpointAPI) returnType:my.test.Paths [primary]
-      VALUE_PARAMETER name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+          ARG api: CONSTRUCTOR_CALL 'public constructor <init> (vararg values: kotlin.Pair<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
+            ARG values: CALL 'public final fun arrayOf <T> (vararg elements: T of kotlin.arrayOf): kotlin.Array<T of kotlin.arrayOf> declared in kotlin' type=kotlin.Array<T of kotlin.arrayOf> origin=null
+              TYPE_ARG T: kotlin.Pair<kotlin.String, kotlin.Any?>
+              ARG elements: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
+                CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
+                  TYPE_ARG A: kotlin.String
+                  TYPE_ARG B: kotlin.Any?
+                  ARG <this>: CONST String type=kotlin.String value="param1"
+                  ARG that: GET_VAR 'param1: kotlin.Int declared in my.test.Paths.<init>' type=kotlin.Int origin=null
+                CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
+                  TYPE_ARG A: kotlin.String
+                  TYPE_ARG B: kotlin.Any?
+                  ARG <this>: CONST String type=kotlin.String value="param2"
+                  ARG that: GET_VAR 'param2: kotlin.String declared in my.test.Paths.<init>' type=kotlin.String origin=null
+    CONSTRUCTOR visibility:public returnType:my.test.Paths [primary]
+      VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
         INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:Paths modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
-    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN <> ($this:kotlin.Any, other:kotlin.Any?) returnType:kotlin.Boolean [fake_override,operator]
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
-      VALUE_PARAMETER name:other index:0 type:kotlin.Any?
-    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.Int [fake_override]
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in kotlin.Any
         public open fun hashCode (): kotlin.Int declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
-    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN <> ($this:kotlin.Any) returnType:kotlin.String [fake_override]
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
         public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:kotlin.Any
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL <> ($this:my.test.Paths, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun body (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:my.test.Paths
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL <> ($this:my.test.Paths, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun header (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:my.test.Paths
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL <> ($this:my.test.Paths) returnType:kotlin.String
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.String
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
       overridden:
         public abstract fun path (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:my.test.Paths
       EXPRESSION_BODY
         STRING_CONCATENATION type=kotlin.String
           CONST String type=kotlin.String value="/path/"
           CALL 'public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' type=kotlin.Int origin=null
-            $this: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
+            ARG <this>: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
           CONST String type=kotlin.String value="/second/"
           CALL 'public final fun <get-param2> (): kotlin.String declared in my.test.Paths' type=kotlin.String origin=null
-            $this: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL <> ($this:my.test.Paths, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+            ARG <this>: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun path (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:my.test.Paths
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
         CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=R of kotlin.Function2 origin=null
-          $this: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> declared in my.test.Paths.path' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> origin=null
-          p1: CALL 'public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' type=kotlin.Int origin=null
-            $this: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
-          p2: CALL 'public final fun Path <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Path>?): io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> origin=null
-            <A>: kotlin.Int
-            name: CONST String type=kotlin.String value="param1"
+          ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> declared in my.test.Paths.path' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> origin=null
+          ARG p1: CALL 'public final fun <get-param1> (): kotlin.Int declared in my.test.Paths' type=kotlin.Int origin=null
+            ARG <this>: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
+          ARG p2: CALL 'public final fun Path <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Path>?): io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> origin=null
+            TYPE_ARG A: kotlin.Int
+            ARG name: CONST String type=kotlin.String value="param1"
         CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=R of kotlin.Function2 origin=null
-          $this: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> declared in my.test.Paths.path' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> origin=null
-          p1: CALL 'public final fun <get-param2> (): kotlin.String declared in my.test.Paths' type=kotlin.String origin=null
-            $this: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
-          p2: CALL 'public final fun Path <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Path>?): io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> origin=null
-            <A>: kotlin.String
-            name: CONST String type=kotlin.String value="param2"
-    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL <> ($this:my.test.Paths, block:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>) returnType:kotlin.Unit
+          ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> declared in my.test.Paths.path' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit> origin=null
+          ARG p1: CALL 'public final fun <get-param2> (): kotlin.String declared in my.test.Paths' type=kotlin.String origin=null
+            ARG <this>: GET_VAR '<this>: my.test.Paths declared in my.test.Paths.path' type=my.test.Paths origin=null
+          ARG p2: CALL 'public final fun Path <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Path>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Path>?): io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Path<A of io.github.nomisrev.typedapi.Path> origin=null
+            TYPE_ARG A: kotlin.String
+            ARG name: CONST String type=kotlin.String value="param2"
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Paths
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun query (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
-      $this: VALUE_PARAMETER name:<this> type:my.test.Paths
-      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:block index:0 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
       BLOCK_BODY
-  FUN name:box visibility:public modality:FINAL <> () returnType:kotlin.String
+  FUN name:box visibility:public modality:FINAL returnType:kotlin.String
     BLOCK_BODY
       VAR name:value type:my.test.Paths [val]
         CONSTRUCTOR_CALL 'public constructor <init> (param1: kotlin.Int, param2: kotlin.String) declared in my.test.Paths' type=my.test.Paths origin=null
-          param1: CONST Int type=kotlin.Int value=1
-          param2: CONST String type=kotlin.String value="2"
+          ARG param1: CONST Int type=kotlin.Int value=1
+          ARG param2: CONST String type=kotlin.String value="2"
       VAR name:path type:kotlin.String [val]
-        CALL 'public final fun path (): kotlin.String declared in my.test.Paths' type=kotlin.String origin=null
-          $this: GET_VAR 'val value: my.test.Paths declared in my.test.box' type=my.test.Paths origin=null
+        BLOCK type=kotlin.String origin=ELVIS
+          VAR IR_TEMPORARY_VARIABLE name:tmp_0 type:kotlin.String [val]
+            CALL 'public final fun path (): kotlin.String declared in my.test.Paths' type=kotlin.String origin=null
+              ARG <this>: GET_VAR 'val value: my.test.Paths declared in my.test.box' type=my.test.Paths origin=null
+          WHEN type=kotlin.String origin=null
+            BRANCH
+              if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                ARG arg0: GET_VAR 'val tmp_0: kotlin.String declared in my.test.box' type=kotlin.String origin=null
+                ARG arg1: CONST Null type=kotlin.Nothing? value=null
+              then: CONST String type=kotlin.String value="empty path"
+            BRANCH
+              if: CONST Boolean type=kotlin.Boolean value=true
+              then: GET_VAR 'val tmp_0: kotlin.String declared in my.test.box' type=kotlin.String origin=null
       RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
         WHEN type=kotlin.String origin=IF
           BRANCH
             if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
-              arg0: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
-              arg1: CONST String type=kotlin.String value="/path/1/second/2"
+              ARG arg0: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
+              ARG arg1: CONST String type=kotlin.String value="/path/1/second/2"
             then: CONST String type=kotlin.String value="OK"
           BRANCH
             if: CONST Boolean type=kotlin.Boolean value=true
-            then: CONST String type=kotlin.String value="fail"
+            then: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
 FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt

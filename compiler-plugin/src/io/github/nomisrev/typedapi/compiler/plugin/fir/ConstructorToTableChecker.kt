@@ -1,6 +1,7 @@
 package io.github.nomisrev.typedapi.compiler.plugin.fir
 
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
+import org.jetbrains.kotlin.DeprecatedForRemovalCompilerApi
 import org.jetbrains.kotlin.descriptors.isClass
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.reportOn
@@ -36,6 +37,7 @@ class FirCheckers(
         }
 }
 
+@OptIn(DeprecatedForRemovalCompilerApi::class)
 class ConstructorToTableChecker(
     private val module: PluginContext,
 ) : FirClassChecker(MppCheckerKind.Common) {

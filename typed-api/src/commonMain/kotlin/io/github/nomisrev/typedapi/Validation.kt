@@ -1,5 +1,7 @@
 package io.github.nomisrev.typedapi
 
+import kotlin.jvm.JvmName
+
 typealias ValidationBuilder = MutableList<String>
 
 fun interface Validation<V> {

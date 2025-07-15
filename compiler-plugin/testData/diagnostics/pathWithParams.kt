@@ -1,4 +1,4 @@
-// DIRECTIVES: FULL_JDK
+// RUN_PIPELINE_TILL: BACKEND
 
 package my.test
 
@@ -15,6 +15,6 @@ class Paths(api: EndpointAPI) {
 
 fun box(): String {
     val value = Paths(1, "2")
-    val path = value.path() ?: "empty path"
+    val path = value.path()
     return if (path == "/path/1/second/2") "OK" else path
 }
