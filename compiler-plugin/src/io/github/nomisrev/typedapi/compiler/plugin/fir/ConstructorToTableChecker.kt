@@ -33,12 +33,10 @@ class FirCheckers(
 ) : FirAdditionalCheckersExtension(session) {
     override val declarationCheckers: DeclarationCheckers =
         object : DeclarationCheckers() {
-            override val classCheckers: Set<FirClassChecker> = emptySet()
-                //setOf(ConstructorToTableChecker(module))
+            override val classCheckers: Set<FirClassChecker> = setOf(ConstructorToTableChecker(module))
         }
 }
 
-// TODO
 @OptIn(DeprecatedForRemovalCompilerApi::class)
 class ConstructorToTableChecker(
     private val module: PluginContext,
