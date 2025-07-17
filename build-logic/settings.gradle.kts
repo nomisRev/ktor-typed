@@ -2,11 +2,8 @@ dependencyResolutionManagement {
     repositories {
         gradlePluginPortal()
     }
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
-    }
 }
+
+apply(from = "../version-catalog-settings.gradle.kts")
 
 rootProject.name = "build-logic"
