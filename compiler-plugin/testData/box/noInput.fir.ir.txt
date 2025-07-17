@@ -1,0 +1,81 @@
+FILE fqName:my.test fileName:/noInput.kt
+  CLASS CLASS name:NoInput modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
+    annotations:
+      Endpoint(path = "/my/path")
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.NoInput
+    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public returnType:my.test.NoInput
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.NoInput'
+          ARG api: CONSTRUCTOR_CALL 'public constructor <init> (vararg values: kotlin.Pair<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
+            ARG values: CALL 'public final fun arrayOf <T> (vararg elements: T of kotlin.arrayOf): kotlin.Array<T of kotlin.arrayOf> declared in kotlin' type=kotlin.Array<T of kotlin.arrayOf> origin=null
+              TYPE_ARG T: kotlin.Pair<kotlin.String, kotlin.Any?>
+              ARG elements: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
+    CONSTRUCTOR visibility:public returnType:my.test.NoInput [primary]
+      VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:NoInput modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+        public open fun hashCode (): kotlin.Int declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+        public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun body (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun header (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.String
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      overridden:
+        public abstract fun path (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
+      EXPRESSION_BODY
+        CONST String type=kotlin.String value="/my/path"
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun path (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun query (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+  FUN name:box visibility:public modality:FINAL returnType:kotlin.String
+    BLOCK_BODY
+      VAR name:value type:my.test.NoInput [val]
+        CONSTRUCTOR_CALL 'public constructor <init> () declared in my.test.NoInput' type=my.test.NoInput origin=null
+      VAR name:path type:kotlin.String [val]
+        CALL 'public final fun path (): kotlin.String declared in my.test.NoInput' type=kotlin.String origin=null
+          ARG <this>: GET_VAR 'val value: my.test.NoInput declared in my.test.box' type=my.test.NoInput origin=null
+      RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+        WHEN type=kotlin.String origin=IF
+          BRANCH
+            if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+              ARG arg0: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
+              ARG arg1: CONST String type=kotlin.String value="/my/path"
+            then: CONST String type=kotlin.String value="OK"
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
+FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt
