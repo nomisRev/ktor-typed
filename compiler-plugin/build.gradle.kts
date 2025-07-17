@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.buildconfig)
     `java-test-fixtures`
     idea
+    id("kotlin-compiler-plugin-templating")
 }
 
 sourceSets {

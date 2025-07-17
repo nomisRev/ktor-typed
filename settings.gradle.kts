@@ -17,6 +17,8 @@ dependencyResolutionManagement {
     }
 }
 
+apply(from = "version-catalog-settings.gradle.kts")
+
 rootProject.name = "typed-api-root"
 include("typed-api")
 include("typed-api-docs")
