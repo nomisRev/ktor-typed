@@ -1,0 +1,47 @@
+FILE: invalidParameterType.kt
+    package my.test
+
+    public final class ComplexType : R|kotlin/Any| {
+        public constructor(value: R|kotlin/String|): R|my/test/ComplexType| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val value: R|kotlin/String| = R|<local>/value|
+            public get(): R|kotlin/String|
+
+        public open override fun toString(): R|kotlin/String| {
+            ^toString this@R|my/test/ComplexType|.R|my/test/ComplexType.value|
+        }
+
+    }
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/api)) public final class InvalidTypeEndpoint : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/InvalidTypeEndpoint| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val complex: R|my/test/ComplexType|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|my/test/ComplexType|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, my/test/ComplexType>|>|(this@R|my/test/InvalidTypeEndpoint|, ::R|my/test/InvalidTypeEndpoint.complex|)
+            public get(): R|my/test/ComplexType| {
+                ^ this@R|my/test/InvalidTypeEndpoint|.D|my/test/InvalidTypeEndpoint.complex|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|my/test/ComplexType|>|(this@R|my/test/InvalidTypeEndpoint|, ::R|my/test/InvalidTypeEndpoint.complex|)
+            }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(complex: R|my/test/ComplexType|): R|my/test/InvalidTypeEndpoint| {
+            this<R|my/test/InvalidTypeEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(complex).R|kotlin/to|(R|<local>/complex|)))
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval value: R|my/test/InvalidTypeEndpoint| = R|my/test/InvalidTypeEndpoint|(R|my/test/ComplexType.ComplexType|(String(test)))
+        ^box String(OK)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test

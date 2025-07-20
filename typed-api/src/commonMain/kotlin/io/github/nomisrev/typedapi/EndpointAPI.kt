@@ -41,7 +41,6 @@ inline fun <reified A> EndpointAPI.body(
     info: Info<A>? = null
 ): DelegateProvider<A> = input(Body(info))
 
-
 fun interface DelegateProvider<A> {
     operator fun provideDelegate(thisRef: Any?, prop: KProperty<*>): ReadOnlyProperty<Any?, A>
 }

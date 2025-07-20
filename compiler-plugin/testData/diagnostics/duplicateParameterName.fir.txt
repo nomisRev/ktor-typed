@@ -1,0 +1,39 @@
+FILE: duplicateParameterName.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/users/{id})) public final class UserEndpoint : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/UserEndpoint| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val id: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.id|)
+            public get(): R|kotlin/Int| {
+                ^ this@R|my/test/UserEndpoint|.D|my/test/UserEndpoint.id|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.id|)
+            }
+
+        public final val id: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.id|)
+            public get(): R|kotlin/String| {
+                ^ this@R|my/test/UserEndpoint|.D|my/test/UserEndpoint.id|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.id|)
+            }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(id: R|kotlin/Int|, id: R|kotlin/String|): R|my/test/UserEndpoint| {
+            this<R|my/test/UserEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(id).R|kotlin/to|(R|<local>/id|), String(id).R|kotlin/to|(R|<local>/id|)))
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval value: R|my/test/UserEndpoint| = R|my/test/UserEndpoint|(Int(1), String(test))
+        ^box String(OK)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test
