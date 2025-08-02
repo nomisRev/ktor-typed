@@ -5,16 +5,6 @@ plugins {
     idea
 }
 
-val projectVersion = rootProject.version
-val kotlinCompilerVersion = libs.versions.kotlin.compiler.get()
-val kotlinLangVersion = libs.versions.kotlin.asProvider().get()
-
-version =
-    if (kotlinCompilerVersion != kotlinLangVersion) "$kotlinCompilerVersion-$projectVersion"
-    else "$kotlinLangVersion-$projectVersion"
-
-logger.lifecycle("[Plugin Versions] Project:$version Kotlin:$kotlinLangVersion Compiler:$kotlinCompilerVersion")
-
 sourceSets {
     main {
         java.setSrcDirs(listOf("src"))
