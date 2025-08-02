@@ -41,6 +41,5 @@ class FirClassChecker(private val module: PluginContext) :
             reporter.reportOn(declaration.source, TypedApiDiagnostics.CLASS_EXPECTED_ERROR, declaration.classId)
             return
         }
-
     }
 }

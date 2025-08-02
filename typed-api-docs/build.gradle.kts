@@ -12,6 +12,6 @@ kotlin {
 dependencies {
     api(project(":typed-api"))
     api(project(":parser"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation(libs.kotlin.reflect)
     testImplementation(libs.kotlin.test)
 }
