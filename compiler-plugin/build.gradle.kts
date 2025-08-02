@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.buildconfig)
     `java-test-fixtures`
     idea
-    id("kotlin-compiler-plugin-templating")
 }
 
 val projectVersion = rootProject.version
