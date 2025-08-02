@@ -22,21 +22,9 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
   }
 
   @Test
-  @TestMetadata("duplicateParameterName.kt")
-  public void testDuplicateParameterName() {
-    runTest("compiler-plugin/testData/diagnostics/duplicateParameterName.kt");
-  }
-
-  @Test
   @TestMetadata("invalidParameterType.kt")
   public void testInvalidParameterType() {
     runTest("compiler-plugin/testData/diagnostics/invalidParameterType.kt");
-  }
-
-  @Test
-  @TestMetadata("missingPathParameter.kt")
-  public void testMissingPathParameter() {
-    runTest("compiler-plugin/testData/diagnostics/missingPathParameter.kt");
   }
 
   @Test

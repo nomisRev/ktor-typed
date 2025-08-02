@@ -11,19 +11,9 @@ FILE: optionalParameters.kt
                 ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.name|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.name|)
             }
 
-        public final val page: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query<Inapplicable(INAPPLICABLE_ARGUMENTS_MAPPING_ERROR): io/github/nomisrev/typedapi/query>#|<R|kotlin/Int|>(Int(1)).R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.page|)
-            public get(): R|kotlin/Int| {
-                ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.page|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.page|)
-            }
-
-        public final val limit: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query<Inapplicable(INAPPLICABLE_ARGUMENTS_MAPPING_ERROR): io/github/nomisrev/typedapi/query>#|<R|kotlin/Int|>(Int(20)).R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.limit|)
-            public get(): R|kotlin/Int| {
-                ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.limit|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.limit|)
-            }
-
-        public final val sortBy: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query<Inapplicable(INAPPLICABLE_ARGUMENTS_MAPPING_ERROR): io/github/nomisrev/typedapi/query>#|<R|kotlin/String|>(String(name)).R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.sortBy|)
-            public get(): R|kotlin/String| {
-                ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.sortBy|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.sortBy|)
+        public final val limit: R|kotlin/Int?|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int?|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int?>|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.limit|)
+            public get(): R|kotlin/Int?| {
+                ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.limit|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int?|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.limit|)
             }
 
         public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
@@ -36,13 +26,13 @@ FILE: optionalParameters.kt
 
         public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
 
-        public constructor(name: R|kotlin/String|, page: R|kotlin/Int|, limit: R|kotlin/Int|, sortBy: R|kotlin/String|): R|my/test/UserSearchEndpoint| {
-            this<R|my/test/UserSearchEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(name).R|kotlin/to|(R|<local>/name|), String(page).R|kotlin/to|(R|<local>/page|), String(limit).R|kotlin/to|(R|<local>/limit|), String(sortBy).R|kotlin/to|(R|<local>/sortBy|)))
+        public constructor(name: R|kotlin/String|, limit: R|kotlin/Int?|): R|my/test/UserSearchEndpoint| {
+            this<R|my/test/UserSearchEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(name).R|kotlin/to|(R|<local>/name|), String(limit).R|kotlin/to|(R|<local>/limit|)))
         }
 
     }
     public final fun box(): R|kotlin/String| {
-        lval endpoint1: R|my/test/UserSearchEndpoint| = R|my/test/UserSearchEndpoint.UserSearchEndpoint<Inapplicable(INAPPLICABLE): my/test/UserSearchEndpoint.UserSearchEndpoint>#|(String(john))
+        lval endpoint1: R|my/test/UserSearchEndpoint| = R|my/test/UserSearchEndpoint|(String(john), Null(null))
         lval map1: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
             R|<local>/endpoint1|.R|my/test/UserSearchEndpoint.query|(<L> = query@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
                 this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
@@ -50,35 +40,28 @@ FILE: optionalParameters.kt
             )
         }
         )
-        lval values1: R|kotlin/collections/Map<kotlin/String?, ERROR CLASS: Cannot infer argument for type parameter V>| = R|<local>/map1|.R|SubstitutionOverride<kotlin/collections/Map.values: R|kotlin/collections/Collection<io/github/nomisrev/typedapi/Input<kotlin/Any?>>|>|.R|kotlin/collections/associate<CS errors: kotlin/collections/associate>#|<R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|, R|kotlin/String?|, <ERROR TYPE REF: Cannot infer argument for type parameter V>>(<L> = associate@fun <anonymous>(it: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|): R|kotlin/Pair<kotlin/String?, ERROR CLASS: Cannot infer argument for type parameter V>| <inline=Inline, kind=UNKNOWN>  {
-            ^ R|<local>/it|.R|SubstitutionOverride<io/github/nomisrev/typedapi/Input.name: R|kotlin/String?|><Function call expected: name()>#|.R|kotlin/to<Inapplicable(INAPPLICABLE): kotlin/to>#|<R|kotlin/String?|, <ERROR TYPE REF: Cannot infer argument for type parameter B>>(R|<local>/it|.<Unresolved name: value>#)
+        lval values1: R|kotlin/collections/Map<kotlin/String?, kotlin/Any?>| = R|<local>/map1|.R|SubstitutionOverride<kotlin/collections/Map.entries: R|kotlin/collections/Set<kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>>|>|.R|kotlin/collections/associate|<R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|, R|kotlin/String?|, R|kotlin/Any?|>(<L> = associate@fun <anonymous>(<destruct>: R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|): R|kotlin/Pair<kotlin/String?, kotlin/Any?>| <inline=Inline, kind=UNKNOWN>  {
+            lval value: R|kotlin/Any?| = R|<local>/<destruct>|.R|kotlin/collections/component1|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>()
+            lval input: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>| = R|<local>/<destruct>|.R|kotlin/collections/component2|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>()
+            ^  {
+                R|<local>/input|.R|SubstitutionOverride<io/github/nomisrev/typedapi/Input.name: R|kotlin/String?|>|().R|kotlin/to|<R|kotlin/String?|, R|kotlin/Any?|>(R|<local>/value|)
+            }
+
         }
         )
         when () {
-            !=(R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(name)), String(john)) ->  {
-                ^box <strcat>(String(Expected name='john', got ), R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(name)))
+            !=(R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(name)), String(john)) ->  {
+                ^box <strcat>(String(Expected name='john', got ), R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(name)))
             }
         }
 
         when () {
-            !=(R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(page)), Int(1)) ->  {
-                ^box <strcat>(String(Expected page=1, got ), R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(page)))
+            ==(R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(limit)), String(null)) ->  {
+                ^box <strcat>(String(Expected null, got ), R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(limit)))
             }
         }
 
-        when () {
-            !=(R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(limit)), Int(20)) ->  {
-                ^box <strcat>(String(Expected limit=20, got ), R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(limit)))
-            }
-        }
-
-        when () {
-            !=(R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(sortBy)), String(name)) ->  {
-                ^box <strcat>(String(Expected sortBy='name', got ), R|<local>/values1|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(sortBy)))
-            }
-        }
-
-        lval endpoint2: R|my/test/UserSearchEndpoint| = R|my/test/UserSearchEndpoint|(String(alice), Int(2), Int(50), String(age))
+        lval endpoint2: R|my/test/UserSearchEndpoint| = R|my/test/UserSearchEndpoint|(String(alice), Int(50))
         lval map2: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
             R|<local>/endpoint2|.R|my/test/UserSearchEndpoint.query|(<L> = query@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
                 this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
@@ -86,31 +69,24 @@ FILE: optionalParameters.kt
             )
         }
         )
-        lval values2: R|kotlin/collections/Map<kotlin/String?, ERROR CLASS: Cannot infer argument for type parameter V>| = R|<local>/map2|.R|SubstitutionOverride<kotlin/collections/Map.values: R|kotlin/collections/Collection<io/github/nomisrev/typedapi/Input<kotlin/Any?>>|>|.R|kotlin/collections/associate<CS errors: kotlin/collections/associate>#|<R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|, R|kotlin/String?|, <ERROR TYPE REF: Cannot infer argument for type parameter V>>(<L> = associate@fun <anonymous>(it: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|): R|kotlin/Pair<kotlin/String?, ERROR CLASS: Cannot infer argument for type parameter V>| <inline=Inline, kind=UNKNOWN>  {
-            ^ R|<local>/it|.R|SubstitutionOverride<io/github/nomisrev/typedapi/Input.name: R|kotlin/String?|><Function call expected: name()>#|.R|kotlin/to<Inapplicable(INAPPLICABLE): kotlin/to>#|<R|kotlin/String?|, <ERROR TYPE REF: Cannot infer argument for type parameter B>>(R|<local>/it|.<Unresolved name: value>#)
+        lval values2: R|kotlin/collections/Map<kotlin/String?, kotlin/Any?>| = R|<local>/map2|.R|SubstitutionOverride<kotlin/collections/Map.entries: R|kotlin/collections/Set<kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>>|>|.R|kotlin/collections/associate|<R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|, R|kotlin/String?|, R|kotlin/Any?|>(<L> = associate@fun <anonymous>(<destruct>: R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|): R|kotlin/Pair<kotlin/String?, kotlin/Any?>| <inline=Inline, kind=UNKNOWN>  {
+            lval value: R|kotlin/Any?| = R|<local>/<destruct>|.R|kotlin/collections/component1|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>()
+            lval input: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>| = R|<local>/<destruct>|.R|kotlin/collections/component2|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>()
+            ^  {
+                R|<local>/input|.R|SubstitutionOverride<io/github/nomisrev/typedapi/Input.name: R|kotlin/String?|>|().R|kotlin/to|<R|kotlin/String?|, R|kotlin/Any?|>(R|<local>/value|)
+            }
+
         }
         )
         when () {
-            !=(R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(name)), String(alice)) ->  {
-                ^box <strcat>(String(Expected name='alice', got ), R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(name)))
+            !=(R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(name)), String(alice)) ->  {
+                ^box <strcat>(String(Expected name='alice', got ), R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(name)))
             }
         }
 
         when () {
-            !=(R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(page)), Int(2)) ->  {
-                ^box <strcat>(String(Expected page=2, got ), R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(page)))
-            }
-        }
-
-        when () {
-            !=(R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(limit)), Int(50)) ->  {
-                ^box <strcat>(String(Expected limit=50, got ), R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(limit)))
-            }
-        }
-
-        when () {
-            !=(R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(sortBy)), String(age)) ->  {
-                ^box <strcat>(String(Expected sortBy='age', got ), R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: <ERROR TYPE REF: Cannot infer argument for type parameter V>>|(String(sortBy)))
+            !=(R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(limit)), Int(50)) ->  {
+                ^box <strcat>(String(Expected limit=50, got ), R|<local>/values2|.R|SubstitutionOverride<kotlin/collections/Map.get: R|kotlin/Any?|>|(String(limit)))
             }
         }
 

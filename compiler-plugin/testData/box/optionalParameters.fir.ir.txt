@@ -1,0 +1,291 @@
+FILE fqName:my.test fileName:/optionalParameters.kt
+  CLASS CLASS name:UserSearchEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
+    annotations:
+      Endpoint(path = "/api/users")
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.UserSearchEndpoint
+    PROPERTY name:name visibility:public modality:FINAL [delegated,val]
+      FIELD PROPERTY_DELEGATE name:name$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
+            ARG <this>: CALL 'public final fun query <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.query>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.String> origin=null
+              TYPE_ARG A: kotlin.String
+              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.UserSearchEndpoint.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG thisRef: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint' type=my.test.UserSearchEndpoint origin=null
+            ARG prop: PROPERTY_REFERENCE 'public final name: kotlin.String declared in my.test.UserSearchEndpoint' field=null getter='public final fun <get-name> (): kotlin.String declared in my.test.UserSearchEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.UserSearchEndpoint, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-name> visibility:public modality:FINAL returnType:kotlin.String
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+        correspondingProperty: PROPERTY name:name visibility:public modality:FINAL [delegated,val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-name> (): kotlin.String declared in my.test.UserSearchEndpoint'
+            CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadOnlyProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadOnlyProperty declared in kotlin.properties.ReadOnlyProperty' type=kotlin.String origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_DELEGATE name:name$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> visibility:private [final] declared in my.test.UserSearchEndpoint' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
+                receiver: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.<get-name>' type=my.test.UserSearchEndpoint origin=IMPLICIT_ARGUMENT
+              ARG thisRef: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.<get-name>' type=my.test.UserSearchEndpoint origin=null
+              ARG property: PROPERTY_REFERENCE 'public final name: kotlin.String declared in my.test.UserSearchEndpoint' field=null getter='public final fun <get-name> (): kotlin.String declared in my.test.UserSearchEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.UserSearchEndpoint, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+    PROPERTY name:limit visibility:public modality:FINAL [delegated,val]
+      FIELD PROPERTY_DELEGATE name:limit$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int?> visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int?> origin=null
+            ARG <this>: CALL 'public final fun query <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.query>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.Int?> origin=null
+              TYPE_ARG A: kotlin.Int?
+              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.UserSearchEndpoint.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG thisRef: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint' type=my.test.UserSearchEndpoint origin=null
+            ARG prop: PROPERTY_REFERENCE 'public final limit: kotlin.Int? declared in my.test.UserSearchEndpoint' field=null getter='public final fun <get-limit> (): kotlin.Int? declared in my.test.UserSearchEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.UserSearchEndpoint, kotlin.Int?> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-limit> visibility:public modality:FINAL returnType:kotlin.Int?
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+        correspondingProperty: PROPERTY name:limit visibility:public modality:FINAL [delegated,val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-limit> (): kotlin.Int? declared in my.test.UserSearchEndpoint'
+            CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadOnlyProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadOnlyProperty declared in kotlin.properties.ReadOnlyProperty' type=kotlin.Int? origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_DELEGATE name:limit$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int?> visibility:private [final] declared in my.test.UserSearchEndpoint' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int?> origin=null
+                receiver: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.<get-limit>' type=my.test.UserSearchEndpoint origin=IMPLICIT_ARGUMENT
+              ARG thisRef: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.<get-limit>' type=my.test.UserSearchEndpoint origin=null
+              ARG property: PROPERTY_REFERENCE 'public final limit: kotlin.Int? declared in my.test.UserSearchEndpoint' field=null getter='public final fun <get-limit> (): kotlin.Int? declared in my.test.UserSearchEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.UserSearchEndpoint, kotlin.Int?> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public returnType:my.test.UserSearchEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:name index:0 type:kotlin.String
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:limit index:1 type:kotlin.Int?
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.UserSearchEndpoint'
+          ARG api: CONSTRUCTOR_CALL 'public constructor <init> (vararg values: kotlin.Pair<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
+            ARG values: CALL 'public final fun arrayOf <T> (vararg elements: T of kotlin.arrayOf): kotlin.Array<T of kotlin.arrayOf> declared in kotlin' type=kotlin.Array<T of kotlin.arrayOf> origin=null
+              TYPE_ARG T: kotlin.Pair<kotlin.String, kotlin.Any?>
+              ARG elements: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
+                CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
+                  TYPE_ARG A: kotlin.String
+                  TYPE_ARG B: kotlin.Any?
+                  ARG <this>: CONST String type=kotlin.String value="name"
+                  ARG that: GET_VAR 'name: kotlin.String declared in my.test.UserSearchEndpoint.<init>' type=kotlin.String origin=null
+                CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
+                  TYPE_ARG A: kotlin.String
+                  TYPE_ARG B: kotlin.Any?
+                  ARG <this>: CONST String type=kotlin.String value="limit"
+                  ARG that: GET_VAR 'limit: kotlin.Int? declared in my.test.UserSearchEndpoint.<init>' type=kotlin.Int? origin=null
+    CONSTRUCTOR visibility:public returnType:my.test.UserSearchEndpoint [primary]
+      VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:UserSearchEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+        public open fun hashCode (): kotlin.Int declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+        public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun body (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun header (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.String
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+      overridden:
+        public abstract fun path (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
+      EXPRESSION_BODY
+        CONST String type=kotlin.String value="/api/users"
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun path (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserSearchEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun query (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+        CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=R of kotlin.Function2 origin=null
+          ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> declared in my.test.UserSearchEndpoint.query' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> origin=null
+          ARG p1: CALL 'public final fun <get-name> (): kotlin.String declared in my.test.UserSearchEndpoint' type=kotlin.String origin=null
+            ARG <this>: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.query' type=my.test.UserSearchEndpoint origin=null
+          ARG p2: CALL 'public final fun Query <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Query>?): io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> origin=null
+            TYPE_ARG A: kotlin.String
+            ARG name: CONST String type=kotlin.String value="name"
+        CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=R of kotlin.Function2 origin=null
+          ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> declared in my.test.UserSearchEndpoint.query' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> origin=null
+          ARG p1: CALL 'public final fun <get-limit> (): kotlin.Int? declared in my.test.UserSearchEndpoint' type=kotlin.Int? origin=null
+            ARG <this>: GET_VAR '<this>: my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.query' type=my.test.UserSearchEndpoint origin=null
+          ARG p2: CALL 'public final fun Query <A> (name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.Query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Query>?): io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Query<A of io.github.nomisrev.typedapi.Query> origin=null
+            TYPE_ARG A: kotlin.Int?
+            ARG name: CONST String type=kotlin.String value="limit"
+  FUN name:box visibility:public modality:FINAL returnType:kotlin.String
+    BLOCK_BODY
+      VAR name:endpoint1 type:my.test.UserSearchEndpoint [val]
+        CONSTRUCTOR_CALL 'public constructor <init> (name: kotlin.String, limit: kotlin.Int?) declared in my.test.UserSearchEndpoint' type=my.test.UserSearchEndpoint origin=null
+          ARG name: CONST String type=kotlin.String value="john"
+          ARG limit: CONST Null type=kotlin.Nothing? value=null
+      VAR name:map1 type:kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> [val]
+        CALL 'public final fun buildMap <K, V> (builderAction: @[ExtensionFunctionType] kotlin.Function1<kotlin.collections.MutableMap<K of kotlin.collections.buildMap, V of kotlin.collections.buildMap>, kotlin.Unit>): kotlin.collections.Map<K of kotlin.collections.buildMap, V of kotlin.collections.buildMap> declared in kotlin.collections' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+          TYPE_ARG K: kotlin.Any?
+          TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+          ARG builderAction: FUN_EXPR type=@[ExtensionFunctionType] kotlin.Function1<kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>, kotlin.Unit> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Unit
+              VALUE_PARAMETER kind:ExtensionReceiver name:$this$buildMap index:0 type:kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+              BLOCK_BODY
+                CALL 'public final fun query (block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in my.test.UserSearchEndpoint' type=kotlin.Unit origin=null
+                  ARG <this>: GET_VAR 'val endpoint1: my.test.UserSearchEndpoint declared in my.test.box' type=my.test.UserSearchEndpoint origin=null
+                  ARG block: FUN_EXPR type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> origin=LAMBDA
+                    FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Unit
+                      VALUE_PARAMETER kind:Regular name:any index:0 type:kotlin.Any?
+                      VALUE_PARAMETER kind:Regular name:input index:1 type:io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>
+                      BLOCK_BODY
+                        TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+                          CALL 'public abstract fun put (key: K of kotlin.collections.MutableMap, value: V of kotlin.collections.MutableMap): V of kotlin.collections.MutableMap? declared in kotlin.collections.MutableMap' type=io.github.nomisrev.typedapi.Input<kotlin.Any?>? origin=null
+                            ARG <this>: GET_VAR '$this$buildMap: kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=IMPLICIT_ARGUMENT
+                            ARG key: GET_VAR 'any: kotlin.Any? declared in my.test.box.<anonymous>.<anonymous>' type=kotlin.Any? origin=null
+                            ARG value: GET_VAR 'input: io.github.nomisrev.typedapi.Input.Query<kotlin.Any?> declared in my.test.box.<anonymous>.<anonymous>' type=io.github.nomisrev.typedapi.Input.Query<kotlin.Any?> origin=null
+      VAR name:values1 type:kotlin.collections.Map<kotlin.String?, kotlin.Any?> [val]
+        CALL 'public final fun associate <T, K, V> (<this>: kotlin.collections.Iterable<T of kotlin.collections.associate>, transform: kotlin.Function1<T of kotlin.collections.associate, kotlin.Pair<K of kotlin.collections.associate, V of kotlin.collections.associate>>): kotlin.collections.Map<K of kotlin.collections.associate, V of kotlin.collections.associate> declared in kotlin.collections' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+          TYPE_ARG T: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+          TYPE_ARG K: kotlin.String?
+          TYPE_ARG V: kotlin.Any?
+          ARG <this>: CALL 'public abstract fun <get-entries> (): kotlin.collections.Set<kotlin.collections.Map.Entry<K of kotlin.collections.Map, V of kotlin.collections.Map>> declared in kotlin.collections.Map' type=kotlin.collections.Set<kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>> origin=GET_PROPERTY
+            ARG <this>: GET_VAR 'val map1: kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+          ARG transform: FUN_EXPR type=kotlin.Function1<kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>, kotlin.Pair<kotlin.String?, kotlin.Any?>> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Pair<kotlin.String?, kotlin.Any?>
+              VALUE_PARAMETER DESTRUCTURED_OBJECT_PARAMETER kind:Regular name:<destruct> index:0 type:kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+              BLOCK_BODY
+                VAR IR_DESTRUCTURED_PARAMETER_VARIABLE name:value type:kotlin.Any? [val]
+                  CALL 'public final fun component1 <K, V> (<this>: kotlin.collections.Map.Entry<K of kotlin.collections.component1, V of kotlin.collections.component1>): K of kotlin.collections.component1 declared in kotlin.collections' type=kotlin.Any? origin=COMPONENT_N(index=1)
+                    TYPE_ARG K: kotlin.Any?
+                    TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+                    ARG <this>: GET_VAR '<destruct>: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+                VAR IR_DESTRUCTURED_PARAMETER_VARIABLE name:input type:io.github.nomisrev.typedapi.Input<kotlin.Any?> [val]
+                  CALL 'public final fun component2 <K, V> (<this>: kotlin.collections.Map.Entry<K of kotlin.collections.component2, V of kotlin.collections.component2>): V of kotlin.collections.component2 declared in kotlin.collections' type=io.github.nomisrev.typedapi.Input<kotlin.Any?> origin=COMPONENT_N(index=2)
+                    TYPE_ARG K: kotlin.Any?
+                    TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+                    ARG <this>: GET_VAR '<destruct>: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+                RETURN type=kotlin.Nothing from='local final fun <anonymous> (<destruct>: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>): kotlin.Pair<kotlin.String?, kotlin.Any?> declared in my.test.box'
+                  CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<kotlin.String?, kotlin.Any?> origin=null
+                    TYPE_ARG A: kotlin.String?
+                    TYPE_ARG B: kotlin.Any?
+                    ARG <this>: CALL 'public open fun name (): kotlin.String? declared in io.github.nomisrev.typedapi.Input' type=kotlin.String? origin=null
+                      ARG <this>: GET_VAR 'val input: io.github.nomisrev.typedapi.Input<kotlin.Any?> declared in my.test.box.<anonymous>' type=io.github.nomisrev.typedapi.Input<kotlin.Any?> origin=null
+                    ARG that: GET_VAR 'val value: kotlin.Any? declared in my.test.box.<anonymous>' type=kotlin.Any? origin=null
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun not (): kotlin.Boolean declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+            ARG <this>: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+              ARG arg0: CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values1: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="name"
+              ARG arg1: CONST String type=kotlin.String value="john"
+          then: RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+            STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Expected name='john', got "
+              CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values1: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="name"
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+            ARG arg0: CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+              ARG <this>: GET_VAR 'val values1: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+              ARG key: CONST String type=kotlin.String value="limit"
+            ARG arg1: CONST String type=kotlin.String value="null"
+          then: RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+            STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Expected null, got "
+              CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values1: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="limit"
+      VAR name:endpoint2 type:my.test.UserSearchEndpoint [val]
+        CONSTRUCTOR_CALL 'public constructor <init> (name: kotlin.String, limit: kotlin.Int?) declared in my.test.UserSearchEndpoint' type=my.test.UserSearchEndpoint origin=null
+          ARG name: CONST String type=kotlin.String value="alice"
+          ARG limit: CONST Int type=kotlin.Int value=50
+      VAR name:map2 type:kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> [val]
+        CALL 'public final fun buildMap <K, V> (builderAction: @[ExtensionFunctionType] kotlin.Function1<kotlin.collections.MutableMap<K of kotlin.collections.buildMap, V of kotlin.collections.buildMap>, kotlin.Unit>): kotlin.collections.Map<K of kotlin.collections.buildMap, V of kotlin.collections.buildMap> declared in kotlin.collections' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+          TYPE_ARG K: kotlin.Any?
+          TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+          ARG builderAction: FUN_EXPR type=@[ExtensionFunctionType] kotlin.Function1<kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>, kotlin.Unit> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Unit
+              VALUE_PARAMETER kind:ExtensionReceiver name:$this$buildMap index:0 type:kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+              BLOCK_BODY
+                CALL 'public final fun query (block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in my.test.UserSearchEndpoint' type=kotlin.Unit origin=null
+                  ARG <this>: GET_VAR 'val endpoint2: my.test.UserSearchEndpoint declared in my.test.box' type=my.test.UserSearchEndpoint origin=null
+                  ARG block: FUN_EXPR type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit> origin=LAMBDA
+                    FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Unit
+                      VALUE_PARAMETER kind:Regular name:any index:0 type:kotlin.Any?
+                      VALUE_PARAMETER kind:Regular name:input index:1 type:io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>
+                      BLOCK_BODY
+                        TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+                          CALL 'public abstract fun put (key: K of kotlin.collections.MutableMap, value: V of kotlin.collections.MutableMap): V of kotlin.collections.MutableMap? declared in kotlin.collections.MutableMap' type=io.github.nomisrev.typedapi.Input<kotlin.Any?>? origin=null
+                            ARG <this>: GET_VAR '$this$buildMap: kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=IMPLICIT_ARGUMENT
+                            ARG key: GET_VAR 'any: kotlin.Any? declared in my.test.box.<anonymous>.<anonymous>' type=kotlin.Any? origin=null
+                            ARG value: GET_VAR 'input: io.github.nomisrev.typedapi.Input.Query<kotlin.Any?> declared in my.test.box.<anonymous>.<anonymous>' type=io.github.nomisrev.typedapi.Input.Query<kotlin.Any?> origin=null
+      VAR name:values2 type:kotlin.collections.Map<kotlin.String?, kotlin.Any?> [val]
+        CALL 'public final fun associate <T, K, V> (<this>: kotlin.collections.Iterable<T of kotlin.collections.associate>, transform: kotlin.Function1<T of kotlin.collections.associate, kotlin.Pair<K of kotlin.collections.associate, V of kotlin.collections.associate>>): kotlin.collections.Map<K of kotlin.collections.associate, V of kotlin.collections.associate> declared in kotlin.collections' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+          TYPE_ARG T: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+          TYPE_ARG K: kotlin.String?
+          TYPE_ARG V: kotlin.Any?
+          ARG <this>: CALL 'public abstract fun <get-entries> (): kotlin.collections.Set<kotlin.collections.Map.Entry<K of kotlin.collections.Map, V of kotlin.collections.Map>> declared in kotlin.collections.Map' type=kotlin.collections.Set<kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>> origin=GET_PROPERTY
+            ARG <this>: GET_VAR 'val map2: kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+          ARG transform: FUN_EXPR type=kotlin.Function1<kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>, kotlin.Pair<kotlin.String?, kotlin.Any?>> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Pair<kotlin.String?, kotlin.Any?>
+              VALUE_PARAMETER DESTRUCTURED_OBJECT_PARAMETER kind:Regular name:<destruct> index:0 type:kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+              BLOCK_BODY
+                VAR IR_DESTRUCTURED_PARAMETER_VARIABLE name:value type:kotlin.Any? [val]
+                  CALL 'public final fun component1 <K, V> (<this>: kotlin.collections.Map.Entry<K of kotlin.collections.component1, V of kotlin.collections.component1>): K of kotlin.collections.component1 declared in kotlin.collections' type=kotlin.Any? origin=COMPONENT_N(index=1)
+                    TYPE_ARG K: kotlin.Any?
+                    TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+                    ARG <this>: GET_VAR '<destruct>: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+                VAR IR_DESTRUCTURED_PARAMETER_VARIABLE name:input type:io.github.nomisrev.typedapi.Input<kotlin.Any?> [val]
+                  CALL 'public final fun component2 <K, V> (<this>: kotlin.collections.Map.Entry<K of kotlin.collections.component2, V of kotlin.collections.component2>): V of kotlin.collections.component2 declared in kotlin.collections' type=io.github.nomisrev.typedapi.Input<kotlin.Any?> origin=COMPONENT_N(index=2)
+                    TYPE_ARG K: kotlin.Any?
+                    TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+                    ARG <this>: GET_VAR '<destruct>: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+                RETURN type=kotlin.Nothing from='local final fun <anonymous> (<destruct>: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>): kotlin.Pair<kotlin.String?, kotlin.Any?> declared in my.test.box'
+                  CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<kotlin.String?, kotlin.Any?> origin=null
+                    TYPE_ARG A: kotlin.String?
+                    TYPE_ARG B: kotlin.Any?
+                    ARG <this>: CALL 'public open fun name (): kotlin.String? declared in io.github.nomisrev.typedapi.Input' type=kotlin.String? origin=null
+                      ARG <this>: GET_VAR 'val input: io.github.nomisrev.typedapi.Input<kotlin.Any?> declared in my.test.box.<anonymous>' type=io.github.nomisrev.typedapi.Input<kotlin.Any?> origin=null
+                    ARG that: GET_VAR 'val value: kotlin.Any? declared in my.test.box.<anonymous>' type=kotlin.Any? origin=null
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun not (): kotlin.Boolean declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+            ARG <this>: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+              ARG arg0: CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values2: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="name"
+              ARG arg1: CONST String type=kotlin.String value="alice"
+          then: RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+            STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Expected name='alice', got "
+              CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values2: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="name"
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun not (): kotlin.Boolean declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+            ARG <this>: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+              ARG arg0: CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values2: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="limit"
+              ARG arg1: CONST Int type=kotlin.Int value=50
+          then: RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+            STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Expected limit=50, got "
+              CALL 'public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? declared in kotlin.collections.Map' type=kotlin.Any? origin=GET_ARRAY_ELEMENT
+                ARG <this>: GET_VAR 'val values2: kotlin.collections.Map<kotlin.String?, kotlin.Any?> declared in my.test.box' type=kotlin.collections.Map<kotlin.String?, kotlin.Any?> origin=null
+                ARG key: CONST String type=kotlin.String value="limit"
+      RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+        CONST String type=kotlin.String value="OK"
+FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt
