@@ -37,18 +37,18 @@ buildConfig {
     val coreProject = project(":typed-api")
     buildConfigField(
         type = "String",
-        name = "ANNOTATIONS_LIBRARY_COORDINATES",
+        name = "RUNTIME_LIBRARY_COORDINATES",
         expression = "\"${coreProject.group}:${coreProject.name}:${coreProject.version}\"",
     )
 }
 
 gradlePlugin {
     plugins {
-        create("simplePlugin") {
+        create("typedApi") {
             id = rootProject.group.toString()
-            displayName = "SimplePlugin"
-            description = "SimplePlugin"
-            implementationClass = "io.github.nomisrev.typedapi.compiler.plugin.SimpleGradlePlugin"
+            displayName = "TypedApiPlugin"
+            description = "TypedApiPlugin"
+            implementationClass = "io.github.nomisrev.typedapi.compiler.plugin.TypedApiGradlePlugin"
         }
     }
 }

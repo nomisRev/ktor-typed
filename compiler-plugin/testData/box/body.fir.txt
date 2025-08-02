@@ -1,0 +1,82 @@
+FILE: body.kt
+    package my.test
+
+    public final data class User : R|kotlin/Any| {
+        public constructor(name: R|kotlin/String|, age: R|kotlin/Int|): R|my/test/User| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val name: R|kotlin/String| = R|<local>/name|
+            public get(): R|kotlin/String|
+
+        public final val age: R|kotlin/Int| = R|<local>/age|
+            public get(): R|kotlin/Int|
+
+        public final operator fun component1(): R|kotlin/String|
+
+        public final operator fun component2(): R|kotlin/Int|
+
+        public final fun copy(name: R|kotlin/String| = this@R|my/test/User|.R|my/test/User.name|, age: R|kotlin/Int| = this@R|my/test/User|.R|my/test/User.age|): R|my/test/User|
+
+    }
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/users)) public final class UserEndpoint : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/UserEndpoint| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val user: R|my/test/User|by R|<local>/api|.R|io/github/nomisrev/typedapi/body|<R|my/test/User|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, my/test/User>|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.user|)
+            public get(): R|my/test/User| {
+                ^ this@R|my/test/UserEndpoint|.D|my/test/UserEndpoint.user|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|my/test/User|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.user|)
+            }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(user: R|my/test/User|): R|my/test/UserEndpoint| {
+            this<R|my/test/UserEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(user).R|kotlin/to|(R|<local>/user|)))
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval testUser: R|my/test/User| = R|my/test/User.User|(String(John Doe), Int(30))
+        lval endpoint: R|my/test/UserEndpoint| = R|my/test/UserEndpoint|(R|<local>/testUser|)
+        lval map: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
+            R|<local>/endpoint|.R|my/test/UserEndpoint.body|(<L> = body@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
+                this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
+            }
+            )
+        }
+        )
+        when () {
+            !=(R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|, Int(1)) ->  {
+                ^box <strcat>(String(Expected 1 body parameter, got ), R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|)
+            }
+        }
+
+        lval bodyValue: R|my/test/User?| = (R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.entries: R|kotlin/collections/Set<kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>>|>|.R|kotlin/collections/firstOrNull|<R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|>()?.{ $subj$.R|SubstitutionOverride<kotlin/collections/Map.Entry.key: R|kotlin/Any?|>| } as? R|my/test/User|)
+        when () {
+            ==(R|<local>/bodyValue|, Null(null)) ->  {
+                ^box String(Body value is null or not a User)
+            }
+        }
+
+        ^box when () {
+            ==(R|<local>/bodyValue|, R|<local>/testUser|) ->  {
+                String(OK)
+            }
+            else ->  {
+                <strcat>(String(Expected ), R|<local>/testUser|, String(, got ), R|<local>/bodyValue|)
+            }
+        }
+
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test
+

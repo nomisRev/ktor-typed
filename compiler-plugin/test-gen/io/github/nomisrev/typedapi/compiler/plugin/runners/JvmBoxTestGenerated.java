@@ -22,15 +22,45 @@ public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
   }
 
   @Test
+  @TestMetadata("body.kt")
+  public void testBody() {
+    runTest("compiler-plugin/testData/box/body.kt");
+  }
+
+  @Test
+  @TestMetadata("header.kt")
+  public void testHeader() {
+    runTest("compiler-plugin/testData/box/header.kt");
+  }
+
+  @Test
   @TestMetadata("hello.kt")
   public void testHello() {
     runTest("compiler-plugin/testData/box/hello.kt");
   }
 
   @Test
+  @TestMetadata("multipleQueries.kt")
+  public void testMultipleQueries() {
+    runTest("compiler-plugin/testData/box/multipleQueries.kt");
+  }
+
+  @Test
   @TestMetadata("newConstructor.kt")
   public void testNewConstructor() {
     runTest("compiler-plugin/testData/box/newConstructor.kt");
+  }
+
+  @Test
+  @TestMetadata("noInput.kt")
+  public void testNoInput() {
+    runTest("compiler-plugin/testData/box/noInput.kt");
+  }
+
+  @Test
+  @TestMetadata("optionalParameters.kt")
+  public void testOptionalParameters() {
+    runTest("compiler-plugin/testData/box/optionalParameters.kt");
   }
 
   @Test

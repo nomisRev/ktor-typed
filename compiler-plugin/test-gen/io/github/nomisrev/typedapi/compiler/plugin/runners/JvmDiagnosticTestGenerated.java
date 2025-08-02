@@ -22,6 +22,12 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("invalidParameterType.kt")
+  public void testInvalidParameterType() {
+    runTest("compiler-plugin/testData/diagnostics/invalidParameterType.kt");
+  }
+
+  @Test
   @TestMetadata("pathWithParams.kt")
   public void testPathWithParams() {
     runTest("compiler-plugin/testData/diagnostics/pathWithParams.kt");

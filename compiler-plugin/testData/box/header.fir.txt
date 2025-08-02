@@ -1,0 +1,57 @@
+FILE: header.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/api)) public final class Header : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/Header| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val authorization: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/header|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/Header|, ::R|my/test/Header.authorization|)
+            public get(): R|kotlin/String| {
+                ^ this@R|my/test/Header|.D|my/test/Header.authorization|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/Header|, ::R|my/test/Header.authorization|)
+            }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(authorization: R|kotlin/String|): R|my/test/Header| {
+            this<R|my/test/Header|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(authorization).R|kotlin/to|(R|<local>/authorization|)))
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval value: R|my/test/Header| = R|my/test/Header|(String(Bearer token123))
+        lval map: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
+            R|<local>/value|.R|my/test/Header.header|(<L> = header@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
+                this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
+            }
+            )
+        }
+        )
+        when () {
+            !=(R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|, Int(1)) ->  {
+                ^box <strcat>(String(Expected 1 header parameter, got ), R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|)
+            }
+        }
+
+        lval headerValue: R|kotlin/Any?| = R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.entries: R|kotlin/collections/Set<kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>>|>|.R|kotlin/collections/firstOrNull|<R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|>()?.{ $subj$.R|SubstitutionOverride<kotlin/collections/Map.Entry.key: R|kotlin/Any?|>| }
+        ^box when () {
+            ==(R|<local>/headerValue|, String(Bearer token123)) ->  {
+                String(OK)
+            }
+            else ->  {
+                <strcat>(String(Expected 'Bearer token123', got '), R|<local>/headerValue|, String('))
+            }
+        }
+
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test
+

@@ -1,0 +1,311 @@
+FILE fqName:my.test fileName:/body.kt
+  CLASS CLASS name:User modality:FINAL visibility:public [data] superTypes:[kotlin.Any]
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.User
+    PROPERTY name:name visibility:public modality:FINAL [val]
+      FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]
+        EXPRESSION_BODY
+          GET_VAR 'name: kotlin.String declared in my.test.User.<init>' type=kotlin.String origin=INITIALIZE_PROPERTY_FROM_PARAMETER
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-name> visibility:public modality:FINAL returnType:kotlin.String
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+        correspondingProperty: PROPERTY name:name visibility:public modality:FINAL [val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-name> (): kotlin.String declared in my.test.User'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+              receiver: GET_VAR '<this>: my.test.User declared in my.test.User.<get-name>' type=my.test.User origin=null
+    PROPERTY name:age visibility:public modality:FINAL [val]
+      FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]
+        EXPRESSION_BODY
+          GET_VAR 'age: kotlin.Int declared in my.test.User.<init>' type=kotlin.Int origin=INITIALIZE_PROPERTY_FROM_PARAMETER
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-age> visibility:public modality:FINAL returnType:kotlin.Int
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+        correspondingProperty: PROPERTY name:age visibility:public modality:FINAL [val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-age> (): kotlin.Int declared in my.test.User'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+              receiver: GET_VAR '<this>: my.test.User declared in my.test.User.<get-age>' type=my.test.User origin=null
+    CONSTRUCTOR visibility:public returnType:my.test.User [primary]
+      VALUE_PARAMETER kind:Regular name:name index:0 type:kotlin.String
+      VALUE_PARAMETER kind:Regular name:age index:1 type:kotlin.Int
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:User modality:FINAL visibility:public [data] superTypes:[kotlin.Any]' type=kotlin.Unit
+    FUN GENERATED_DATA_CLASS_MEMBER name:component1 visibility:public modality:FINAL returnType:kotlin.String [operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun component1 (): kotlin.String declared in my.test.User'
+          GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+            receiver: GET_VAR '<this>: my.test.User declared in my.test.User.component1' type=my.test.User origin=null
+    FUN GENERATED_DATA_CLASS_MEMBER name:component2 visibility:public modality:FINAL returnType:kotlin.Int [operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun component2 (): kotlin.Int declared in my.test.User'
+          GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+            receiver: GET_VAR '<this>: my.test.User declared in my.test.User.component2' type=my.test.User origin=null
+    FUN GENERATED_DATA_CLASS_MEMBER name:copy visibility:public modality:FINAL returnType:my.test.User
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+      VALUE_PARAMETER kind:Regular name:name index:1 type:kotlin.String
+        EXPRESSION_BODY
+          GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+            receiver: GET_VAR '<this>: my.test.User declared in my.test.User.copy' type=my.test.User origin=null
+      VALUE_PARAMETER kind:Regular name:age index:2 type:kotlin.Int
+        EXPRESSION_BODY
+          GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+            receiver: GET_VAR '<this>: my.test.User declared in my.test.User.copy' type=my.test.User origin=null
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun copy (name: kotlin.String, age: kotlin.Int): my.test.User declared in my.test.User'
+          CONSTRUCTOR_CALL 'public constructor <init> (name: kotlin.String, age: kotlin.Int) declared in my.test.User' type=my.test.User origin=null
+            ARG name: GET_VAR 'name: kotlin.String declared in my.test.User.copy' type=kotlin.String origin=null
+            ARG age: GET_VAR 'age: kotlin.Int declared in my.test.User.copy' type=kotlin.Int origin=null
+    FUN GENERATED_DATA_CLASS_MEMBER name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+      BLOCK_BODY
+        WHEN type=kotlin.Unit origin=null
+          BRANCH
+            if: CALL 'public final fun EQEQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQEQ
+              ARG arg0: GET_VAR '<this>: my.test.User declared in my.test.User.equals' type=my.test.User origin=null
+              ARG arg1: GET_VAR 'other: kotlin.Any? declared in my.test.User.equals' type=kotlin.Any? origin=null
+            then: RETURN type=kotlin.Nothing from='public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in my.test.User'
+              CONST Boolean type=kotlin.Boolean value=true
+        WHEN type=kotlin.Unit origin=null
+          BRANCH
+            if: TYPE_OP type=kotlin.Boolean origin=NOT_INSTANCEOF typeOperand=my.test.User
+              GET_VAR 'other: kotlin.Any? declared in my.test.User.equals' type=kotlin.Any? origin=null
+            then: RETURN type=kotlin.Nothing from='public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in my.test.User'
+              CONST Boolean type=kotlin.Boolean value=false
+        VAR IR_TEMPORARY_VARIABLE name:tmp_0 type:my.test.User [val]
+          TYPE_OP type=my.test.User origin=CAST typeOperand=my.test.User
+            GET_VAR 'other: kotlin.Any? declared in my.test.User.equals' type=kotlin.Any? origin=null
+        WHEN type=kotlin.Unit origin=null
+          BRANCH
+            if: CALL 'public final fun not (): kotlin.Boolean declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+              ARG <this>: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+                ARG arg0: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+                  receiver: GET_VAR '<this>: my.test.User declared in my.test.User.equals' type=my.test.User origin=null
+                ARG arg1: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+                  receiver: GET_VAR 'val tmp_0: my.test.User declared in my.test.User.equals' type=my.test.User origin=null
+            then: RETURN type=kotlin.Nothing from='public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in my.test.User'
+              CONST Boolean type=kotlin.Boolean value=false
+        WHEN type=kotlin.Unit origin=null
+          BRANCH
+            if: CALL 'public final fun not (): kotlin.Boolean declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+              ARG <this>: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+                ARG arg0: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+                  receiver: GET_VAR '<this>: my.test.User declared in my.test.User.equals' type=my.test.User origin=null
+                ARG arg1: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+                  receiver: GET_VAR 'val tmp_0: my.test.User declared in my.test.User.equals' type=my.test.User origin=null
+            then: RETURN type=kotlin.Nothing from='public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in my.test.User'
+              CONST Boolean type=kotlin.Boolean value=false
+        RETURN type=kotlin.Nothing from='public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in my.test.User'
+          CONST Boolean type=kotlin.Boolean value=true
+    FUN GENERATED_DATA_CLASS_MEMBER name:hashCode visibility:public modality:OPEN returnType:kotlin.Int
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+      BLOCK_BODY
+        VAR name:result type:kotlin.Int [var]
+          CALL 'public open fun hashCode (): kotlin.Int declared in kotlin.String' type=kotlin.Int origin=null
+            ARG <this>: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+              receiver: GET_VAR '<this>: my.test.User declared in my.test.User.hashCode' type=my.test.User origin=null
+        SET_VAR 'var result: kotlin.Int declared in my.test.User.hashCode' type=kotlin.Unit origin=EQ
+          CALL 'public final fun plus (other: kotlin.Int): kotlin.Int declared in kotlin.Int' type=kotlin.Int origin=null
+            ARG <this>: CALL 'public final fun times (other: kotlin.Int): kotlin.Int declared in kotlin.Int' type=kotlin.Int origin=null
+              ARG <this>: GET_VAR 'var result: kotlin.Int declared in my.test.User.hashCode' type=kotlin.Int origin=null
+              ARG other: CONST Int type=kotlin.Int value=31
+            ARG other: CALL 'public open fun hashCode (): kotlin.Int declared in kotlin.Int' type=kotlin.Int origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+                receiver: GET_VAR '<this>: my.test.User declared in my.test.User.hashCode' type=my.test.User origin=null
+        RETURN type=kotlin.Nothing from='public open fun hashCode (): kotlin.Int declared in my.test.User'
+          GET_VAR 'var result: kotlin.Int declared in my.test.User.hashCode' type=kotlin.Int origin=null
+    FUN GENERATED_DATA_CLASS_MEMBER name:toString visibility:public modality:OPEN returnType:kotlin.String
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.User
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public open fun toString (): kotlin.String declared in my.test.User'
+          STRING_CONCATENATION type=kotlin.String
+            CONST String type=kotlin.String value="User("
+            CONST String type=kotlin.String value="name="
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:name type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
+              receiver: GET_VAR '<this>: my.test.User declared in my.test.User.toString' type=my.test.User origin=null
+            CONST String type=kotlin.String value=", "
+            CONST String type=kotlin.String value="age="
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:age type:kotlin.Int visibility:private [final]' type=kotlin.Int origin=null
+              receiver: GET_VAR '<this>: my.test.User declared in my.test.User.toString' type=my.test.User origin=null
+            CONST String type=kotlin.String value=")"
+  CLASS CLASS name:UserEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
+    annotations:
+      Endpoint(path = "/users")
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.UserEndpoint
+    PROPERTY name:user visibility:public modality:FINAL [delegated,val]
+      FIELD PROPERTY_DELEGATE name:user$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> origin=null
+            ARG <this>: CALL 'public final fun body <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.body>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.body> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<my.test.User> origin=null
+              TYPE_ARG A: my.test.User
+              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.UserEndpoint.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG thisRef: GET_VAR '<this>: my.test.UserEndpoint declared in my.test.UserEndpoint' type=my.test.UserEndpoint origin=null
+            ARG prop: PROPERTY_REFERENCE 'public final user: my.test.User declared in my.test.UserEndpoint' field=null getter='public final fun <get-user> (): my.test.User declared in my.test.UserEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.UserEndpoint, my.test.User> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+      FUN DELEGATED_PROPERTY_ACCESSOR name:<get-user> visibility:public modality:FINAL returnType:my.test.User
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
+        correspondingProperty: PROPERTY name:user visibility:public modality:FINAL [delegated,val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-user> (): my.test.User declared in my.test.UserEndpoint'
+            CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadOnlyProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadOnlyProperty declared in kotlin.properties.ReadOnlyProperty' type=my.test.User origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_DELEGATE name:user$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> visibility:private [final] declared in my.test.UserEndpoint' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> origin=null
+                receiver: GET_VAR '<this>: my.test.UserEndpoint declared in my.test.UserEndpoint.<get-user>' type=my.test.UserEndpoint origin=IMPLICIT_ARGUMENT
+              ARG thisRef: GET_VAR '<this>: my.test.UserEndpoint declared in my.test.UserEndpoint.<get-user>' type=my.test.UserEndpoint origin=null
+              ARG property: PROPERTY_REFERENCE 'public final user: my.test.User declared in my.test.UserEndpoint' field=null getter='public final fun <get-user> (): my.test.User declared in my.test.UserEndpoint' setter=null type=kotlin.reflect.KProperty1<my.test.UserEndpoint, my.test.User> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] visibility:public returnType:my.test.UserEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:user index:0 type:my.test.User
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.UserEndpoint'
+          ARG api: CONSTRUCTOR_CALL 'public constructor <init> (vararg values: kotlin.Pair<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
+            ARG values: CALL 'public final fun arrayOf <T> (vararg elements: T of kotlin.arrayOf): kotlin.Array<T of kotlin.arrayOf> declared in kotlin' type=kotlin.Array<T of kotlin.arrayOf> origin=null
+              TYPE_ARG T: kotlin.Pair<kotlin.String, kotlin.Any?>
+              ARG elements: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
+                CALL 'public final fun to <A, B> (<this>: A of kotlin.to, that: B of kotlin.to): kotlin.Pair<A of kotlin.to, B of kotlin.to> declared in kotlin' type=kotlin.Pair<A of kotlin.to, B of kotlin.to> origin=null
+                  TYPE_ARG A: kotlin.String
+                  TYPE_ARG B: kotlin.Any?
+                  ARG <this>: CONST String type=kotlin.String value="user"
+                  ARG that: GET_VAR 'user: my.test.User declared in my.test.UserEndpoint.<init>' type=my.test.User origin=null
+    CONSTRUCTOR visibility:public returnType:my.test.UserEndpoint [primary]
+      VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:UserEndpoint modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+        public open fun hashCode (): kotlin.Int declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+        public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:body visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun body (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+        CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=R of kotlin.Function2 origin=null
+          ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit> declared in my.test.UserEndpoint.body' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit> origin=null
+          ARG p1: CALL 'public final fun <get-user> (): my.test.User declared in my.test.UserEndpoint' type=my.test.User origin=null
+            ARG <this>: GET_VAR '<this>: my.test.UserEndpoint declared in my.test.UserEndpoint.body' type=my.test.UserEndpoint origin=null
+          ARG p2: CALL 'public final fun Body <A> (info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Body>?): io.github.nomisrev.typedapi.Input.Body<A of io.github.nomisrev.typedapi.Body> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Body<A of io.github.nomisrev.typedapi.Body> origin=null
+            TYPE_ARG A: my.test.User
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:header visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun header (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.String
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
+      overridden:
+        public abstract fun path (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
+      EXPRESSION_BODY
+        CONST String type=kotlin.String value="/users"
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun path (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+    FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] name:query visibility:public modality:FINAL returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
+      VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
+      overridden:
+        public abstract fun query (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
+      BLOCK_BODY
+  FUN name:box visibility:public modality:FINAL returnType:kotlin.String
+    BLOCK_BODY
+      VAR name:testUser type:my.test.User [val]
+        CONSTRUCTOR_CALL 'public constructor <init> (name: kotlin.String, age: kotlin.Int) declared in my.test.User' type=my.test.User origin=null
+          ARG name: CONST String type=kotlin.String value="John Doe"
+          ARG age: CONST Int type=kotlin.Int value=30
+      VAR name:endpoint type:my.test.UserEndpoint [val]
+        CONSTRUCTOR_CALL 'public constructor <init> (user: my.test.User) declared in my.test.UserEndpoint' type=my.test.UserEndpoint origin=null
+          ARG user: GET_VAR 'val testUser: my.test.User declared in my.test.box' type=my.test.User origin=null
+      VAR name:map type:kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> [val]
+        CALL 'public final fun buildMap <K, V> (builderAction: @[ExtensionFunctionType] kotlin.Function1<kotlin.collections.MutableMap<K of kotlin.collections.buildMap, V of kotlin.collections.buildMap>, kotlin.Unit>): kotlin.collections.Map<K of kotlin.collections.buildMap, V of kotlin.collections.buildMap> declared in kotlin.collections' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+          TYPE_ARG K: kotlin.Any?
+          TYPE_ARG V: io.github.nomisrev.typedapi.Input<kotlin.Any?>
+          ARG builderAction: FUN_EXPR type=@[ExtensionFunctionType] kotlin.Function1<kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>, kotlin.Unit> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Unit
+              VALUE_PARAMETER kind:ExtensionReceiver name:$this$buildMap index:0 type:kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+              BLOCK_BODY
+                CALL 'public final fun body (block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in my.test.UserEndpoint' type=kotlin.Unit origin=null
+                  ARG <this>: GET_VAR 'val endpoint: my.test.UserEndpoint declared in my.test.box' type=my.test.UserEndpoint origin=null
+                  ARG block: FUN_EXPR type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit> origin=LAMBDA
+                    FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.Unit
+                      VALUE_PARAMETER kind:Regular name:any index:0 type:kotlin.Any?
+                      VALUE_PARAMETER kind:Regular name:input index:1 type:io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>
+                      BLOCK_BODY
+                        TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
+                          CALL 'public abstract fun put (key: K of kotlin.collections.MutableMap, value: V of kotlin.collections.MutableMap): V of kotlin.collections.MutableMap? declared in kotlin.collections.MutableMap' type=io.github.nomisrev.typedapi.Input<kotlin.Any?>? origin=null
+                            ARG <this>: GET_VAR '$this$buildMap: kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box.<anonymous>' type=kotlin.collections.MutableMap<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=IMPLICIT_ARGUMENT
+                            ARG key: GET_VAR 'any: kotlin.Any? declared in my.test.box.<anonymous>.<anonymous>' type=kotlin.Any? origin=null
+                            ARG value: GET_VAR 'input: io.github.nomisrev.typedapi.Input.Body<kotlin.Any?> declared in my.test.box.<anonymous>.<anonymous>' type=io.github.nomisrev.typedapi.Input.Body<kotlin.Any?> origin=null
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun not (): kotlin.Boolean declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+            ARG <this>: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+              ARG arg0: CALL 'public abstract fun <get-size> (): kotlin.Int declared in kotlin.collections.Map' type=kotlin.Int origin=GET_PROPERTY
+                ARG <this>: GET_VAR 'val map: kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+              ARG arg1: CONST Int type=kotlin.Int value=1
+          then: RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+            STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Expected 1 body parameter, got "
+              CALL 'public abstract fun <get-size> (): kotlin.Int declared in kotlin.collections.Map' type=kotlin.Int origin=GET_PROPERTY
+                ARG <this>: GET_VAR 'val map: kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+      VAR name:bodyValue type:my.test.User? [val]
+        TYPE_OP type=my.test.User? origin=SAFE_CAST typeOperand=my.test.User
+          BLOCK type=kotlin.Any? origin=SAFE_CALL
+            VAR IR_TEMPORARY_VARIABLE name:tmp_1 type:kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? [val]
+              CALL 'public final fun firstOrNull <T> (<this>: kotlin.collections.Iterable<T of kotlin.collections.firstOrNull>): T of kotlin.collections.firstOrNull? declared in kotlin.collections' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
+                TYPE_ARG T: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+                ARG <this>: CALL 'public abstract fun <get-entries> (): kotlin.collections.Set<kotlin.collections.Map.Entry<K of kotlin.collections.Map, V of kotlin.collections.Map>> declared in kotlin.collections.Map' type=kotlin.collections.Set<kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>> origin=GET_PROPERTY
+                  ARG <this>: GET_VAR 'val map: kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> declared in my.test.box' type=kotlin.collections.Map<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=null
+            WHEN type=kotlin.Any? origin=null
+              BRANCH
+                if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+                  ARG arg0: GET_VAR 'val tmp_1: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? declared in my.test.box' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
+                  ARG arg1: CONST Null type=kotlin.Nothing? value=null
+                then: CONST Null type=kotlin.Nothing? value=null
+              BRANCH
+                if: CONST Boolean type=kotlin.Boolean value=true
+                then: CALL 'public abstract fun <get-key> (): K of kotlin.collections.Map.Entry declared in kotlin.collections.Map.Entry' type=kotlin.Any? origin=GET_PROPERTY
+                  ARG <this>: GET_VAR 'val tmp_1: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? declared in my.test.box' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+            ARG arg0: GET_VAR 'val bodyValue: my.test.User? declared in my.test.box' type=my.test.User? origin=null
+            ARG arg1: CONST Null type=kotlin.Nothing? value=null
+          then: RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+            CONST String type=kotlin.String value="Body value is null or not a User"
+      RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
+        WHEN type=kotlin.String origin=IF
+          BRANCH
+            if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+              ARG arg0: GET_VAR 'val bodyValue: my.test.User? declared in my.test.box' type=my.test.User? origin=null
+              ARG arg1: GET_VAR 'val testUser: my.test.User declared in my.test.box' type=my.test.User origin=null
+            then: CONST String type=kotlin.String value="OK"
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Expected "
+              GET_VAR 'val testUser: my.test.User declared in my.test.box' type=my.test.User origin=null
+              CONST String type=kotlin.String value=", got "
+              GET_VAR 'val bodyValue: my.test.User? declared in my.test.box' type=my.test.User? origin=null
+FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt

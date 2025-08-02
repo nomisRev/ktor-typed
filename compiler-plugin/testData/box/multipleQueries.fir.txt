@@ -1,0 +1,84 @@
+FILE: multipleQueries.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/search)) public final class SearchEndpoint : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/SearchEndpoint| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val query: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.query|)
+            public get(): R|kotlin/String| {
+                ^ this@R|my/test/SearchEndpoint|.D|my/test/SearchEndpoint.query|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.query|)
+            }
+
+        public final val page: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.page|)
+            public get(): R|kotlin/Int| {
+                ^ this@R|my/test/SearchEndpoint|.D|my/test/SearchEndpoint.page|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.page|)
+            }
+
+        public final val limit: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.limit|)
+            public get(): R|kotlin/Int| {
+                ^ this@R|my/test/SearchEndpoint|.D|my/test/SearchEndpoint.limit|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.limit|)
+            }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(query: R|kotlin/String|, page: R|kotlin/Int|, limit: R|kotlin/Int|): R|my/test/SearchEndpoint| {
+            this<R|my/test/SearchEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(query).R|kotlin/to|(R|<local>/query|), String(page).R|kotlin/to|(R|<local>/page|), String(limit).R|kotlin/to|(R|<local>/limit|)))
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval endpoint: R|my/test/SearchEndpoint| = R|my/test/SearchEndpoint|(String(kotlin), Int(1), Int(10))
+        lval map: R|kotlin/collections/Map<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>| = R|kotlin/collections/buildMap|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>(<L> = buildMap@fun R|kotlin/collections/MutableMap<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|.<anonymous>(): R|kotlin/Unit| <inline=Inline, kind=EXACTLY_ONCE>  {
+            R|<local>/endpoint|.R|my/test/SearchEndpoint.query|(<L> = query@fun <anonymous>(any: R|kotlin/Any?|, input: R|io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>|): R|kotlin/Unit| <inline=NoInline>  {
+                this@R|special/anonymous|.R|SubstitutionOverride<kotlin/collections/MutableMap.put: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>?|>|(R|<local>/any|, R|<local>/input|)
+            }
+            )
+        }
+        )
+        when () {
+            !=(R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|, Int(3)) ->  {
+                ^box <strcat>(String(Expected 3 query parameters, got ), R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.size: R|kotlin/Int|>|)
+            }
+        }
+
+        lval values: R|kotlin/collections/List<kotlin/Any?>| = R|<local>/map|.R|SubstitutionOverride<kotlin/collections/Map.entries: R|kotlin/collections/Set<kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>>|>|.R|kotlin/collections/map|<R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|, R|kotlin/Any?|>(<L> = map@fun <anonymous>(<destruct>: R|kotlin/collections/Map.Entry<kotlin/Any?, io/github/nomisrev/typedapi/Input<kotlin/Any?>>|): R|kotlin/Any?| <inline=Inline, kind=UNKNOWN>  {
+            lval key: R|kotlin/Any?| = R|<local>/<destruct>|.R|kotlin/collections/component1|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>()
+            lval value: R|io/github/nomisrev/typedapi/Input<kotlin/Any?>| = R|<local>/<destruct>|.R|kotlin/collections/component2|<R|kotlin/Any?|, R|io/github/nomisrev/typedapi/Input<kotlin/Any?>|>()
+            ^  {
+                R|<local>/key|
+            }
+
+        }
+        )
+        when () {
+            R|<local>/values|.R|SubstitutionOverride<kotlin/collections/List.contains: R|kotlin/Boolean|>|(String(kotlin)).R|kotlin/Boolean.not|() ->  {
+                ^box String(Missing query parameter 'kotlin')
+            }
+        }
+
+        when () {
+            R|<local>/values|.R|SubstitutionOverride<kotlin/collections/List.contains: R|kotlin/Boolean|>|(Int(1)).R|kotlin/Boolean.not|() ->  {
+                ^box String(Missing query parameter '1')
+            }
+        }
+
+        when () {
+            R|<local>/values|.R|SubstitutionOverride<kotlin/collections/List.contains: R|kotlin/Boolean|>|(Int(10)).R|kotlin/Boolean.not|() ->  {
+                ^box String(Missing query parameter '10')
+            }
+        }
+
+        ^box String(OK)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test

@@ -1,0 +1,38 @@
+FILE: noInput.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/my/path)) public final class NoInput : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/NoInput| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(): R|my/test/NoInput| {
+            this<R|my/test/NoInput|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|())
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval value: R|my/test/NoInput| = R|my/test/NoInput|()
+        lval path: R|kotlin/String| = R|<local>/value|.R|my/test/NoInput.path|()
+        ^box when () {
+            ==(R|<local>/path|, String(/my/path)) ->  {
+                String(OK)
+            }
+            else ->  {
+                R|<local>/path|
+            }
+        }
+
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test

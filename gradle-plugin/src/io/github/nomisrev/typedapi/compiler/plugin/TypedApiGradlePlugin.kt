@@ -1,7 +1,7 @@
 package io.github.nomisrev.typedapi.compiler.plugin
 
 import io.github.nomisrev.typedapi.BuildConfig
-import io.github.nomisrev.typedapi.BuildConfig.ANNOTATIONS_LIBRARY_COORDINATES
+import io.github.nomisrev.typedapi.BuildConfig.RUNTIME_LIBRARY_COORDINATES
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
@@ -10,9 +10,9 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
 @Suppress("unused") // Used via reflection.
-class SimpleGradlePlugin : KotlinCompilerPluginSupportPlugin {
+class TypedApiGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project) {
-        target.extensions.create("simplePlugin", SimpleGradleExtension::class.java)
+        target.extensions.create("typedApi", TypedApiGradleExtension::class.java)
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
@@ -29,13 +29,13 @@ class SimpleGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
         val project = kotlinCompilation.target.project
 
-        kotlinCompilation.dependencies { implementation(ANNOTATIONS_LIBRARY_COORDINATES) }
+        kotlinCompilation.dependencies { implementation(RUNTIME_LIBRARY_COORDINATES) }
         if (kotlinCompilation.implementationConfigurationName == "metadataCompilationImplementation") {
-            project.dependencies.add("commonMainImplementation", ANNOTATIONS_LIBRARY_COORDINATES)
+            project.dependencies.add("commonMainImplementation", RUNTIME_LIBRARY_COORDINATES)
         }
 
         return project.provider {
-            val extension = project.extensions.getByType(SimpleGradleExtension::class.java)
+            val extension = project.extensions.getByType(TypedApiGradleExtension::class.java)
             emptyList()
         }
     }
