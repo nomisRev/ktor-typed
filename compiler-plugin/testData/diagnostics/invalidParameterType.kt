@@ -22,3 +22,6 @@ fun box(): String {
     val value = InvalidTypeEndpoint(ComplexType("test"))
     return "OK"
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, nullableType, override, primaryConstructor,
+propertyDeclaration, propertyDelegate, stringLiteral */

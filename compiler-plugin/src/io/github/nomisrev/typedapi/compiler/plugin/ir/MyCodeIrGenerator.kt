@@ -146,11 +146,6 @@ class MyCodeIrGenerator(
         super.visitConstructor(declaration, data)
     }
 
-//    override fun visitSimpleFunction(declaration: IrSimpleFunction, data: Nothing?) {
-//        super.visitSimpleFunction(declaration, data)
-//
-//    }
-
     override fun visitFunction(declaration: IrFunction, data: Nothing?) {
         if (declaration.origin is IrDeclarationOrigin.GeneratedByPlugin) {
             if (!httpRequestValueIdentifiers.contains(declaration.name)) {

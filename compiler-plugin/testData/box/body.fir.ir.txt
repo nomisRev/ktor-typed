@@ -76,7 +76,7 @@ FILE fqName:my.test fileName:/body.kt
             then: RETURN type=kotlin.Nothing from='public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in my.test.User'
               CONST Boolean type=kotlin.Boolean value=false
         VAR IR_TEMPORARY_VARIABLE name:tmp_0 type:my.test.User [val]
-          TYPE_OP type=my.test.User origin=CAST typeOperand=my.test.User
+          TYPE_OP type=my.test.User origin=IMPLICIT_CAST typeOperand=my.test.User
             GET_VAR 'other: kotlin.Any? declared in my.test.User.equals' type=kotlin.Any? origin=null
         WHEN type=kotlin.Unit origin=null
           BRANCH
@@ -286,7 +286,8 @@ FILE fqName:my.test fileName:/body.kt
               BRANCH
                 if: CONST Boolean type=kotlin.Boolean value=true
                 then: CALL 'public abstract fun <get-key> (): K of kotlin.collections.Map.Entry declared in kotlin.collections.Map.Entry' type=kotlin.Any? origin=GET_PROPERTY
-                  ARG <this>: GET_VAR 'val tmp_1: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? declared in my.test.box' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
+                  ARG <this>: TYPE_OP type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=IMPLICIT_CAST typeOperand=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+                    GET_VAR 'val tmp_1: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? declared in my.test.box' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
       WHEN type=kotlin.Unit origin=IF
         BRANCH
           if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
@@ -307,5 +308,6 @@ FILE fqName:my.test fileName:/body.kt
               CONST String type=kotlin.String value="Expected "
               GET_VAR 'val testUser: my.test.User declared in my.test.box' type=my.test.User origin=null
               CONST String type=kotlin.String value=", got "
-              GET_VAR 'val bodyValue: my.test.User? declared in my.test.box' type=my.test.User? origin=null
+              TYPE_OP type=my.test.User origin=IMPLICIT_CAST typeOperand=my.test.User
+                GET_VAR 'val bodyValue: my.test.User? declared in my.test.box' type=my.test.User? origin=null
 FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt
