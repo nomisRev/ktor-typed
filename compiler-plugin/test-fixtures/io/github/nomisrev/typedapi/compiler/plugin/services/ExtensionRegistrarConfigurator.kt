@@ -1,5 +1,6 @@
 package io.github.nomisrev.typedapi.compiler.plugin.services
 
+import io.github.nomisrev.typedapi.compiler.plugin.CallableIds
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import io.github.nomisrev.typedapi.compiler.plugin.ClassIds
@@ -26,6 +27,7 @@ class ExtensionRegistrarConfigurator(
         val module =
             PluginContext(
                 classIds = ClassIds(),
+                callableIds = CallableIds(),
                 options = Options(configuration),
                 logger = Logger(true),
             )
