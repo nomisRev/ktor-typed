@@ -1,6 +1,6 @@
 package io.github.nomisrev.typedapi.compiler.plugin
 
-import io.github.nomisrev.typedapi.BuildConfig
+import io.github.nomisrev.BuildConfig
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOptionProcessingException

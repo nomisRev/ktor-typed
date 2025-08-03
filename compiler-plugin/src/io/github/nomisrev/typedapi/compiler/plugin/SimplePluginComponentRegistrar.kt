@@ -15,6 +15,7 @@ class SimplePluginComponentRegistrar : CompilerPluginRegistrar() {
         val module =
             PluginContext(
                 classIds = ClassIds(),
+                callableIds = CallableIds(),
                 options = options,
                 logger = logger,
             )

@@ -6,12 +6,12 @@ FILE: redeclaredParam.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
+        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>()
             public get(): R|kotlin/String| {
                 ^ this@R|my/test/RedeclaredEndpoint|.D|my/test/RedeclaredEndpoint.name|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
             }
 
-        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
+        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>()
             public get(): R|kotlin/String| {
                 ^ this@R|my/test/RedeclaredEndpoint|.D|my/test/RedeclaredEndpoint.name|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
             }
@@ -37,3 +37,4 @@ FILE: redeclaredParam.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
+

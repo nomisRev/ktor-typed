@@ -12,7 +12,7 @@ data class Route(
 
 inline fun <reified A> collect(
     noinline block: (EndpointAPI) -> A
-): Route =  collect(typeOf<A>(), A::class, block)
+): Route = collect(typeOf<A>(), A::class, block)
 
 fun <A> collect(
     kType: KType,
@@ -24,8 +24,8 @@ fun <A> collect(
 
     val inputs = mutableListOf<Input<*>>()
     val api = object : EndpointAPI {
-        override fun <A> input(input: Input<A>): DelegateProvider<A> = DelegateProvider { _, prop ->
-            val name = input.name() ?: prop.name
+        override fun <A> input(input: Input<A>): ReadOnlyProperty<Any?, A> {
+            val name = input.name()
             inputs.add(
                 when (input) {
                     is Input.Body<*> -> input
@@ -56,7 +56,7 @@ fun <A> collect(
                 }
             )
 
-            ReadOnlyProperty { _, _ -> error("Not implemented") }
+            return ReadOnlyProperty { _, _ -> error("Not implemented") }
         }
     }
     block(api)

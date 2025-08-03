@@ -6,12 +6,10 @@ FILE fqName:my.test fileName:/header.kt
     PROPERTY name:authorization visibility:public modality:FINAL [delegated,val]
       FIELD PROPERTY_DELEGATE name:authorization$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> visibility:private [final]
         EXPRESSION_BODY
-          CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
-            ARG <this>: CALL 'public final fun header <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, toHeaderCase: kotlin.Function1<kotlin.String, kotlin.String>, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.header>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.header>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.header> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.String> origin=null
-              TYPE_ARG A: kotlin.String
-              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Header.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
-            ARG thisRef: GET_VAR '<this>: my.test.Header declared in my.test.Header' type=my.test.Header origin=null
-            ARG prop: PROPERTY_REFERENCE 'public final authorization: kotlin.String declared in my.test.Header' field=null getter='public final fun <get-authorization> (): kotlin.String declared in my.test.Header' setter=null type=kotlin.reflect.KProperty1<my.test.Header, kotlin.String> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+          CALL 'public final fun header <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, toHeaderCase: kotlin.Function1<kotlin.String, kotlin.String>, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.header>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.header>?): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.header> declared in io.github.nomisrev.typedapi' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.String> origin=null
+            TYPE_ARG A: kotlin.String
+            ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Header.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG name: CONST String type=kotlin.String value="authorization"
       FUN DELEGATED_PROPERTY_ACCESSOR name:<get-authorization> visibility:public modality:FINAL returnType:kotlin.String
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Header
         correspondingProperty: PROPERTY name:authorization visibility:public modality:FINAL [delegated,val]

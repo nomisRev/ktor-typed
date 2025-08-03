@@ -8,28 +8,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-// Define a simple endpoint function
+/**
+ * SUPPORT FOR KDOC API from OpenAPI KLIP as alternative to typed DSL.
+ */
 @Endpoint("/users/{id}")
 class UserEndpoint(api: EndpointAPI) /* : Documented */ {
-    val id by api.path<Int>()
-
-    // TODO alternative option
-    // init {
-    //   // DSL??
-    //   api.document {
-    //       // API Doc DSL
-    //   }
-    // }
-
-    // Or inheritance, allows extra `A : Documented` check, and together with lazy eval it's pretty OK!
-    // Can automatically be added by compiler plugin
-    // override val info by Info {
-    //     returns = oneOf(
-    //         HttpStatusCode.OK to body<User>(Json),
-    //         HttpStatusCode.NotFound to text
-    //     )
-    //     ...
-    // }
+    // name = "id" is filled in by compiler plugin
+    //    TODO inline description Kdoc if any
+    val id by api.path<Int>(name = "id")
 }
 
 class OpenAPIGeneratorTest {

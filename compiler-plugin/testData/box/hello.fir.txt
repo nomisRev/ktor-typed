@@ -6,7 +6,7 @@ FILE: hello.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/Hello|, ::R|my/test/Hello.age|)
+        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>()
             public get(): R|kotlin/Int| {
                 ^ this@R|my/test/Hello|.D|my/test/Hello.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/Hello|, ::R|my/test/Hello.age|)
             }

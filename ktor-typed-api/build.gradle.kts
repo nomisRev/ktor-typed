@@ -1,5 +1,5 @@
 plugins {
-    id("kotlin-multiplatform-common")
+    id("org.jetbrains.kotlin.multiplatform")
     alias(libs.plugins.serialization)
     alias(libs.plugins.power.assert)
     alias(libs.plugins.kover)
@@ -7,6 +7,9 @@ plugins {
 
 kotlin {
     jvmToolchain(11)
+
+    jvm()
+
     sourceSets {
         commonMain {
             dependencies {
@@ -14,6 +17,7 @@ kotlin {
                 api(ktorLibs.server.core)
                 api(ktorLibs.client.core)
                 api(ktorLibs.serialization.kotlinx.json)
+                implementation(libs.kotlin.reflect)
             }
         }
         commonTest {

@@ -6,12 +6,9 @@ FILE fqName:my.test fileName:/query.kt
     PROPERTY name:age visibility:public modality:FINAL [delegated,val]
       FIELD PROPERTY_DELEGATE name:age$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> visibility:private [final]
         EXPRESSION_BODY
-          CALL 'public abstract fun provideDelegate (thisRef: kotlin.Any?, prop: kotlin.reflect.KProperty<*>): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.DelegateProvider> declared in io.github.nomisrev.typedapi.DelegateProvider' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
-            ARG <this>: CALL 'public final fun query <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.query>?): io.github.nomisrev.typedapi.DelegateProvider<A of io.github.nomisrev.typedapi.query> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.DelegateProvider<kotlin.Int> origin=null
-              TYPE_ARG A: kotlin.Int
-              ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Query.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
-            ARG thisRef: GET_VAR '<this>: my.test.Query declared in my.test.Query' type=my.test.Query origin=null
-            ARG prop: PROPERTY_REFERENCE 'public final age: kotlin.Int declared in my.test.Query' field=null getter='public final fun <get-age> (): kotlin.Int declared in my.test.Query' setter=null type=kotlin.reflect.KProperty1<my.test.Query, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
+          CALL 'public final fun query <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, name: kotlin.String?, validation: io.github.nomisrev.typedapi.Validation<A of io.github.nomisrev.typedapi.query>?, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.query>?): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.query> declared in io.github.nomisrev.typedapi' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, kotlin.Int> origin=null
+            TYPE_ARG A: kotlin.Int
+            ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Query.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
       FUN DELEGATED_PROPERTY_ACCESSOR name:<get-age> visibility:public modality:FINAL returnType:kotlin.Int
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Query
         correspondingProperty: PROPERTY name:age visibility:public modality:FINAL [delegated,val]

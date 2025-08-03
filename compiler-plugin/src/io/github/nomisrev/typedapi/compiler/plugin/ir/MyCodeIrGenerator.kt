@@ -1,13 +1,11 @@
 package io.github.nomisrev.typedapi.compiler.plugin.ir
 
-import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
 import io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension
 import io.github.nomisrev.typedapi.compiler.plugin.fir.httpRequestValueIdentifiers
 import org.jetbrains.kotlin.ir.IrElement
-import org.jetbrains.kotlin.ir.builders.IrGeneratorContext
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irCall
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
@@ -19,53 +17,34 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrPropertyImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
+import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrStringConcatenationImpl
-import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
-import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isString
 import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
-import org.jetbrains.kotlin.ir.util.isVararg
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.toIrConst
 import org.jetbrains.kotlin.ir.visitors.IrVisitor
-import org.jetbrains.kotlin.name.CallableId
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.util.OperatorNameConventions
-
-class MyCodeIrGenerationExtension(private val module: PluginContext) : IrGenerationExtension {
-    override fun generate(
-        moduleFragment: IrModuleFragment,
-        pluginContext: IrPluginContext,
-    ) {
-        moduleFragment.accept(MyCodeIrGenerator(pluginContext, module), null)
-    }
-}
-
-internal fun IrGeneratorContext.createIrBuilder(symbol: IrSymbol): DeclarationIrBuilder =
-    DeclarationIrBuilder(this, symbol, symbol.owner.startOffset, symbol.owner.endOffset)
 
 class MyCodeIrGenerator(
     private val pluginContext: IrPluginContext,
     private val module: PluginContext,
+    private val irSymbols: IrSymbols,
 ) : IrVisitor<Unit, Nothing?>() {
     override fun visitElement(
         element: IrElement,
@@ -73,44 +52,6 @@ class MyCodeIrGenerator(
     ) {
         element.acceptChildren(this, data)
     }
-
-    val toSymbol: IrSimpleFunctionSymbol = pluginContext.referenceFunctions(
-        CallableId(FqName("kotlin"), null, Name.identifier("to"))
-    ).singleOrNull() ?: error("Couldn't find to function")
-
-    val arrayOfSymbol: IrSimpleFunctionSymbol = pluginContext.referenceFunctions(
-        CallableId(FqName("kotlin"), null, Name.identifier("arrayOf"))
-    ).single {
-        // Looking for fun <T> arrayOf(vararg elements: T): Array<T>
-        it.owner.typeParameters.size == 1 && it.owner.parameters.size == 1 && it.owner.parameters[0].isVararg
-    }
-
-    val mapEndpoint =
-        pluginContext.referenceClass(module.classIds.mapEndpoint) ?: error("Couldn't find MapEndpoint class")
-    val pairClass = pluginContext.referenceClass(ClassId.fromString("kotlin/Pair"))?.let {
-        val stringType = pluginContext.symbols.string.defaultType
-        val anyNullableType = pluginContext.symbols.any.typeWith().makeNullable()
-        it.typeWith(listOf(stringType, anyNullableType))
-    } ?: error("Couldn't find Pair class")
-
-    // TODO Support all inputs
-    val query = pluginContext.referenceFunctions(
-        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Query"))
-    ).singleOrNull() ?: error("Couldn't find query function")
-
-    val path = pluginContext.referenceFunctions(
-        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Path"))
-    ).singleOrNull() ?: error("Couldn't find path function")
-
-    val header = pluginContext.referenceFunctions(
-        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Header"))
-    ).singleOrNull() ?: error("Couldn't find path function")
-
-    val body = pluginContext.referenceFunctions(
-        CallableId(FqName("io.github.nomisrev.typedapi"), null, Name.identifier("Body"))
-    ).singleOrNull() ?: error("Couldn't find path function")
-
-    val function2 = pluginContext.referenceClass(StandardClassIds.FunctionN(2))
 
     override fun visitConstructor(declaration: IrConstructor, data: Nothing?) {
         val keyOrNull =
@@ -120,7 +61,7 @@ class MyCodeIrGenerator(
         val irBuilder = pluginContext.createIrBuilder(declaration.symbol)
 
         val pairExpressions = declaration.parameters.map { param ->
-            irBuilder.irCall(toSymbol).apply {
+            irBuilder.irCall(irSymbols.to).apply {
                 insertExtensionReceiver(param.name.asString().toIrConst(pluginContext.symbols.string.defaultType))
                 arguments[1] = irBuilder.irGet(declaration.parameters[param.indexInParameters])
                 typeArguments[0] = pluginContext.symbols.string.defaultType
@@ -128,14 +69,15 @@ class MyCodeIrGenerator(
             }
         }
 
-        val mapOfCall = irBuilder.irCall(arrayOfSymbol).apply {
-            arguments[0] = irBuilder.irVararg(pairClass, pairExpressions)
-            typeArguments[0] = pairClass
+        val mapOfCall = irBuilder.irCall(irSymbols.arrayOf).apply {
+            arguments[0] = irBuilder.irVararg(irSymbols.stringToNullableAny, pairExpressions)
+            typeArguments[0] = irSymbols.stringToNullableAny
         }
 
-        val mapEndpointCall = irBuilder.irCall(mapEndpoint.constructors.single { !it.owner.isPrimary }).apply {
-            arguments[0] = mapOfCall
-        }
+        val mapEndpointCall =
+            irBuilder.irCall(irSymbols.mapEndpoint.constructors.single { !it.owner.isPrimary }).apply {
+                arguments[0] = mapOfCall
+            }
 
         declaration.body = irBuilder.irBlockBody {
             +irDelegatingConstructorCall(primaryConstructor).apply {
@@ -144,6 +86,30 @@ class MyCodeIrGenerator(
         }
 
         super.visitConstructor(declaration, data)
+    }
+
+    override fun visitProperty(declaration: IrProperty, data: Nothing?) {
+        if (!declaration.isDelegated) return super.visitProperty(declaration, data)
+        val delegateInitializer = declaration.backingField?.initializer?.expression
+
+        if (delegateInitializer is IrCallImpl && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name.asString() == "header") {
+            val nameIndex =
+                delegateInitializer.symbol.owner.parameters.find { it.name.asString() == "name" }?.indexInParameters
+            if (nameIndex != null && delegateInitializer.arguments[nameIndex] == null) {
+                delegateInitializer.arguments[nameIndex] =
+                    declaration.name.asString().toIrConst(pluginContext.symbols.string.defaultType)
+            }
+            println("Transformed property IR:\n${declaration.dump()}")
+        }
+
+        super.visitProperty(declaration, data)
+    }
+
+    override fun visitCall(expression: IrCall, data: Nothing?) {
+        super.visitCall(expression, data)
+        if ((expression.symbol.owner.parent as? IrClass)?.name?.asString() == "EndpointAPI") {
+            module.logger.log { "Generating call: ${expression.symbol.owner.name}" }
+        }
     }
 
     override fun visitFunction(declaration: IrFunction, data: Nothing?) {
@@ -258,21 +224,21 @@ class MyCodeIrGenerator(
     ): IrBlockBody = builder.irBlockBody {
         val block = function.parameters.firstOrNull { it.name.asString() == "block" } ?: return@irBlockBody
         val inputType = when (type) {
-            "query" -> query
-            "path" -> path
-            "header" -> header
-            "body" -> body
+            "query" -> irSymbols.query
+            "path" -> irSymbols.path
+            "header" -> irSymbols.header
+            "body" -> irSymbols.body
             else -> error("Unknown type: $type")
         }
 
-        val invokeFun = function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
+        val invokeFun = irSymbols.function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
             ?.first { it.name == OperatorNameConventions.INVOKE }
             ?: error("No invoke function found")
 
         val inputs = endpoint.declarations
             .filterIsInstance<IrPropertyImpl>()
             .filter {
-                ((it.backingField?.initializer?.expression as IrCallImpl).dispatchReceiver as IrCallImpl).symbol.owner.name.asString() == type
+                (it.backingField?.initializer?.expression as? IrCallImpl)?.symbol?.owner?.name?.asString() == type
             }
 
         for (input in inputs) {
@@ -301,6 +267,6 @@ class MyCodeIrGenerator(
             }
         }
 
-        module.logger.log { "Generated query for: ${endpoint.name} with lambda: ${block?.name}" }
+        module.logger.log { "Generated query for: ${endpoint.name} with lambda: ${block.name}" }
     }
 }

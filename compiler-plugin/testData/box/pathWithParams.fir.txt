@@ -6,12 +6,12 @@ FILE: pathWithParams.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val param1: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param1|)
+        public final val param1: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/Int|>()
             public get(): R|kotlin/Int| {
                 ^ this@R|my/test/Paths|.D|my/test/Paths.param1|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param1|)
             }
 
-        public final val param2: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param2|)
+        public final val param2: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/path|<R|kotlin/String|>()
             public get(): R|kotlin/String| {
                 ^ this@R|my/test/Paths|.D|my/test/Paths.param2|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/Paths|, ::R|my/test/Paths.param2|)
             }

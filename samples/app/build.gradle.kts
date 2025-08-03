@@ -2,14 +2,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    id("io.github.nomisrev.typedapi")
+    alias(libs.plugins.serialization)
+    id("io.github.nomisrev")
     application
 }
 
 application.mainClass.set("MainKt")
 
 dependencies {
-    implementation(ktorLibs.server.netty)
+    implementation("io.github.nomisrev:ktor-typed-api:0.0.1")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
