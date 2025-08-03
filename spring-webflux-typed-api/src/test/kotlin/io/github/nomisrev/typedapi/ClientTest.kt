@@ -1,16 +1,11 @@
 package io.github.nomisrev.typedapi
 
-import io.github.nomisrev.typedapi.spring.route
 import kotlinx.serialization.Serializable
-import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
-import org.springframework.web.reactive.function.server.RouterFunctionDsl
-import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
-import reactor.core.publisher.Mono
 import kotlin.test.Test
 
 @Endpoint(path = "/client-test/{id}")

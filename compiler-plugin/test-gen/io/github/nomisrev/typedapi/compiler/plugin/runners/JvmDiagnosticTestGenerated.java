@@ -28,8 +28,8 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
   }
 
   @Test
-  @TestMetadata("pathWithParams.kt")
-  public void testPathWithParams() {
-    runTest("compiler-plugin/testData/diagnostics/pathWithParams.kt");
+  @TestMetadata("redeclaredParam.kt")
+  public void testRedeclaredParam() {
+    runTest("compiler-plugin/testData/diagnostics/redeclaredParam.kt");
   }
 }

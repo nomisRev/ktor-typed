@@ -13,6 +13,8 @@ import org.jetbrains.kotlin.fir.analysis.extensions.FirAdditionalCheckersExtensi
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.utils.classId
+import org.jetbrains.kotlin.fir.expressions.FirAnnotation
+import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
 import org.jetbrains.kotlin.fir.types.renderReadableWithFqNames
 import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.name.ClassId
@@ -31,15 +33,28 @@ class FirClassChecker(private val module: PluginContext) :
     FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirClass) {
-        val annotation =
+        val annotation: FirAnnotation =
             declaration.getAnnotationByClassId(ClassId.topLevel(module.classIds.annotation), context.session) ?: return
 
         module.logger.log { "annotation: ${annotation.resolvedType.renderReadableWithFqNames()}" }
         module.logger.log { "class: ${declaration.status.isData}" }
         module.logger.log { "class: ${declaration.classKind}" }
         if (declaration.status.isData) {
-            reporter.reportOn(declaration.source, TypedApiDiagnostics.CLASS_EXPECTED_ERROR, declaration.classId)
-            return
+            return reporter.reportOn(declaration.source, TypedApiDiagnostics.CLASS_EXPECTED_ERROR, declaration.classId)
         }
+
+        val path = annotation.pathOrNull()
+        if (path.isNullOrBlank()) return reporter.reportOn(annotation.source, TypedApiDiagnostics.EMPTY_PATH_WARNING)
+        val parts = "\\{(.+?)\\}".toRegex().findAll(path).map { it.groupValues[1] }.toList()
+        // TODO
+        println("Poop")
     }
 }
+
+fun FirAnnotation.pathOrNull(): String? =
+    (argumentMapping
+        .mapping
+        .entries
+        .map { it.value }
+        .firstOrNull() as FirLiteralExpression).value as? String
+

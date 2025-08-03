@@ -1,0 +1,39 @@
+FILE: redeclaredParam.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/api)) public final class RedeclaredEndpoint : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/RedeclaredEndpoint| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
+            public get(): R|kotlin/String| {
+                ^ this@R|my/test/RedeclaredEndpoint|.D|my/test/RedeclaredEndpoint.name|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
+            }
+
+        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
+            public get(): R|kotlin/String| {
+                ^ this@R|my/test/RedeclaredEndpoint|.D|my/test/RedeclaredEndpoint.name|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/RedeclaredEndpoint|, ::R|my/test/RedeclaredEndpoint.name|)
+            }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(name: R|kotlin/String|, name: R|kotlin/String|): R|my/test/RedeclaredEndpoint| {
+            this<R|my/test/RedeclaredEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(name).R|kotlin/to|(R|<local>/name|), String(name).R|kotlin/to|(R|<local>/name|)))
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval value: R|my/test/RedeclaredEndpoint| = R|my/test/RedeclaredEndpoint|(String(test), String(test))
+        ^box String(OK)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test
