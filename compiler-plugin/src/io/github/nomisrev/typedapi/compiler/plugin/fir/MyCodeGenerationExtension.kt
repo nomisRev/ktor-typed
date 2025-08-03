@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConstructor
-import org.jetbrains.kotlin.fir.plugin.createDefaultPrivateConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.renderWithType
 import org.jetbrains.kotlin.fir.resolve.defaultType
@@ -32,6 +31,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
+import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeKotlinTypeConflictingProjection
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
@@ -44,15 +44,13 @@ import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.types.ConstantValueKind
 import org.jetbrains.kotlin.util.capitalizeDecapitalize.capitalizeAsciiOnly
 
-val httpRequestValueIdentifiers = listOf(
+internal val httpRequestValueIdentifiers = listOf(
     Name.identifier("query"),
     Name.identifier("path"),
     Name.identifier("header"),
     Name.identifier("body"),
 )
 
-// TODO remove SymbolInternals
-// TODO what is DirectDeclarationsAccess, and can we avoid it?
 class MyCodeGenerationExtension(
     session: FirSession,
     private val module: PluginContext,
@@ -80,12 +78,14 @@ class MyCodeGenerationExtension(
             ?: error("Cannot find kotlin.Pair symbol")
     }
 
+    // TODO what is DirectDeclarationsAccess, and can we avoid it?
     @OptIn(DirectDeclarationsAccess::class)
     private val mapEndpoint: FirRegularClassSymbol by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(module.classIds.mapEndpoint) as? FirRegularClassSymbol
             ?: error("Cannot find MapEndpointAPI class symbol")
     }
 
+    // TODO what is DirectDeclarationsAccess, and can we avoid it?
     @OptIn(DirectDeclarationsAccess::class)
     private val mapEndpointVarargConstructor by lazy {
         mapEndpoint.declarationSymbols.filterIsInstance<FirConstructorSymbol>()
@@ -124,6 +124,7 @@ class MyCodeGenerationExtension(
                 argumentList = mapEndpointConstructorArguments(constructor)
             }
 
+            // TODO remove SymbolInternals
             @OptIn(SymbolInternals::class) val primaryConstructorValues =
                 primaryConstructorSymbol.valueParameterSymbols.singleOrNull()?.fir
                     ?: error("Primary Constructor requires single parameter but found: ${constructor.valueParameters.joinToString { it.name.asString() }}")
@@ -157,6 +158,7 @@ class MyCodeGenerationExtension(
                     coneTypeOrNull = param.returnTypeRef.coneType
                 } to param).toResolvedArgumentList()
             }
+            // TODO remove SymbolInternals
             val targetParam =
                 @OptIn(SymbolInternals::class) mapEndpointVarargConstructor.valueParameterSymbols.single().fir
             Pair(nameToParamCall, targetParam)
@@ -171,21 +173,15 @@ class MyCodeGenerationExtension(
         val name = callableId.callableName.asString().capitalizeAsciiOnly()
         val inputType = module.classIds.input.createNestedClassId(Name.identifier(name))
 
-        // query { value: Any?, input: Input<Any?> -> ... }
-        val lambdaType = StandardClassIds.FunctionN(2).constructClassLikeType(
-            arrayOf(
-                session.builtinTypes.nullableAnyType.coneType,
-                inputType.constructClassLikeType(typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType)),
-                session.builtinTypes.unitType.coneType
-            )
-        )
+        val lambdaType = inputVisitor(inputType)
         val member = createMemberFunction(
-            context.owner, Key, callableId.callableName, session.builtinTypes.unitType.coneType
+            owner = context.owner,
+            key = Key,
+            name = callableId.callableName,
+            returnType = session.builtinTypes.unitType.coneType
         ) {
             valueParameter(Name.identifier("block"), lambdaType)
-            status {
-                isOverride = true
-            }
+            status { isOverride = true }
         }.apply {
             containingClassForStaticMemberAttr = endpoint.toLookupTag()
         }
@@ -195,6 +191,22 @@ class MyCodeGenerationExtension(
 
         return listOfNotNull(member.symbol, pathStringOrNull(callableId, endpoint)?.symbol)
     }
+
+    /**
+     * Generates vistor:
+     *  - query { value: Any?, input: Input.Query<Any?> -> ... }
+     *  - path { value: Any?, input: Input.Path<Any?> -> ... }
+     *  - header { value: Any?, input: Input.Header<Any?> -> ... }
+     *  - body { value: Any?, input: Input.Body<Any?> -> ... }
+     */
+    private fun inputVisitor(inputType: ClassId): ConeClassLikeType =
+        StandardClassIds.FunctionN(2).constructClassLikeType(
+            arrayOf(
+                session.builtinTypes.nullableAnyType.coneType,
+                inputType.constructClassLikeType(typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType)),
+                session.builtinTypes.unitType.coneType
+            )
+        )
 
     private fun pathStringOrNull(callableId: CallableId, endpoint: FirRegularClassSymbol): FirSimpleFunction? =
         if (callableId.callableName.asString() == "path") {

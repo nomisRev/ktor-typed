@@ -18,3 +18,6 @@ fun box(): String {
     val path = value.path()
     return if (path == "/path/1/second/2") "OK" else path
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, nullableType, primaryConstructor, propertyDeclaration,
+propertyDelegate, stringLiteral */

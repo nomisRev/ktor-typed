@@ -146,7 +146,8 @@ FILE fqName:my.test fileName:/header.kt
             BRANCH
               if: CONST Boolean type=kotlin.Boolean value=true
               then: CALL 'public abstract fun <get-key> (): K of kotlin.collections.Map.Entry declared in kotlin.collections.Map.Entry' type=kotlin.Any? origin=GET_PROPERTY
-                ARG <this>: GET_VAR 'val tmp_0: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? declared in my.test.box' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
+                ARG <this>: TYPE_OP type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>> origin=IMPLICIT_CAST typeOperand=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>
+                  GET_VAR 'val tmp_0: kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? declared in my.test.box' type=kotlin.collections.Map.Entry<kotlin.Any?, io.github.nomisrev.typedapi.Input<kotlin.Any?>>? origin=null
       RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
         WHEN type=kotlin.String origin=IF
           BRANCH
