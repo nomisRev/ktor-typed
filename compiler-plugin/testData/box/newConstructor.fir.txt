@@ -6,7 +6,7 @@ FILE: newConstructor.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/NewConstructor|, ::R|my/test/NewConstructor.age|)
+        public final val age: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>()
             public get(): R|kotlin/Int| {
                 ^ this@R|my/test/NewConstructor|.D|my/test/NewConstructor.age|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/NewConstructor|, ::R|my/test/NewConstructor.age|)
             }

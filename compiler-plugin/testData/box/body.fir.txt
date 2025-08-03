@@ -24,7 +24,7 @@ FILE: body.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val user: R|my/test/User|by R|<local>/api|.R|io/github/nomisrev/typedapi/body|<R|my/test/User|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, my/test/User>|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.user|)
+        public final val user: R|my/test/User|by R|<local>/api|.R|io/github/nomisrev/typedapi/body|<R|my/test/User|>()
             public get(): R|my/test/User| {
                 ^ this@R|my/test/UserEndpoint|.D|my/test/UserEndpoint.user|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|my/test/User|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.user|)
             }
@@ -79,4 +79,3 @@ FILE: body.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-

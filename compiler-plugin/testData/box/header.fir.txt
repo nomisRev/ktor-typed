@@ -6,7 +6,7 @@ FILE: header.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val authorization: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/header|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/Header|, ::R|my/test/Header.authorization|)
+        public final val authorization: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/header|<R|kotlin/String|>()
             public get(): R|kotlin/String| {
                 ^ this@R|my/test/Header|.D|my/test/Header.authorization|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/Header|, ::R|my/test/Header.authorization|)
             }
@@ -54,4 +54,3 @@ FILE: header.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-

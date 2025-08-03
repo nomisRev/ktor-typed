@@ -6,17 +6,17 @@ FILE: multipleQueries.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val query: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.query|)
+        public final val query: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>()
             public get(): R|kotlin/String| {
                 ^ this@R|my/test/SearchEndpoint|.D|my/test/SearchEndpoint.query|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.query|)
             }
 
-        public final val page: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.page|)
+        public final val page: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>()
             public get(): R|kotlin/Int| {
                 ^ this@R|my/test/SearchEndpoint|.D|my/test/SearchEndpoint.page|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.page|)
             }
 
-        public final val limit: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int>|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.limit|)
+        public final val limit: R|kotlin/Int|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int|>()
             public get(): R|kotlin/Int| {
                 ^ this@R|my/test/SearchEndpoint|.D|my/test/SearchEndpoint.limit|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int|>|(this@R|my/test/SearchEndpoint|, ::R|my/test/SearchEndpoint.limit|)
             }

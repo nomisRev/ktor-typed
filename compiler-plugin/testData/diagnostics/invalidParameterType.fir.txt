@@ -19,7 +19,7 @@ FILE: invalidParameterType.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val complex: R|my/test/ComplexType|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|my/test/ComplexType|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, my/test/ComplexType>|>|(this@R|my/test/InvalidTypeEndpoint|, ::R|my/test/InvalidTypeEndpoint.complex|)
+        public final val complex: R|my/test/ComplexType|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|my/test/ComplexType|>()
             public get(): R|my/test/ComplexType| {
                 ^ this@R|my/test/InvalidTypeEndpoint|.D|my/test/InvalidTypeEndpoint.complex|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|my/test/ComplexType|>|(this@R|my/test/InvalidTypeEndpoint|, ::R|my/test/InvalidTypeEndpoint.complex|)
             }

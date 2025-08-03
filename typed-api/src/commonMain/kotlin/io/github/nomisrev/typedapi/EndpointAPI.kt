@@ -12,21 +12,21 @@ sealed interface InputDelegate<A> : ReadOnlyProperty<Any?, A> {
 }
 
 interface EndpointAPI {
-    fun <A> input(input: Input<A>): DelegateProvider<A>
+    fun <A> input(input: Input<A>): ReadOnlyProperty<Any?, A>
 }
 
 inline fun <reified A> EndpointAPI.path(
     name: String? = null,
     validation: Validation<A>? = null,
     info: Info<A>? = null
-): DelegateProvider<A> =
+): ReadOnlyProperty<Any?, A> =
     input(Path(name, validation, info))
 
 inline fun <reified A> EndpointAPI.query(
     name: String? = null,
     validation: Validation<A>? = null,
     info: Info<A>? = null
-): DelegateProvider<A> =
+): ReadOnlyProperty<Any?, A> =
     input(Query(name, validation, info))
 
 inline fun <reified A> EndpointAPI.header(
@@ -35,22 +35,17 @@ inline fun <reified A> EndpointAPI.header(
         { it.split(Regex("(?=[A-Z])")).joinToString("-") { it.replaceFirstChar { c -> c.uppercase() } } },
     validation: Validation<A>? = null,
     info: Info<A>? = null
-): DelegateProvider<A> = input(Header(name, toHeaderCase, validation, info))
+): ReadOnlyProperty<Any?, A> = input(Header(name, toHeaderCase, validation, info))
 
 inline fun <reified A> EndpointAPI.body(
     info: Info<A>? = null
-): DelegateProvider<A> = input(Body(info))
-
-fun interface DelegateProvider<A> {
-    operator fun provideDelegate(thisRef: Any?, prop: KProperty<*>): ReadOnlyProperty<Any?, A>
-}
+): ReadOnlyProperty<Any?, A> = input(Body(info))
 
 inline fun <reified A> Path(
     name: String? = null,
     validation: Validation<A>? = null,
     info: Info<A>? = null
 ): Input.Path<A> = Input.Path(name, validation, A::class, typeOf<A>(), info)
-
 
 inline fun <reified A> Header(
     name: String? = null,

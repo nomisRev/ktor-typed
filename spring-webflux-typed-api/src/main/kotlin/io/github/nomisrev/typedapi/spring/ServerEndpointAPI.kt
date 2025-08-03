@@ -1,13 +1,11 @@
 package io.github.nomisrev.typedapi.spring
 
-import io.github.nomisrev.typedapi.DelegateProvider
 import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
 import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.Validation
 import io.github.nomisrev.typedapi.ValidationBuilder
 import kotlinx.coroutines.reactor.mono
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.web.reactive.function.server.RequestPredicate
 import org.springframework.web.reactive.function.server.RequestPredicates
@@ -16,7 +14,6 @@ import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.reactive.function.server.RouterFunctions
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.core.publisher.Mono
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
@@ -97,52 +94,50 @@ private class ServerEndpointAPI(var path: String, private val request: ServerReq
     var body: Any? = null
     var bodyInput: Input.Body<*>? = null
 
-    override fun <A> input(input: Input<A>): DelegateProvider<A> =
-        DelegateProvider { _, _ ->
-            when (input) {
-                is Input.Body -> ReadOnlyProperty<Any?, A> { _, _ ->
-                    @Suppress("UNCHECKED_CAST")
-                    body as A
-                }.also { bodyInput = input }
+    override fun <A> input(input: Input<A>): ReadOnlyProperty<Any?, A> =
+        when (input) {
+            is Input.Body -> ReadOnlyProperty<Any?, A> { _, _ ->
+                @Suppress("UNCHECKED_CAST")
+                body as A
+            }.also { bodyInput = input }
 
-                is Input.Header<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                    val name = input.name ?: input.casing(property.name)
-                    val values = request.headers().header(name)
-                    getParameter<A>(
-                        values,
-                        name,
-                        input.kClass,
-                        input.kType,
-                        input.validation as? Validation<A>,
-                        mutableListOf()
-                    )
-                }
+            is Input.Header<*> -> ReadOnlyProperty<Any?, A> { _, property ->
+                val name = input.name ?: input.casing(property.name)
+                val values = request.headers().header(name)
+                getParameter<A>(
+                    values,
+                    name,
+                    input.kClass,
+                    input.kType,
+                    input.validation as? Validation<A>,
+                    mutableListOf()
+                )
+            }
 
-                is Input.Path<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                    val name = input.name ?: property.name
-                    val value = request.pathVariable(name)
-                    getParameter<A>(
-                        listOf(value),
-                        name,
-                        input.kClass,
-                        input.kType,
-                        input.validation as? Validation<A>,
-                        mutableListOf()
-                    )
-                }
+            is Input.Path<*> -> ReadOnlyProperty<Any?, A> { _, property ->
+                val name = input.name ?: property.name
+                val value = request.pathVariable(name)
+                getParameter<A>(
+                    listOf(value),
+                    name,
+                    input.kClass,
+                    input.kType,
+                    input.validation as? Validation<A>,
+                    mutableListOf()
+                )
+            }
 
-                is Input.Query<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                    val name = input.name ?: property.name
-                    val values = request.queryParams()[name]
-                    getParameter<A>(
-                        values,
-                        name,
-                        input.kClass,
-                        input.kType,
-                        input.validation as? Validation<A>,
-                        mutableListOf()
-                    )
-                }
+            is Input.Query<*> -> ReadOnlyProperty<Any?, A> { _, property ->
+                val name = input.name ?: property.name
+                val values = request.queryParams()[name]
+                getParameter<A>(
+                    values,
+                    name,
+                    input.kClass,
+                    input.kType,
+                    input.validation as? Validation<A>,
+                    mutableListOf()
+                )
             }
         }
 }

@@ -6,12 +6,12 @@ FILE: optionalParameters.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/String>|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.name|)
+        public final val name: R|kotlin/String|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/String|>()
             public get(): R|kotlin/String| {
                 ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.name|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/String|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.name|)
             }
 
-        public final val limit: R|kotlin/Int?|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int?|>().R|SubstitutionOverride<io/github/nomisrev/typedapi/DelegateProvider.provideDelegate: R|kotlin/properties/ReadOnlyProperty<kotlin/Any?, kotlin/Int?>|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.limit|)
+        public final val limit: R|kotlin/Int?|by R|<local>/api|.R|io/github/nomisrev/typedapi/query|<R|kotlin/Int?|>()
             public get(): R|kotlin/Int?| {
                 ^ this@R|my/test/UserSearchEndpoint|.D|my/test/UserSearchEndpoint.limit|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|kotlin/Int?|>|(this@R|my/test/UserSearchEndpoint|, ::R|my/test/UserSearchEndpoint.limit|)
             }
