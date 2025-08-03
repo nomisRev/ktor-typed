@@ -1,7 +1,7 @@
 package io.github.nomisrev.typedapi.compiler.plugin
 
-import io.github.nomisrev.typedapi.BuildConfig
-import io.github.nomisrev.typedapi.BuildConfig.RUNTIME_LIBRARY_COORDINATES
+import io.github.nomisrev.BuildConfig
+import io.github.nomisrev.BuildConfig.RUNTIME_LIBRARY_COORDINATES
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation

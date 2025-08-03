@@ -6,9 +6,6 @@ plugins {
     alias(libs.plugins.kover)
 }
 
-group = "io.github.nomisrev.typedapi"
-version = "0.0.1"
-
 koverReport {
     defaults {
         html { onCheck = true }

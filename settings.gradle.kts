@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "typed-api-root"
+
 include("typed-api")
 include("typed-api-docs")
 include("parser")

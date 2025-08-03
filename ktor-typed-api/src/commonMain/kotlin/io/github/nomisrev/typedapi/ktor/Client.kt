@@ -11,8 +11,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
-import io.github.nomisrev.typedapi.Input
-import io.github.nomisrev.typedapi.Request
 
 suspend fun <A : HttpRequestValue> HttpClient.request(
     method: HttpMethod,

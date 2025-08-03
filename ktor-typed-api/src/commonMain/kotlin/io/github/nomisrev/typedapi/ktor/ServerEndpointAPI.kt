@@ -5,7 +5,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.route
 import io.ktor.util.reflect.TypeInfo
-import io.github.nomisrev.typedapi.DelegateProvider
 import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
 import io.github.nomisrev.typedapi.Input
@@ -74,54 +73,51 @@ private class ServerEndpointAPI(private val context: RoutingContext) : EndpointA
     val body: CompletableDeferred<Any?> = CompletableDeferred()
     var bodyInput: Input.Body<*>? = null
 
-    override fun <A> input(input: Input<A>): DelegateProvider<A> =
-        DelegateProvider { _, _ ->
-            when (input) {
-                is Input.Body -> ReadOnlyProperty<Any?, A> { _, _ ->
-                    @Suppress("OPT_IN_USAGE", "UNCHECKED_CAST")
-                    body.getCompleted() as A
-                }.also { bodyInput = input }
+    override fun <A> input(input: Input<A>): ReadOnlyProperty<Any?, A> = when (input) {
+        is Input.Body -> ReadOnlyProperty<Any?, A> { _, _ ->
+            @Suppress("OPT_IN_USAGE", "UNCHECKED_CAST")
+            body.getCompleted() as A
+        }.also { bodyInput = input }
 
-                is Input.Header<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                    val name = input.name ?: input.casing(property.name)
-                    val values = context.call.request.headers.getAll(name)
-                    getParameter(
-                        values,
-                        name,
-                        input.kClass,
-                        input.kType,
-                        input.validation as? Validation<A>,
-                        mutableListOf()
-                    )
-                }
-
-                is Input.Path<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                    val name = input.name ?: property.name
-                    val values = context.call.pathParameters.getAll(name)
-                    getParameter(
-                        values,
-                        name,
-                        input.kClass,
-                        input.kType,
-                        input.validation as? Validation<A>,
-                        mutableListOf()
-                    )
-                }
-
-                is Input.Query<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                    val name = input.name ?: property.name
-                    val values = context.call.queryParameters.getAll(name)
-                    getParameter(
-                        values,
-                        name,
-                        input.kClass,
-                        input.kType,
-                        input.validation as? Validation<A>,
-                        mutableListOf()
-                    )
-                }
-            }
+        is Input.Header<*> -> ReadOnlyProperty { _, _ ->
+            val name = input.casing(input.name!!)
+            val values = context.call.request.headers.getAll(name)
+            getParameter(
+                values,
+                name,
+                input.kClass,
+                input.kType,
+                input.validation as? Validation<A>,
+                mutableListOf()
+            )
         }
+
+        is Input.Path<*> -> ReadOnlyProperty { _, property ->
+            val name = input.name ?: property.name
+            val values = context.call.pathParameters.getAll(name)
+            getParameter(
+                values,
+                name,
+                input.kClass,
+                input.kType,
+                input.validation as? Validation<A>,
+                mutableListOf()
+            )
+        }
+
+        is Input.Query<*> -> ReadOnlyProperty { _, property ->
+            val name = input.name ?: property.name
+            val values = context.call.queryParameters.getAll(name)
+            getParameter(
+                values,
+                name,
+                input.kClass,
+                input.kType,
+                input.validation as? Validation<A>,
+                mutableListOf()
+            )
+        }
+    }
 }
 
 private fun <A> getParameter(
