@@ -1,6 +1,5 @@
 import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
-import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.body
 import io.github.nomisrev.typedapi.header
 import io.github.nomisrev.typedapi.query
@@ -17,7 +16,7 @@ fun main() {
     println("MAIN STARTED!")
     val value = MyEndpoint("Simon", 32, "MY_HEADER", "body")
     println(value.path())
-    value.query { any, input ->
+    value.query() { any, input ->
         println(any)
         println(input)
     }

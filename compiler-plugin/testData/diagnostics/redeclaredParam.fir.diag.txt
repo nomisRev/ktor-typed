@@ -1,0 +1,5 @@
+/redeclaredParam.kt:(316,320): error: Conflicting declarations:
+val name: String
+
+/redeclaredParam.kt:(352,356): error: Conflicting declarations:
+val name: String

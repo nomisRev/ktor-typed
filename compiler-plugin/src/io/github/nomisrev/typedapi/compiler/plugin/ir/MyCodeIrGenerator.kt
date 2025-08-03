@@ -204,8 +204,8 @@ class MyCodeIrGenerator(
 
             // Handle the placeholder.
             val propertyName = matchResult.groupValues[1]
-            val property = propertiesByName[propertyName]
-                ?: error("Cannot find property '$propertyName' in class '${parentClass.name.asString()}' for path template.")
+            val property = propertiesByName[propertyName] ?: return@forEach
+//                ?: error("Cannot find property '$propertyName' in class '${parentClass.name.asString()}' for path template.")
 
             // Create an expression to get the property value, e.g., `this.userId`.
             val propertyGetterCall = builder.irCall(property.getter!!).apply {
