@@ -10,40 +10,11 @@ import org.springframework.web.reactive.function.server.router
 import kotlin.test.Test
 
 @Endpoint(path = "/profile/{profileId}")
-class ProfileApi(api: EndpointAPI) : HttpRequestValue {
+class ProfileApi(api: EndpointAPI) {
     val profileId: Int by api.path<Int>()
     val name by api.query<String>()
     val email by api.query<String?>()
     val userAgent by api.header<String>()
-
-    // Compiler plugin generates everything below
-    constructor(profileId: Int, name: String, email: String?, userAgent: String) : this(
-        MapEndpointAPI(
-            mapOf(
-                "profileId" to profileId,
-                "name" to name,
-                "email" to email,
-                "userAgent" to userAgent
-            )
-        )
-    )
-
-    override fun path(): String = "/profile/$profileId"
-
-    override fun query(block: (Any?, Input.Query<Any?>) -> Unit) {
-        block(name, Query<String>("name") as Input.Query<Any?>)
-        block(email, Query<String?>("email") as Input.Query<Any?>)
-    }
-
-    override fun path(block: (Any?, Input.Path<Any?>) -> Unit) {
-        block(profileId, Path<Int>("profileId") as Input.Path<Any?>)
-    }
-
-    override fun header(block: (Any?, Input.Header<Any?>) -> Unit) {
-        block(userAgent, Header<String>("userAgent") as Input.Header<Any?>)
-    }
-
-    override fun body(block: (Any?, Input.Body<Any?>) -> Unit) {}
 }
 
 @Serializable

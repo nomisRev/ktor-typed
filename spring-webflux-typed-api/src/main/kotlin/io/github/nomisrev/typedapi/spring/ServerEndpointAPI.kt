@@ -102,7 +102,7 @@ private class ServerEndpointAPI(var path: String, private val request: ServerReq
             }.also { bodyInput = input }
 
             is Input.Header<*> -> ReadOnlyProperty<Any?, A> { _, property ->
-                val name = input.name ?: input.casing(property.name)
+                val name = input.casing(input.name!!)
                 val values = request.headers().header(name)
                 getParameter<A>(
                     values,

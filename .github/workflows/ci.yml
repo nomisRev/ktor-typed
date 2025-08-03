@@ -70,6 +70,9 @@ jobs:
       - name: Check samples
         run: ./gradlew -p samples check --continue --quiet
 
+      - name: Check integrations
+        run: ./gradlew -p integration-test check --continue --quiet
+
       - name: (Fail-only) Upload reports
         if: failure()
         uses: actions/upload-artifact@v4

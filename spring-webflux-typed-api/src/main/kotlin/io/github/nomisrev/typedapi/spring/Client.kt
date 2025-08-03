@@ -29,7 +29,7 @@ suspend fun <A : HttpRequestValue, T : Any> WebClient.request(
         }
     }
     value.header { value, input ->
-        headersSpec?.header(input.name, value?.toString())
+        headersSpec?.header(input.casing(input.name!!), value?.toString())
     }
     requireNotNull(headersSpec) { "Cannot be null" }
     return headersSpec.awaitExchange(responseHandler)
