@@ -3,13 +3,14 @@ import io.github.nomisrev.typedapi.EndpointAPI
 import io.github.nomisrev.typedapi.body
 import io.github.nomisrev.typedapi.header
 import io.github.nomisrev.typedapi.query
+import io.ktor.http.ContentType.Text
 
 @Endpoint("/")
 class MyEndpoint(api: EndpointAPI) {
     val name by api.query<String>()
     val age by api.query<Int>()
     val header by api.header<String>()
-    val body by api.body<String>()
+    val body by api.body<String>(Text.Plain)
 }
 
 fun main() {

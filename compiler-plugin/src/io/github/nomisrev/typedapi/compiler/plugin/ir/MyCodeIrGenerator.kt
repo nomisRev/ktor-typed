@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isString
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
@@ -92,7 +93,9 @@ class MyCodeIrGenerator(
         if (!declaration.isDelegated) return super.visitProperty(declaration, data)
         val delegateInitializer = declaration.backingField?.initializer?.expression
 
-        if (delegateInitializer is IrCallImpl && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name.asString() == "header") {
+        if (delegateInitializer is IrCallImpl
+            && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name in httpRequestValueIdentifiers
+        ) {
             val nameIndex =
                 delegateInitializer.symbol.owner.parameters.find { it.name.asString() == "name" }?.indexInParameters
             if (nameIndex != null && delegateInitializer.arguments[nameIndex] == null) {
@@ -257,16 +260,24 @@ class MyCodeIrGenerator(
                     typeArguments[0] = input.getter!!.returnType
                     // TODO: consider the specified name!
                     if (type != "body") {
-                        arguments[0] = irString(input.name.asString())
+                        val x = arguments
+
+                        val originalArguments =
+                            (input.backingField?.initializer?.expression as? IrCallImpl)?.arguments?.drop(1)
+
+                        originalArguments?.forEachIndexed { index, expr -> x[index] = expr?.deepCopyWithSymbols() }
+
+                    } else {
+                        val x = arguments
+                        (input.backingField?.initializer?.expression as? IrCallImpl)?.arguments?.drop(1)
+                            ?.forEachIndexed { index, expr ->
+                                x[index] = expr?.deepCopyWithSymbols()
+                            }
                     }
-                    // TODO pass parameters
-                    //   it.valueParameters.forEach { param ->
-                    //       putValueArgument(param.index, irBuilder.irGet(param))
-                    //   }
                 }
             }
         }
 
-        module.logger.log { "Generated query for: ${endpoint.name} with lambda: ${block.name}" }
+        module.logger.log { "Generated $type for: ${endpoint.name} with lambda: ${block.name}" }
     }
 }

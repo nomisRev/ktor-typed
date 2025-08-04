@@ -1,6 +1,7 @@
 package io.github.nomisrev.typedapi
 
 import io.ktor.http.HttpMethod
+import io.ktor.http.ContentType
 import io.ktor.server.response.respond
 import io.ktor.server.testing.testApplication
 import io.ktor.client.call.body
@@ -46,7 +47,7 @@ class GetApi(api: EndpointAPI) {
 @Endpoint(path = "/method-test/{id}")
 class PostApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
-    val body: ServerTestBody by api.body<ServerTestBody>()
+    val body: ServerTestBody by api.body<ServerTestBody>(ContentType.Application.Json)
 }
 
 @Serializable

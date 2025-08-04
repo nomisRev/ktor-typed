@@ -38,6 +38,7 @@ public fun <A : Any> Route.route(
             val api = ServerEndpointAPI(this)
             val value = endpoint(api)
             runCatching {
+                // TODO validate ContentType ?
                 api.bodyInput?.let { input ->
                     api.body.completeWith(runCatching { call.receiveNullable(TypeInfo(input.kClass, input.kType)) })
                 }
