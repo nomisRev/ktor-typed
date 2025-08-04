@@ -4,6 +4,7 @@ import io.github.nomisrev.typedapi.compiler.plugin.Function2
 import io.github.nomisrev.typedapi.compiler.plugin.Pair
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
@@ -12,6 +13,7 @@ import org.jetbrains.kotlin.ir.util.isVararg
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.util.OperatorNameConventions
 
 class IrSymbols(
     ctx: IrPluginContext,
@@ -30,6 +32,7 @@ class IrSymbols(
         it.typeWith(listOf(stringType, anyNullableType))
     } ?: error("Couldn't find Pair class")
 
+    val api = ctx.clazz(module.classIds.api)
     val mapEndpoint = ctx.clazz(module.classIds.mapEndpoint)
     val to: IrSimpleFunctionSymbol = ctx.function(callableIds.to)
     val query = ctx.function(callableIds.query)
@@ -37,6 +40,9 @@ class IrSymbols(
     val header = ctx.function(callableIds.header)
     val body = ctx.function(callableIds.body)
     val function2 = ctx.referenceClass(StandardClassIds.Function2)
+    val invokeFun = function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
+        ?.first { it.name == OperatorNameConventions.INVOKE }
+        ?: error("No invoke function found")
 }
 
 private fun IrPluginContext.function(callableId: CallableId): IrSimpleFunctionSymbol =

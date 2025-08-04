@@ -189,10 +189,6 @@ class HttpRequestValueExtension(
             else -> error("Unknown type: $type")
         }
 
-        val invokeFun = irSymbols.function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
-            ?.first { it.name == OperatorNameConventions.INVOKE }
-            ?: error("No invoke function found")
-
         val inputs = endpoint.declarations
             .filterIsInstance<IrPropertyImpl>()
             .filter {
@@ -201,7 +197,7 @@ class HttpRequestValueExtension(
 
         for (input in inputs) {
             // Generate the call to `block.invoke(this.age, Input.Query<String>())`.
-            +irCall(invokeFun).apply {
+            +irCall(irSymbols.invokeFun).apply {
                 // Receiver: set the `block` function parameter as receiver for the lambda invocation
                 dispatchReceiver = irGet(block)
 

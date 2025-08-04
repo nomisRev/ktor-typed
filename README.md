@@ -53,7 +53,7 @@ data class UserData(val email: String, val age: Int)
 
 ```kotlin
 routing {
-    post(::UserApi) { api ->
+    post(UserApi) { api ->
         // Access typed parameters
         val user = userService.createUser(id = api.userId, name = api.name, token = api.token, data = api.userData)
         call.respond(HttpStatusCode.OK, user)
@@ -65,7 +65,7 @@ routing {
 
 ```kotlin
 router {
-    POST(::UserApi) { api ->
+    POST(UserApi) { api ->
         // Access typed parameters
         val user = userService.createUser(id = api.userId, name = api.name, token = api.token, data = api.userData)
         ServerResponse.ok()

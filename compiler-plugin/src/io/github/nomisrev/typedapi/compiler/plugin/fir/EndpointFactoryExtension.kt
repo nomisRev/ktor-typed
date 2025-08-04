@@ -82,7 +82,6 @@ class EndpointFactoryExtension(
         context: NestedClassGenerationContext
     ): FirClassLikeSymbol<*>? =
         when {
-            name == create -> null
             name == SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT -> {
                 createCompanionObject(owner, Key) {
                     superType(module.classIds.factory.createConeType(session, arrayOf(owner.defaultType())))

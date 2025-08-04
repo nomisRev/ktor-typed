@@ -77,11 +77,8 @@ class EndpointFactoryIrExtension(
         }
         declaration.addDefaultConstructor(constructor)
 
-        val type =
-            pluginContext.referenceClass(module.classIds.factory)!!
-                .typeWith(declaration.parentAsClass.defaultType)
-
-        declaration.superTypes = listOf(type)
+        declaration.superTypes = listOf(pluginContext.referenceClass(module.classIds.factory)!!
+            .typeWith(declaration.parentAsClass.defaultType))
 
         /**
          *  fun <B> create(block: (path: String, (EndpointAPI) -> A) -> B): B =
@@ -90,19 +87,15 @@ class EndpointFactoryIrExtension(
         val create = declaration.findDeclaration<IrSimpleFunction> { it.name == Name.identifier("create") } ?: return
         create.apply {
             val typeParam = typeParameters.single()
-            val endpointAPIType = pluginContext.referenceClass(module.classIds.api)!!.defaultType
+
             // Create (EndpointAPI) -> Header type
             val apiToValueConstructor = pluginContext.irBuiltIns.functionN(1)
-                .typeWith(listOf<IrType>(endpointAPIType, declaration.parentAsClass.defaultType))
-
-            val invokeFun = irSymbols.function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
-                ?.first { it.name == OperatorNameConventions.INVOKE }
-                ?: error("No invoke function found")
+                .typeWith(listOf<IrType>(irSymbols.api.defaultType, declaration.parentAsClass.defaultType))
 
             returnType = typeParam.defaultType
             body = pluginContext.createIrBuilder(this.symbol).irBlockBody {
                 val annotationPath = getAnnotationPath(declaration.parentAsClass)
-                val invokeCall = irCall(invokeFun.symbol, type = typeParam.defaultType).apply {
+                val invokeCall = irCall(irSymbols.invokeFun.symbol, type = typeParam.defaultType).apply {
                     arguments[0] = irGet(create.parameters[1])
                     arguments[1] = annotationPath.toIrConst(pluginContext.symbols.string.defaultType)
 
@@ -110,7 +103,7 @@ class EndpointFactoryIrExtension(
                         parent = create
                         val apiParam = addValueParameter {
                             name = Name.identifier("api")
-                            this.type = endpointAPIType
+                            type = irSymbols.api.defaultType
                         }
                         body = context.createIrBuilder(symbol).irBlockBody {
                             +irReturn(
