@@ -2,6 +2,7 @@ package io.github.nomisrev.typedapi
 
 import io.github.nomisrev.typedapi.spring.GET
 import io.github.nomisrev.typedapi.spring.POST
+import io.ktor.http.ContentType
 import kotlinx.serialization.Serializable
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient.bindToRouterFunction
@@ -40,7 +41,7 @@ class GetApi(api: EndpointAPI) {
 @Endpoint(path = "/method-test/{id}")
 class PostApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
-    val body: ServerTestBody by api.body<ServerTestBody>()
+    val body: ServerTestBody by api.body<ServerTestBody>(ContentType.Application.Json)
 }
 
 @Serializable
@@ -51,7 +52,7 @@ class ServerTest {
     @Test
     fun testBasicRouteHandling() {
         val router = router {
-            GET(::SimpleTestApi) { api ->
+            GET(SimpleTestApi) { api ->
                 ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(ServerTestResponse(id = api.id, name = api.name, message = "Success"))
@@ -74,13 +75,13 @@ class ServerTest {
         data class RouteResponse(val route: String, val value: String)
 
         val router = router {
-            GET(::Route1Api) { api ->
+            GET(Route1Api) { api ->
                 ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(RouteResponse("route1", api.id.toString()))
             }
 
-            GET(::Route2Api) { api ->
+            GET(Route2Api) { api ->
                 ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(RouteResponse("route2", api.name))
@@ -111,13 +112,13 @@ class ServerTest {
         data class MethodResponse(val method: String, val id: Int, val body: ServerTestBody? = null)
 
         val router = router {
-            GET(::GetApi) { api ->
+            GET(GetApi) { api ->
                 ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(MethodResponse("GET", api.id))
             }
 
-            POST(::PostApi) { api ->
+            POST(PostApi) { api ->
                 ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(MethodResponse("POST", api.id, api.body))

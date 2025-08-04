@@ -24,7 +24,7 @@ FILE: body.kt
             super<R|kotlin/Any|>()
         }
 
-        public final val user: R|my/test/User|by R|<local>/api|.R|io/github/nomisrev/typedapi/body|<R|my/test/User|>()
+        public final val user: R|my/test/User|by R|<local>/api|.R|io/github/nomisrev/typedapi/body|<R|my/test/User|>(Q|io/ktor/http/ContentType.Application|.R|io/ktor/http/ContentType.Application.Json|)
             public get(): R|my/test/User| {
                 ^ this@R|my/test/UserEndpoint|.D|my/test/UserEndpoint.user|.R|SubstitutionOverride<kotlin/properties/ReadOnlyProperty.getValue: R|my/test/User|>|(this@R|my/test/UserEndpoint|, ::R|my/test/UserEndpoint.user|)
             }
@@ -41,6 +41,11 @@ FILE: body.kt
 
         public constructor(user: R|my/test/User|): R|my/test/UserEndpoint| {
             this<R|my/test/UserEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(user).R|kotlin/to|(R|<local>/user|)))
+        }
+
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/UserEndpoint>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/UserEndpoint>) -> B|): R|B|
+
         }
 
     }

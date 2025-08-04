@@ -11,6 +11,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                api(ktorLibs.http)
                 api(libs.kotlinx.serialization)
                 api(libs.kotlinx.coroutines)
             }

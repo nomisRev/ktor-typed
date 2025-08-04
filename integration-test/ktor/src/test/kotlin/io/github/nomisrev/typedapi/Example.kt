@@ -1,5 +1,6 @@
 package io.github.nomisrev.typedapi
 
+import io.ktor.http.ContentType
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
@@ -24,6 +25,7 @@ class ProfileApi(api: EndpointAPI)  {
     )
     val userAgent by api.header<String>()
     val json by api.body<TestBody>(
+        contentType = ContentType.Application.Json,
         info = Info(
             example = example(TestBody("my custom body")),
         ),
@@ -41,7 +43,7 @@ class Test {
     fun example() = testApplication {
         routing {
             install(ContentNegotiation) { json() }
-            get(::ProfileApi) { api ->
+            get(ProfileApi) { api ->
                 call.respond(Profile(api.profileId, api.name, api.email, api.userAgent, api.json))
             }
         }

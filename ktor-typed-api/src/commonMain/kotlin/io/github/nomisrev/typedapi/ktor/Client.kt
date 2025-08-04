@@ -21,8 +21,7 @@ suspend fun <A : HttpRequestValue> HttpClient.request(
     value.header { value, input -> header(input.casing(input.name!!), value) }
     value.query { value, input -> parameter(input.name!!, value) }
     value.body { value, input ->
-        // TODO parameterise, or collect from ContentNegotiation
-        contentType(ContentType.Application.Json)
+        contentType(input.contentType)
         setBody(value)
     }
 }

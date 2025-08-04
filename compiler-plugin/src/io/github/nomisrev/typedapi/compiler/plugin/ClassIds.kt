@@ -8,6 +8,8 @@ import org.jetbrains.kotlin.name.StandardClassIds
 
 class ClassIds(
     val annotation: AnnotationFqn = FqName("io.github.nomisrev.typedapi.Endpoint"),
+    val factory: ClassId = ClassId(FqName("io.github.nomisrev.typedapi"), Name.identifier("EndpointFactory"),),
+    val api: ClassId = ClassId(FqName("io.github.nomisrev.typedapi"), Name.identifier("EndpointAPI"),),
     val mapEndpoint: ClassId = ClassId(
         FqName("io.github.nomisrev.typedapi"),
         Name.identifier("MapEndpointAPI"),

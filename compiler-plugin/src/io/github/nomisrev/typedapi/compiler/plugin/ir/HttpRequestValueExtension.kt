@@ -3,26 +3,20 @@ package io.github.nomisrev.typedapi.compiler.plugin.ir
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
-import io.github.nomisrev.typedapi.compiler.plugin.fir.MyCodeGenerationExtension
-import io.github.nomisrev.typedapi.compiler.plugin.fir.httpRequestValueIdentifiers
+import io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irCall
-import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.builders.irExprBody
 import org.jetbrains.kotlin.ir.builders.irGet
 import org.jetbrains.kotlin.ir.builders.irString
-import org.jetbrains.kotlin.ir.builders.irVararg
 import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
-import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrPropertyImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
-import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -30,18 +24,15 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrStringConcatenationImpl
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isString
-import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.dump
+import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
 import org.jetbrains.kotlin.ir.util.parentAsClass
-import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.toIrConst
 import org.jetbrains.kotlin.ir.visitors.IrVisitor
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
-class MyCodeIrGenerator(
+class HttpRequestValueExtension(
     private val pluginContext: IrPluginContext,
     private val module: PluginContext,
     private val irSymbols: IrSymbols,
@@ -53,68 +44,31 @@ class MyCodeIrGenerator(
         element.acceptChildren(this, data)
     }
 
-    override fun visitConstructor(declaration: IrConstructor, data: Nothing?) {
-        val keyOrNull =
-            (declaration.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey as? MyCodeGenerationExtension.Key
-                ?: return
-        val primaryConstructor = (declaration.parent as? IrClassImpl)?.primaryConstructor ?: return
-        val irBuilder = pluginContext.createIrBuilder(declaration.symbol)
-
-        val pairExpressions = declaration.parameters.map { param ->
-            irBuilder.irCall(irSymbols.to).apply {
-                insertExtensionReceiver(param.name.asString().toIrConst(pluginContext.symbols.string.defaultType))
-                arguments[1] = irBuilder.irGet(declaration.parameters[param.indexInParameters])
-                typeArguments[0] = pluginContext.symbols.string.defaultType
-                typeArguments[1] = pluginContext.symbols.any.defaultType.makeNullable()
-            }
-        }
-
-        val mapOfCall = irBuilder.irCall(irSymbols.arrayOf).apply {
-            arguments[0] = irBuilder.irVararg(irSymbols.stringToNullableAny, pairExpressions)
-            typeArguments[0] = irSymbols.stringToNullableAny
-        }
-
-        val mapEndpointCall =
-            irBuilder.irCall(irSymbols.mapEndpoint.constructors.single { !it.owner.isPrimary }).apply {
-                arguments[0] = mapOfCall
-            }
-
-        declaration.body = irBuilder.irBlockBody {
-            +irDelegatingConstructorCall(primaryConstructor).apply {
-                arguments[0] = mapEndpointCall
-            }
-        }
-
-        super.visitConstructor(declaration, data)
-    }
-
+    /*
+     * If no explicit name is passed to the EndpointAPI builders, than the parameter name is explicitly passed.
+     *   val path by api.path<String>() =>  val name by api.path<String>("name")
+     */
     override fun visitProperty(declaration: IrProperty, data: Nothing?) {
         if (!declaration.isDelegated) return super.visitProperty(declaration, data)
         val delegateInitializer = declaration.backingField?.initializer?.expression
 
-        if (delegateInitializer is IrCallImpl && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name.asString() == "header") {
+        if (delegateInitializer is IrCallImpl
+            && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name in HttpRequestValueExtension.callableNames
+        ) {
             val nameIndex =
                 delegateInitializer.symbol.owner.parameters.find { it.name.asString() == "name" }?.indexInParameters
             if (nameIndex != null && delegateInitializer.arguments[nameIndex] == null) {
                 delegateInitializer.arguments[nameIndex] =
                     declaration.name.asString().toIrConst(pluginContext.symbols.string.defaultType)
             }
-            println("Transformed property IR:\n${declaration.dump()}")
         }
 
         super.visitProperty(declaration, data)
     }
 
-    override fun visitCall(expression: IrCall, data: Nothing?) {
-        super.visitCall(expression, data)
-        if ((expression.symbol.owner.parent as? IrClass)?.name?.asString() == "EndpointAPI") {
-            module.logger.log { "Generating call: ${expression.symbol.owner.name}" }
-        }
-    }
-
     override fun visitFunction(declaration: IrFunction, data: Nothing?) {
         if (declaration.origin is IrDeclarationOrigin.GeneratedByPlugin) {
-            if (!httpRequestValueIdentifiers.contains(declaration.name)) {
+            if (!HttpRequestValueExtension.callableNames.contains(declaration.name)) {
                 return
             }
 
@@ -216,6 +170,10 @@ class MyCodeIrGenerator(
         return builder.irExprBody(finalExpression)
     }
 
+    /**
+     * Generates the body of the function.
+     *  function2.invoke(this.param, Input.Query<String>(...))
+     */
     private fun body(
         builder: DeclarationIrBuilder,
         function: IrFunction,
@@ -231,10 +189,6 @@ class MyCodeIrGenerator(
             else -> error("Unknown type: $type")
         }
 
-        val invokeFun = irSymbols.function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
-            ?.first { it.name == OperatorNameConventions.INVOKE }
-            ?: error("No invoke function found")
-
         val inputs = endpoint.declarations
             .filterIsInstance<IrPropertyImpl>()
             .filter {
@@ -243,7 +197,7 @@ class MyCodeIrGenerator(
 
         for (input in inputs) {
             // Generate the call to `block.invoke(this.age, Input.Query<String>())`.
-            +irCall(invokeFun).apply {
+            +irCall(irSymbols.invokeFun).apply {
                 // Receiver: set the `block` function parameter as receiver for the lambda invocation
                 dispatchReceiver = irGet(block)
 
@@ -257,16 +211,24 @@ class MyCodeIrGenerator(
                     typeArguments[0] = input.getter!!.returnType
                     // TODO: consider the specified name!
                     if (type != "body") {
-                        arguments[0] = irString(input.name.asString())
+                        val x = arguments
+
+                        val originalArguments =
+                            (input.backingField?.initializer?.expression as? IrCallImpl)?.arguments?.drop(1)
+
+                        originalArguments?.forEachIndexed { index, expr -> x[index] = expr?.deepCopyWithSymbols() }
+
+                    } else {
+                        val x = arguments
+                        (input.backingField?.initializer?.expression as? IrCallImpl)?.arguments?.drop(1)
+                            ?.forEachIndexed { index, expr ->
+                                x[index] = expr?.deepCopyWithSymbols()
+                            }
                     }
-                    // TODO pass parameters
-                    //   it.valueParameters.forEach { param ->
-                    //       putValueArgument(param.index, irBuilder.irGet(param))
-                    //   }
                 }
             }
         }
 
-        module.logger.log { "Generated query for: ${endpoint.name} with lambda: ${block.name}" }
+        module.logger.log { "Generated $type for: ${endpoint.name} with lambda: ${block.name}" }
     }
 }

@@ -1,40 +1,29 @@
 package io.github.nomisrev.typedapi.compiler.plugin.fir
 
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
-import org.jetbrains.kotlin.GeneratedDeclarationKey
+import io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.containingClassForStaticMemberAttr
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirConstructor
-import org.jetbrains.kotlin.fir.declarations.FirSimpleFunction
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCallOrigin
 import org.jetbrains.kotlin.fir.expressions.builder.buildDelegatedConstructorCall
 import org.jetbrains.kotlin.fir.expressions.builder.buildFunctionCall
 import org.jetbrains.kotlin.fir.expressions.builder.buildLiteralExpression
 import org.jetbrains.kotlin.fir.expressions.builder.buildPropertyAccessExpression
 import org.jetbrains.kotlin.fir.expressions.impl.FirResolvedArgumentList
-import org.jetbrains.kotlin.fir.extensions.ExperimentalTopLevelDeclarationsGenerationApi
-import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
-import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
-import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
-import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createConstructor
-import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.renderWithType
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeKotlinTypeConflictingProjection
 import org.jetbrains.kotlin.fir.types.coneType
-import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
@@ -42,29 +31,12 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.types.ConstantValueKind
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.capitalizeAsciiOnly
 
-internal val httpRequestValueIdentifiers = listOf(
-    Name.identifier("query"),
-    Name.identifier("path"),
-    Name.identifier("header"),
-    Name.identifier("body"),
-)
-
-class MyCodeGenerationExtension(
+// TODO what is DirectDeclarationsAccess, and can we avoid it?
+class ValueConstructorExtension(
     session: FirSession,
-    private val module: PluginContext,
-) : FirDeclarationGenerationExtension(session) {
-    private val predicate = LookupPredicate.create { annotated(module.classIds.annotation) }
-    private val matchedClasses by lazy {
-        session.predicateBasedProvider.getSymbolsByPredicate(predicate).filterIsInstance<FirRegularClassSymbol>()
-    }
-
-    override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(predicate)
-    }
-
-    object Key : GeneratedDeclarationKey()
+    module: PluginContext,
+) : EndpointAnnotatedFirDeclarationGenerationExtension(session, module) {
 
     private val toSymbol by lazy {
         val toCallableId = CallableId(StandardClassIds.BASE_KOTLIN_PACKAGE, Name.identifier("to"))
@@ -78,14 +50,12 @@ class MyCodeGenerationExtension(
             ?: error("Cannot find kotlin.Pair symbol")
     }
 
-    // TODO what is DirectDeclarationsAccess, and can we avoid it?
     @OptIn(DirectDeclarationsAccess::class)
     private val mapEndpoint: FirRegularClassSymbol by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(module.classIds.mapEndpoint) as? FirRegularClassSymbol
             ?: error("Cannot find MapEndpointAPI class symbol")
     }
 
-    // TODO what is DirectDeclarationsAccess, and can we avoid it?
     @OptIn(DirectDeclarationsAccess::class)
     private val mapEndpointVarargConstructor by lazy {
         mapEndpoint.declarationSymbols.filterIsInstance<FirConstructorSymbol>()
@@ -164,77 +134,8 @@ class MyCodeGenerationExtension(
             Pair(nameToParamCall, targetParam)
         }.toResolvedArgumentList()
 
-    override fun generateFunctions(
-        callableId: CallableId, context: MemberGenerationContext?
-    ): List<FirNamedFunctionSymbol> {
-        val endpoint = context?.declaredScope?.classId
-            ?.let { classId -> matchedClasses.find { it.classId == classId } } ?: return emptyList()
-        if (!httpRequestValueIdentifiers.contains(callableId.callableName)) return emptyList()
-        val name = callableId.callableName.asString().capitalizeAsciiOnly()
-        val inputType = module.classIds.input.createNestedClassId(Name.identifier(name))
-
-        val lambdaType = inputVisitor(inputType)
-        val member = createMemberFunction(
-            owner = context.owner,
-            key = Key,
-            name = callableId.callableName,
-            returnType = session.builtinTypes.unitType.coneType
-        ) {
-            valueParameter(Name.identifier("block"), lambdaType)
-            status { isOverride = true }
-        }.apply {
-            containingClassForStaticMemberAttr = endpoint.toLookupTag()
-        }
-
-        module.logger.log { "Generating 'Inspectable' for $endpoint.${member.name}" }
-        module.logger.log { member.renderWithType() }
-
-        return listOfNotNull(member.symbol, pathStringOrNull(callableId, endpoint)?.symbol)
-    }
-
-    /**
-     * Generates vistor:
-     *  - query { value: Any?, input: Input.Query<Any?> -> ... }
-     *  - path { value: Any?, input: Input.Path<Any?> -> ... }
-     *  - header { value: Any?, input: Input.Header<Any?> -> ... }
-     *  - body { value: Any?, input: Input.Body<Any?> -> ... }
-     */
-    private fun inputVisitor(inputType: ClassId): ConeClassLikeType =
-        StandardClassIds.FunctionN(2).constructClassLikeType(
-            arrayOf(
-                session.builtinTypes.nullableAnyType.coneType,
-                inputType.constructClassLikeType(typeArguments = arrayOf(session.builtinTypes.nullableAnyType.coneType)),
-                session.builtinTypes.unitType.coneType
-            )
-        )
-
-    private fun pathStringOrNull(callableId: CallableId, endpoint: FirRegularClassSymbol): FirSimpleFunction? =
-        if (callableId.callableName.asString() == "path") {
-            createMemberFunction(
-                endpoint, Key, callableId.callableName, session.builtinTypes.stringType.coneType
-            ) {
-                status { isOverride = true }
-            }.apply {
-                containingClassForStaticMemberAttr = endpoint.toLookupTag()
-            }
-        } else null
-
-    /**
-     * We generate a special constructor for HttpRequestValue, and its interface functions
-     */
-    override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> =
-        if (matchedClasses.contains(classSymbol)) {
-            val callables = setOf(SpecialNames.INIT) + httpRequestValueIdentifiers
-            module.logger.log { "getCallableNamesForClass for ${classSymbol.classId}: $callables" }
-            callables
-        } else emptySet()
-
-    @ExperimentalTopLevelDeclarationsGenerationApi
-    override fun getTopLevelClassIds(): Set<ClassId> {
-        val topLevelIds = matchedClasses.mapTo(mutableSetOf()) {
-            it.classId
-        }
-        module.logger.log { "Generating code for: ${topLevelIds.joinToString { it.shortClassName.asString() }}" }
-        return topLevelIds
+    override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
+        module.logger.log { "Generating value constructor for ${classSymbol.classId}" }
+        return setOf(SpecialNames.INIT)
     }
 }

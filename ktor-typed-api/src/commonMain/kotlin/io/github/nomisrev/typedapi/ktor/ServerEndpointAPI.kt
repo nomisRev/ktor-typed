@@ -7,6 +7,7 @@ import io.ktor.server.routing.route
 import io.ktor.util.reflect.TypeInfo
 import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
+import io.github.nomisrev.typedapi.EndpointFactory
 import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.Validation
 import io.github.nomisrev.typedapi.ValidationBuilder
@@ -24,50 +25,31 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
 
 public fun <A : Any> Route.route(
-    typeInfo: TypeInfo,
     method: HttpMethod,
-    endpoint: (EndpointAPI) -> A,
+    factory: EndpointFactory<A>,
     block: suspend RoutingContext.(A) -> Unit,
-) {
-    val path = (typeInfo.type.annotations.filterIsInstance<Endpoint>().singleOrNull()
-        ?: typeInfo.type.findAnnotation<Endpoint>())?.path
-        ?: throw IllegalArgumentException("Missing @Endpoint annotation")
-
+): Route = factory.create { path, endpoint ->
     route(path, method) {
         handle {
             val api = ServerEndpointAPI(this)
             val value = endpoint(api)
-            runCatching {
-                api.bodyInput?.let { input ->
-                    api.body.completeWith(runCatching { call.receiveNullable(TypeInfo(input.kClass, input.kType)) })
-                }
-                block(value)
-            }.onFailure { it.printStackTrace() }.getOrThrow()
+            api.bodyInput?.let { input ->
+                api.body.completeWith(runCatching { call.receiveNullable(TypeInfo(input.kClass, input.kType)) })
+            }
+            block(value)
         }
     }
 }
 
-public inline fun <reified A : Any> Route.get(
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend RoutingContext.(A) -> Unit,
-) = route(typeInfo<A>(), HttpMethod.Get, endpoint, block)
+public fun <A : Any> Route.get(
+    factory: EndpointFactory<A>,
+    block: suspend RoutingContext.(A) -> Unit,
+) = route(HttpMethod.Get, factory, block)
 
-public inline fun <reified A : Any> Route.post(
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend RoutingContext.(A) -> Unit,
-) = route(typeInfo<A>(), HttpMethod.Post, endpoint, block)
-
-public inline fun <reified A : Any> Route.route(
-    method: HttpMethod,
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend RoutingContext.(A) -> Unit,
-) = route(typeInfo<A>(), method, endpoint, block)
-
-public inline fun <reified A : Any> Route.route(
-    noinline endpoint: (EndpointAPI) -> A,
-    method: HttpMethod,
-    noinline block: suspend RoutingContext.(A) -> Unit,
-) = route(typeInfo<A>(), method, endpoint, block)
+public fun <A : Any> Route.post(
+    factory: EndpointFactory<A>,
+    block: suspend RoutingContext.(A) -> Unit,
+) = route(HttpMethod.Post, factory, block)
 
 private class ServerEndpointAPI(private val context: RoutingContext) : EndpointAPI {
     val body: CompletableDeferred<Any?> = CompletableDeferred()

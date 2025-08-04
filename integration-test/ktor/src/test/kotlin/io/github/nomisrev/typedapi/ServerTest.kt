@@ -1,6 +1,7 @@
 package io.github.nomisrev.typedapi
 
 import io.ktor.http.HttpMethod
+import io.ktor.http.ContentType
 import io.ktor.server.response.respond
 import io.ktor.server.testing.testApplication
 import io.ktor.client.call.body
@@ -46,7 +47,7 @@ class GetApi(api: EndpointAPI) {
 @Endpoint(path = "/method-test/{id}")
 class PostApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
-    val body: ServerTestBody by api.body<ServerTestBody>()
+    val body: ServerTestBody by api.body<ServerTestBody>(ContentType.Application.Json)
 }
 
 @Serializable
@@ -59,7 +60,7 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::SimpleTestApi) { api ->
+            get(SimpleTestApi) { api ->
                 call.respond(
                     ServerTestResponse(
                         id = api.id,
@@ -91,11 +92,11 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::Route1Api) { api ->
+            get(Route1Api) { api ->
                 call.respond(RouteResponse("route1", api.id.toString()))
             }
 
-            get(::Route2Api) { api ->
+            get(Route2Api) { api ->
                 call.respond(RouteResponse("route2", api.name))
             }
         }
@@ -133,11 +134,11 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::GetApi) { api ->
+            get(GetApi) { api ->
                 call.respond(MethodResponse("GET", api.id))
             }
 
-            post(::PostApi) { api ->
+            post(PostApi) { api ->
                 call.respond(MethodResponse("POST", api.id, api.body))
             }
         }

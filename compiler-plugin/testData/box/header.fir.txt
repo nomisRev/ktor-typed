@@ -25,6 +25,11 @@ FILE: header.kt
             this<R|my/test/Header|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(authorization).R|kotlin/to|(R|<local>/authorization|)))
         }
 
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/Header>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/Header>) -> B|): R|B|
+
+        }
+
     }
     public final fun box(): R|kotlin/String| {
         lval value: R|my/test/Header| = R|my/test/Header|(String(Bearer token123))

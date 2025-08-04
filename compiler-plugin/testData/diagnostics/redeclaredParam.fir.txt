@@ -30,6 +30,11 @@ FILE: redeclaredParam.kt
             this<R|my/test/RedeclaredEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(name).R|kotlin/to|(R|<local>/name|), String(name).R|kotlin/to|(R|<local>/name|)))
         }
 
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/RedeclaredEndpoint>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/RedeclaredEndpoint>) -> B|): R|B|
+
+        }
+
     }
     public final fun box(): R|kotlin/String| {
         lval value: R|my/test/RedeclaredEndpoint| = R|my/test/RedeclaredEndpoint|(String(test), String(test))
@@ -37,4 +42,3 @@ FILE: redeclaredParam.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-

@@ -6,12 +6,13 @@ import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
 import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.body
+import io.ktor.http.ContentType.Application.Json
 
 data class User(val name: String, val age: Int)
 
 @Endpoint("/users")
 class UserEndpoint(api: EndpointAPI) {
-    val user by api.body<User>()
+    val user by api.body<User>(contentType = Json)
 }
 
 fun box(): String {

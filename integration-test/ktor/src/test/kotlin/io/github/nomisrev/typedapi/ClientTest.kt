@@ -1,11 +1,12 @@
 package io.github.nomisrev.typedapi
 
-import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.github.nomisrev.typedapi.ktor.get
+import io.ktor.client.call.body
+import io.ktor.http.ContentType.Application.Json
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
@@ -16,7 +17,7 @@ class SimpleClientApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
     val name: String by api.query<String>()
     val header: String by api.header<String>()
-    val body: ClientTestBody by api.body<ClientTestBody>()
+    val body: ClientTestBody by api.body<ClientTestBody>(Json)
 }
 
 @Serializable
@@ -44,7 +45,7 @@ class ClientTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::SimpleClientApi) { api ->
+            get(SimpleClientApi) { api ->
                 call.respond(
                     ClientTestResponse(
                         id = api.id,
@@ -80,7 +81,7 @@ class ClientTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::NullableParamsApi) { api ->
+            get(NullableParamsApi) { api ->
                 call.respond(
                     NullableResponse(
                         id = api.id,

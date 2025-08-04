@@ -1,0 +1,39 @@
+FILE: test22.kt
+    package my.test
+
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(O)) public final class Test : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+        public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/Test| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final override fun query(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Query<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Path<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun path(): R|kotlin/String|
+
+        public final override fun header(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Header<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public final override fun body(block: R|(kotlin/Any?, io/github/nomisrev/typedapi/Input.Body<kotlin/Any?>) -> kotlin/Unit|): R|kotlin/Unit|
+
+        public constructor(): R|my/test/Test| {
+            this<R|my/test/Test|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|())
+        }
+
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/Test>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/Test>) -> B|): R|B|
+
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lvar s: R|kotlin/String| = String(NOK)
+        lval rest: R|kotlin/String| = Q|my/test/Test|.R|my/test/Test.Companion.create|<R|kotlin/String|>(<L> = create@fun <anonymous>(text: R|kotlin/String|, <unused var>: R|(io/github/nomisrev/typedapi/EndpointAPI) -> my/test/Test|): R|kotlin/String| <inline=NoInline>  {
+            R|<local>/s| = R|<local>/text|
+            ^ String(K)
+        }
+        )
+        ^box R|<local>/s|.R|kotlin/String.plus|(R|<local>/rest|)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package my.test

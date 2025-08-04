@@ -38,6 +38,11 @@ FILE: invalidParameterType.kt
             this<R|my/test/InvalidTypeEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(complex).R|kotlin/to|(R|<local>/complex|)))
         }
 
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/InvalidTypeEndpoint>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/InvalidTypeEndpoint>) -> B|): R|B|
+
+        }
+
     }
     public final fun box(): R|kotlin/String| {
         lval value: R|my/test/InvalidTypeEndpoint| = R|my/test/InvalidTypeEndpoint|(R|my/test/ComplexType.ComplexType|(String(test)))
