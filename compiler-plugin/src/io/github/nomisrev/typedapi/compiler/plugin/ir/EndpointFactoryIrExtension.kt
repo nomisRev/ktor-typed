@@ -3,13 +3,11 @@ package io.github.nomisrev.typedapi.compiler.plugin.ir
 import io.github.nomisrev.typedapi.compiler.plugin.PluginContext
 import io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.backend.common.ir.returnType
+import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
-import org.jetbrains.kotlin.ir.builders.declarations.addFunction
-import org.jetbrains.kotlin.ir.builders.declarations.addTypeParameter
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildClass
 import org.jetbrains.kotlin.ir.builders.declarations.buildConstructor
@@ -18,14 +16,9 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irCall
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.builders.irGet
-import org.jetbrains.kotlin.ir.builders.irRawFunctionReference
 import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.builders.irRichFunctionReference
-import org.jetbrains.kotlin.ir.builders.irString
-import org.jetbrains.kotlin.ir.builders.parent
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
-import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionExpressionImpl
@@ -34,13 +27,12 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.findDeclaration
 import org.jetbrains.kotlin.ir.util.hasAnnotation
-import org.jetbrains.kotlin.ir.util.irConstructorCall
 import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
-import org.jetbrains.kotlin.ir.util.isBuiltInSuspendCoroutineUninterceptedOrReturn
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.toIrConst
@@ -71,13 +63,12 @@ class EndpointFactoryIrExtension(
      */
     @UnsafeDuringIrConstructionAPI
     override fun visitClass(declaration: IrClass, data: Nothing?) {
-        module.logger.log { "################################################################ Generating factory for ${declaration.name}" }
+        module.logger.log { "Generating factory for ${declaration.name}" }
         val keyOrNull =
             (declaration.origin as? IrDeclarationOrigin.GeneratedByPlugin)?.pluginKey as? EndpointFactoryExtension.Key
                 ?: return super.visitClass(declaration, data)
 
         val primaryConstructor = (declaration.parent as? IrClassImpl)?.primaryConstructor ?: return
-        val irBuilder = pluginContext.createIrBuilder(declaration.symbol)
 
         val constructor = declaration.addConstructor {
             name = declaration.name
@@ -101,7 +92,7 @@ class EndpointFactoryIrExtension(
             val typeParam = typeParameters.single()
             val endpointAPIType = pluginContext.referenceClass(module.classIds.api)!!.defaultType
             // Create (EndpointAPI) -> Header type
-            val functionType1 = pluginContext.irBuiltIns.functionN(1)
+            val apiToValueConstructor = pluginContext.irBuiltIns.functionN(1)
                 .typeWith(listOf<IrType>(endpointAPIType, declaration.parentAsClass.defaultType))
 
             val invokeFun = irSymbols.function2?.owner?.declarations?.filterIsInstance<IrSimpleFunction>()
@@ -109,31 +100,19 @@ class EndpointFactoryIrExtension(
                 ?: error("No invoke function found")
 
             returnType = typeParam.defaultType
-            val blockParameter = create.parameters[1]
-
             body = pluginContext.createIrBuilder(this.symbol).irBlockBody {
-                // Get the annotation path
                 val annotationPath = getAnnotationPath(declaration.parentAsClass)
-
                 val invokeCall = irCall(invokeFun.symbol, type = typeParam.defaultType).apply {
-                    // Receiver: set the `block` function parameter as receiver for the lambda invocation
-                    dispatchReceiver = irGet(blockParameter)
-
+                    arguments[0] = irGet(create.parameters[1])
                     arguments[1] = annotationPath.toIrConst(pluginContext.symbols.string.defaultType)
 
-                    val lambdaFunction = pluginContext.irFactory.buildFun {
-                        name = Name.special("<anonymous>")
-                        returnType = declaration.parentAsClass.defaultType
-                        visibility = DescriptorVisibilities.LOCAL
-                        origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
-                    }.apply {
+                    val lambdaFunction = pluginContext.lambda(declaration).apply {
                         parent = create
                         val apiParam = addValueParameter {
                             name = Name.identifier("api")
                             this.type = endpointAPIType
                         }
-                        val builder = pluginContext.createIrBuilder(symbol)
-                        body = builder.irBlockBody {
+                        body = context.createIrBuilder(symbol).irBlockBody {
                             +irReturn(
                                 irCall(primaryConstructor).apply {
                                     arguments[0] = irGet(apiParam)
@@ -143,9 +122,9 @@ class EndpointFactoryIrExtension(
                     }
 
                     arguments[2] = IrFunctionExpressionImpl(
-                        startOffset = startOffset,
-                        endOffset = endOffset,
-                        type = functionType1,
+                        startOffset = SYNTHETIC_OFFSET,
+                        endOffset = SYNTHETIC_OFFSET,
+                        type = apiToValueConstructor,
                         function = lambdaFunction,
                         origin = IrStatementOrigin.LAMBDA
                     )
@@ -194,7 +173,7 @@ class EndpointFactoryIrExtension(
 
         val companionObject = factory.buildClass {
             name = SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT
-            kind = org.jetbrains.kotlin.descriptors.ClassKind.OBJECT
+            kind = ClassKind.OBJECT
             visibility = DescriptorVisibilities.PUBLIC
             modality = Modality.FINAL
             isCompanion = true
@@ -223,3 +202,11 @@ class EndpointFactoryIrExtension(
         return factoryClassSymbol.typeWith(listOf(forClass.defaultType))
     }
 }
+
+private fun IrPluginContext.lambda(declaration: IrClass): IrSimpleFunction =
+    irFactory.buildFun {
+        name = Name.special("<anonymous>")
+        returnType = declaration.parentAsClass.defaultType
+        visibility = DescriptorVisibilities.LOCAL
+        origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
+    }
