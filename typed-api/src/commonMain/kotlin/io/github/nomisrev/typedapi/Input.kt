@@ -1,5 +1,6 @@
 package io.github.nomisrev.typedapi
 
+import io.ktor.http.ContentType
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -41,6 +42,7 @@ sealed interface Input<A> {
     ) : Input<A>
 
     class Body<A>(
+        val contentType: ContentType,
         override val kClass: KClass<*>,
         override val kType: KType,
         override val info: Info<A>?,

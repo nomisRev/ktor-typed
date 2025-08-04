@@ -2,6 +2,7 @@ package io.github.nomisrev.typedapi
 
 import io.github.nomisrev.typedapi.spring.GET
 import io.github.nomisrev.typedapi.spring.POST
+import io.ktor.http.ContentType
 import kotlinx.serialization.Serializable
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient.bindToRouterFunction
@@ -40,7 +41,7 @@ class GetApi(api: EndpointAPI) {
 @Endpoint(path = "/method-test/{id}")
 class PostApi(api: EndpointAPI) {
     val id: Int by api.path<Int>()
-    val body: ServerTestBody by api.body<ServerTestBody>()
+    val body: ServerTestBody by api.body<ServerTestBody>(ContentType.Application.Json)
 }
 
 @Serializable

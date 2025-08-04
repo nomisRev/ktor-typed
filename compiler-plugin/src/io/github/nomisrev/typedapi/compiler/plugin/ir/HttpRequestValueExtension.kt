@@ -17,7 +17,6 @@ import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.impl.IrPropertyImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
-import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -25,7 +24,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrStringConcatenationImpl
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isString
-import org.jetbrains.kotlin.ir.util.dump
+import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.isAnnotationWithEqualFqName
 import org.jetbrains.kotlin.ir.util.parentAsClass
@@ -53,7 +52,9 @@ class HttpRequestValueExtension(
         if (!declaration.isDelegated) return super.visitProperty(declaration, data)
         val delegateInitializer = declaration.backingField?.initializer?.expression
 
-        if (delegateInitializer is IrCallImpl && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name.asString() == "header") {
+        if (delegateInitializer is IrCallImpl
+            && (declaration.backingField?.initializer?.expression as IrCallImpl).symbol.owner.name in HttpRequestValueExtension.callableNames
+        ) {
             val nameIndex =
                 delegateInitializer.symbol.owner.parameters.find { it.name.asString() == "name" }?.indexInParameters
             if (nameIndex != null && delegateInitializer.arguments[nameIndex] == null) {
@@ -214,16 +215,24 @@ class HttpRequestValueExtension(
                     typeArguments[0] = input.getter!!.returnType
                     // TODO: consider the specified name!
                     if (type != "body") {
-                        arguments[0] = irString(input.name.asString())
+                        val x = arguments
+
+                        val originalArguments =
+                            (input.backingField?.initializer?.expression as? IrCallImpl)?.arguments?.drop(1)
+
+                        originalArguments?.forEachIndexed { index, expr -> x[index] = expr?.deepCopyWithSymbols() }
+
+                    } else {
+                        val x = arguments
+                        (input.backingField?.initializer?.expression as? IrCallImpl)?.arguments?.drop(1)
+                            ?.forEachIndexed { index, expr ->
+                                x[index] = expr?.deepCopyWithSymbols()
+                            }
                     }
-                    // TODO pass parameters
-                    //   it.valueParameters.forEach { param ->
-                    //       putValueArgument(param.index, irBuilder.irGet(param))
-                    //   }
                 }
             }
         }
 
-        module.logger.log { "Generated query for: ${endpoint.name} with lambda: ${block.name}" }
+        module.logger.log { "Generated $type for: ${endpoint.name} with lambda: ${block.name}" }
     }
 }

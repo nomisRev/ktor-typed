@@ -142,9 +142,11 @@ FILE fqName:my.test fileName:/body.kt
     PROPERTY name:user visibility:public modality:FINAL [delegated,val]
       FIELD PROPERTY_DELEGATE name:user$delegate type:kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> visibility:private [final]
         EXPRESSION_BODY
-          CALL 'public final fun body <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.body>?): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.body> declared in io.github.nomisrev.typedapi' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> origin=null
+          CALL 'public final fun body <A> (<this>: io.github.nomisrev.typedapi.EndpointAPI, contentType: io.ktor.http.ContentType, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.body>?): kotlin.properties.ReadOnlyProperty<kotlin.Any?, A of io.github.nomisrev.typedapi.body> declared in io.github.nomisrev.typedapi' type=kotlin.properties.ReadOnlyProperty<kotlin.Any?, my.test.User> origin=null
             TYPE_ARG A: my.test.User
             ARG <this>: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.UserEndpoint.<init>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+            ARG contentType: CALL 'public final fun <get-Json> (): io.ktor.http.ContentType declared in io.ktor.http.ContentType.Application' type=io.ktor.http.ContentType origin=GET_PROPERTY
+              ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Application modality:FINAL visibility:public superTypes:[kotlin.Any]' type=io.ktor.http.ContentType.Application
       FUN DELEGATED_PROPERTY_ACCESSOR name:<get-user> visibility:public modality:FINAL returnType:my.test.User
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
         correspondingProperty: PROPERTY name:user visibility:public modality:FINAL [delegated,val]
@@ -236,8 +238,10 @@ FILE fqName:my.test fileName:/body.kt
           ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit> declared in my.test.UserEndpoint.body' type=kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit> origin=null
           ARG p1: CALL 'public final fun <get-user> (): my.test.User declared in my.test.UserEndpoint' type=my.test.User origin=null
             ARG <this>: GET_VAR '<this>: my.test.UserEndpoint declared in my.test.UserEndpoint.body' type=my.test.UserEndpoint origin=null
-          ARG p2: CALL 'public final fun Body <A> (info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Body>?): io.github.nomisrev.typedapi.Input.Body<A of io.github.nomisrev.typedapi.Body> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Body<A of io.github.nomisrev.typedapi.Body> origin=null
+          ARG p2: CALL 'public final fun Body <A> (contentType: io.ktor.http.ContentType, info: io.github.nomisrev.typedapi.Info<A of io.github.nomisrev.typedapi.Body>?): io.github.nomisrev.typedapi.Input.Body<A of io.github.nomisrev.typedapi.Body> declared in io.github.nomisrev.typedapi' type=io.github.nomisrev.typedapi.Input.Body<A of io.github.nomisrev.typedapi.Body> origin=null
             TYPE_ARG A: my.test.User
+            ARG contentType: CALL 'public final fun <get-Json> (): io.ktor.http.ContentType declared in io.ktor.http.ContentType.Application' type=io.ktor.http.ContentType origin=GET_PROPERTY
+              ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Application modality:FINAL visibility:public superTypes:[kotlin.Any]' type=io.ktor.http.ContentType.Application
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] name:header visibility:public modality:FINAL returnType:kotlin.Unit
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.UserEndpoint
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>

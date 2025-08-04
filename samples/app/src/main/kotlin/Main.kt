@@ -4,18 +4,14 @@ import io.github.nomisrev.typedapi.EndpointFactory
 import io.github.nomisrev.typedapi.body
 import io.github.nomisrev.typedapi.header
 import io.github.nomisrev.typedapi.query
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.full.declaredMemberExtensionFunctions
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.declaredMembers
+import io.ktor.http.ContentType.Text
 
 @Endpoint("/bloop")
 class MyEndpoint(api: EndpointAPI) {
     val name by api.query<String>()
     val age by api.query<Int>()
     val header by api.header<String>()
-    val body by api.body<String>()
+    val body by api.body<String>(Text.Plain)
 }
 
 fun main() {

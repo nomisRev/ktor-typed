@@ -37,4 +37,3 @@ FILE: test22.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
-

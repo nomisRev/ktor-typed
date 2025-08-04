@@ -1,7 +1,7 @@
 package io.github.nomisrev.typedapi
 
+import io.ktor.http.ContentType
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 sealed interface InputDelegate<A> : ReadOnlyProperty<Any?, A> {
@@ -38,8 +38,9 @@ inline fun <reified A> EndpointAPI.header(
 ): ReadOnlyProperty<Any?, A> = input(Header(name, toHeaderCase, validation, info))
 
 inline fun <reified A> EndpointAPI.body(
+    contentType: ContentType,
     info: Info<A>? = null
-): ReadOnlyProperty<Any?, A> = input(Body(info))
+): ReadOnlyProperty<Any?, A> = input(Body(contentType, info))
 
 inline fun <reified A> Path(
     name: String? = null,
@@ -64,5 +65,6 @@ inline fun <reified A> Query(
 
 
 inline fun <reified A> Body(
+    contentType: ContentType,
     info: Info<A>? = null
-): Input.Body<A> = Input.Body(A::class, typeOf<A>(), info)
+): Input.Body<A> = Input.Body(contentType, A::class, typeOf<A>(), info)
