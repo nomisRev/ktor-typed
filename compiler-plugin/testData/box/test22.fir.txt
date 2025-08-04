@@ -1,7 +1,7 @@
 FILE: test22.kt
     package my.test
 
-    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(/)) public final class Test : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
+    @R|io/github/nomisrev/typedapi/Endpoint|(path = String(O)) public final class Test : R|kotlin/Any|, R|io/github/nomisrev/typedapi/HttpRequestValue| {
         public constructor(api: R|io/github/nomisrev/typedapi/EndpointAPI|): R|my/test/Test| {
             super<R|kotlin/Any|>()
         }
@@ -37,3 +37,4 @@ FILE: test22.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     package my.test
+

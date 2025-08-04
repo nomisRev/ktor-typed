@@ -61,15 +61,17 @@ FILE fqName:my.test fileName:/optionalParameters.kt
         overridden:
           public abstract fun create <B> (block: kotlin.Function2<@[ParameterName(name = "path")] kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, A of io.github.nomisrev.typedapi.EndpointFactory>, B of io.github.nomisrev.typedapi.EndpointFactory.create>): B of io.github.nomisrev.typedapi.EndpointFactory.create declared in io.github.nomisrev.typedapi.EndpointFactory
         BLOCK_BODY
-          CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=B of my.test.UserSearchEndpoint.Companion.create origin=null
-            ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint>, B of my.test.UserSearchEndpoint.Companion.create> declared in my.test.UserSearchEndpoint.Companion.create' type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint>, B of my.test.UserSearchEndpoint.Companion.create> origin=null
-            ARG p1: CONST String type=kotlin.String value="/api/users"
-            ARG p2: FUN_EXPR type=kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint> origin=LAMBDA
-              FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:my.test.UserSearchEndpoint
-                VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
-                BLOCK_BODY
-                  CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.UserSearchEndpoint' type=my.test.UserSearchEndpoint origin=null
-                    ARG api: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.UserSearchEndpoint.Companion.create.<anonymous>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+          RETURN type=kotlin.Nothing from='public final fun create <B> (block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint>, B of my.test.UserSearchEndpoint.Companion.create>): B of my.test.UserSearchEndpoint.Companion.create declared in my.test.UserSearchEndpoint.Companion'
+            CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=B of my.test.UserSearchEndpoint.Companion.create origin=null
+              ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint>, B of my.test.UserSearchEndpoint.Companion.create> declared in my.test.UserSearchEndpoint.Companion.create' type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint>, B of my.test.UserSearchEndpoint.Companion.create> origin=null
+              ARG p1: CONST String type=kotlin.String value="/api/users"
+              ARG p2: FUN_EXPR type=kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.UserSearchEndpoint> origin=LAMBDA
+                FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:my.test.UserSearchEndpoint
+                  VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+                  BLOCK_BODY
+                    RETURN type=kotlin.Nothing from='local final fun <anonymous> (api: io.github.nomisrev.typedapi.EndpointAPI): my.test.UserSearchEndpoint declared in my.test.UserSearchEndpoint.Companion.create'
+                      CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.UserSearchEndpoint' type=my.test.UserSearchEndpoint origin=null
+                        ARG api: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.UserSearchEndpoint.Companion.create.<anonymous>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
     CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] visibility:public returnType:my.test.UserSearchEndpoint
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:name index:0 type:kotlin.String
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:limit index:1 type:kotlin.Int?

@@ -115,20 +115,18 @@ class EndpointFactoryIrExtension(
                 // Get the annotation path
                 val annotationPath = getAnnotationPath(declaration.parentAsClass)
 
-                +irCall(invokeFun.symbol, type = typeParam.defaultType).apply {
+                val invokeCall = irCall(invokeFun.symbol, type = typeParam.defaultType).apply {
                     // Receiver: set the `block` function parameter as receiver for the lambda invocation
                     dispatchReceiver = irGet(blockParameter)
 
                     arguments[1] = annotationPath.toIrConst(pluginContext.symbols.string.defaultType)
 
-                    // Create the lambda function first
                     val lambdaFunction = pluginContext.irFactory.buildFun {
                         name = Name.special("<anonymous>")
                         returnType = declaration.parentAsClass.defaultType
                         visibility = DescriptorVisibilities.LOCAL
                         origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
                     }.apply {
-                        // IMPORTANT: Set parent to the lambda function itself initially
                         parent = create
                         val apiParam = addValueParameter {
                             name = Name.identifier("api")
@@ -136,14 +134,14 @@ class EndpointFactoryIrExtension(
                         }
                         val builder = pluginContext.createIrBuilder(symbol)
                         body = builder.irBlockBody {
-                            +irCall(primaryConstructor).apply {
-                                arguments[0] = irGet(apiParam)
-                            }
+                            +irReturn(
+                                irCall(primaryConstructor).apply {
+                                    arguments[0] = irGet(apiParam)
+                                }
+                            )
                         }
                     }
 
-
-                    // Argument 2: The function expression wrapping the lambda
                     arguments[2] = IrFunctionExpressionImpl(
                         startOffset = startOffset,
                         endOffset = endOffset,
@@ -152,6 +150,8 @@ class EndpointFactoryIrExtension(
                         origin = IrStatementOrigin.LAMBDA
                     )
                 }
+
+                +irReturn(invokeCall)
             }
         }
 
@@ -207,9 +207,9 @@ class EndpointFactoryIrExtension(
             val constructor = factory.buildConstructor {
                 visibility = DescriptorVisibilities.PRIVATE
                 returnType = defaultType
-            }.apply {
-                parent = this@apply
+                parent = parentClass
             }
+
             declarations.add(constructor)
         }
 

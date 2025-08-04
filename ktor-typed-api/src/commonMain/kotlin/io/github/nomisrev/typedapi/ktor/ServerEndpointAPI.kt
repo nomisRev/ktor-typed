@@ -28,7 +28,7 @@ public fun <A : Any> Route.route(
     method: HttpMethod,
     factory: EndpointFactory<A>,
     block: suspend RoutingContext.(A) -> Unit,
-): Route = factory.create<Route> { path, endpoint ->
+): Route = factory.create { path, endpoint ->
     route(path, method) {
         handle {
             val api = ServerEndpointAPI(this)

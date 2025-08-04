@@ -46,15 +46,17 @@ FILE fqName:my.test fileName:/header.kt
         overridden:
           public abstract fun create <B> (block: kotlin.Function2<@[ParameterName(name = "path")] kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, A of io.github.nomisrev.typedapi.EndpointFactory>, B of io.github.nomisrev.typedapi.EndpointFactory.create>): B of io.github.nomisrev.typedapi.EndpointFactory.create declared in io.github.nomisrev.typedapi.EndpointFactory
         BLOCK_BODY
-          CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=B of my.test.Header.Companion.create origin=null
-            ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header>, B of my.test.Header.Companion.create> declared in my.test.Header.Companion.create' type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header>, B of my.test.Header.Companion.create> origin=null
-            ARG p1: CONST String type=kotlin.String value="/api"
-            ARG p2: FUN_EXPR type=kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header> origin=LAMBDA
-              FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:my.test.Header
-                VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
-                BLOCK_BODY
-                  CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.Header' type=my.test.Header origin=null
-                    ARG api: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Header.Companion.create.<anonymous>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+          RETURN type=kotlin.Nothing from='public final fun create <B> (block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header>, B of my.test.Header.Companion.create>): B of my.test.Header.Companion.create declared in my.test.Header.Companion'
+            CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=B of my.test.Header.Companion.create origin=null
+              ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header>, B of my.test.Header.Companion.create> declared in my.test.Header.Companion.create' type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header>, B of my.test.Header.Companion.create> origin=null
+              ARG p1: CONST String type=kotlin.String value="/api"
+              ARG p2: FUN_EXPR type=kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Header> origin=LAMBDA
+                FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:my.test.Header
+                  VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
+                  BLOCK_BODY
+                    RETURN type=kotlin.Nothing from='local final fun <anonymous> (api: io.github.nomisrev.typedapi.EndpointAPI): my.test.Header declared in my.test.Header.Companion.create'
+                      CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.Header' type=my.test.Header origin=null
+                        ARG api: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Header.Companion.create.<anonymous>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
     CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] visibility:public returnType:my.test.Header
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:authorization index:0 type:kotlin.String
       BLOCK_BODY
