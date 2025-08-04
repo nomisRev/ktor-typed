@@ -4,13 +4,6 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
-sealed interface InputDelegate<A> : ReadOnlyProperty<Any?, A> {
-    fun interface Query<A> : InputDelegate<A>
-    fun interface Path<A> : InputDelegate<A>
-    fun interface Header<A> : InputDelegate<A>
-    fun interface Body<A> : InputDelegate<A>
-}
-
 interface EndpointAPI {
     fun <A> input(input: Input<A>): ReadOnlyProperty<Any?, A>
 }
