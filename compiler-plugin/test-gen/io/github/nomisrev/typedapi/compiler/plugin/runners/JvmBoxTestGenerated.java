@@ -74,4 +74,10 @@ public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
   public void testQuery() {
     runTest("compiler-plugin/testData/box/query.kt");
   }
+
+  @Test
+  @TestMetadata("test22.kt")
+  public void testTest22() {
+    runTest("compiler-plugin/testData/box/test22.kt");
+  }
 }

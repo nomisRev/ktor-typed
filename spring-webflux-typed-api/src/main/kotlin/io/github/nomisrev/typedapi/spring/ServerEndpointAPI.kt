@@ -1,7 +1,7 @@
 package io.github.nomisrev.typedapi.spring
 
-import io.github.nomisrev.typedapi.Endpoint
 import io.github.nomisrev.typedapi.EndpointAPI
+import io.github.nomisrev.typedapi.EndpointFactory
 import io.github.nomisrev.typedapi.Input
 import io.github.nomisrev.typedapi.Validation
 import io.github.nomisrev.typedapi.ValidationBuilder
@@ -18,32 +18,25 @@ import reactor.core.publisher.Mono
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.findAnnotation
 
 public fun <A : Any> route(
-    typeInfo: KClass<A>,
     method: HttpMethod,
-    endpoint: (EndpointAPI) -> A,
+    factory: EndpointFactory<A>,
     block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-): RouterFunction<ServerResponse> {
-    val endpointAnnotation =
-        typeInfo.findAnnotation<Endpoint>() ?: throw IllegalArgumentException("Missing @Endpoint annotation")
-
-    val fullPath = endpointAnnotation.path
-
+) = factory.create { path, endpoint ->
     val predicate: RequestPredicate = when (method) {
-        HttpMethod.GET -> RequestPredicates.GET(fullPath)
-        HttpMethod.POST -> RequestPredicates.POST(fullPath)
-        HttpMethod.PUT -> RequestPredicates.PUT(fullPath)
-        HttpMethod.DELETE -> RequestPredicates.DELETE(fullPath)
-        HttpMethod.PATCH -> RequestPredicates.PATCH(fullPath)
-        HttpMethod.HEAD -> RequestPredicates.HEAD(fullPath)
-        HttpMethod.OPTIONS -> RequestPredicates.OPTIONS(fullPath)
+        HttpMethod.GET -> RequestPredicates.GET(path)
+        HttpMethod.POST -> RequestPredicates.POST(path)
+        HttpMethod.PUT -> RequestPredicates.PUT(path)
+        HttpMethod.DELETE -> RequestPredicates.DELETE(path)
+        HttpMethod.PATCH -> RequestPredicates.PATCH(path)
+        HttpMethod.HEAD -> RequestPredicates.HEAD(path)
+        HttpMethod.OPTIONS -> RequestPredicates.OPTIONS(path)
         else -> throw IllegalStateException("")
     }
 
-    return RouterFunctions.route(predicate) { request ->
-        val api = ServerEndpointAPI(fullPath, request)
+    RouterFunctions.route(predicate) { request ->
+        val api = ServerEndpointAPI(path, request)
         val value = endpoint(api)
 
         val bodyMono = api.bodyInput?.let { input ->
@@ -68,27 +61,15 @@ public fun <A : Any> route(
     }
 }
 
-public inline fun <reified A : Any> RouterFunctionDsl.GET(
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-) = add(route(A::class, HttpMethod.GET, endpoint, block))
+public fun <A : Any> RouterFunctionDsl.GET(
+    factory: EndpointFactory<A>,
+    block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
+) = add(route(HttpMethod.GET, factory, block))
 
-public inline fun <reified A : Any> RouterFunctionDsl.POST(
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-) = add(route(A::class, HttpMethod.POST, endpoint, block))
-
-public inline fun <reified A : Any> route(
-    method: HttpMethod,
-    noinline endpoint: (EndpointAPI) -> A,
-    noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-): RouterFunction<ServerResponse> = route(A::class, method, endpoint, block)
-
-public inline fun <reified A : Any> route(
-    noinline endpoint: (EndpointAPI) -> A,
-    method: HttpMethod,
-    noinline block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
-): RouterFunction<ServerResponse> = route(A::class, method, endpoint, block)
+public fun <A : Any> RouterFunctionDsl.POST(
+    factory: EndpointFactory<A>,
+    block: suspend ServerRequest.(A) -> Mono<ServerResponse>,
+) = add(route(HttpMethod.POST, factory, block))
 
 private class ServerEndpointAPI(var path: String, private val request: ServerRequest) : EndpointAPI {
     var body: Any? = null

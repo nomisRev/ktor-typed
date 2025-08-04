@@ -1,14 +1,14 @@
-FILE fqName:my.test fileName:/noInput.kt
-  CLASS CLASS name:NoInput modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
+FILE fqName:my.test fileName:/test22.kt
+  CLASS CLASS name:Test modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]
     annotations:
-      Endpoint(path = "/my/path")
-    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.NoInput
-    CLASS GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[io.github.nomisrev.typedapi.EndpointFactory<my.test.NoInput>]
-      thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.NoInput.Companion
-      CONSTRUCTOR visibility:private returnType:my.test.NoInput.Companion [primary]
+      Endpoint(path = "/")
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.Test
+    CLASS GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[io.github.nomisrev.typedapi.EndpointFactory<my.test.Test>]
+      thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:my.test.Test.Companion
+      CONSTRUCTOR visibility:private returnType:my.test.Test.Companion [primary]
         BLOCK_BODY
           DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[io.github.nomisrev.typedapi.EndpointFactory<my.test.NoInput>]' type=kotlin.Unit
+          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[io.github.nomisrev.typedapi.EndpointFactory<my.test.Test>]' type=kotlin.Unit
       FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -22,34 +22,34 @@ FILE fqName:my.test fileName:/noInput.kt
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         overridden:
           public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.EndpointFactory
-      FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] name:create visibility:public modality:FINAL returnType:B of my.test.NoInput.Companion.create
+      FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] name:create visibility:public modality:FINAL returnType:B of my.test.Test.Companion.create
         TYPE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] name:B index:0 variance: superTypes:[kotlin.Any?] reified:false
-        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput.Companion
-        VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.NoInput>, B of my.test.NoInput.Companion.create>
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Test.Companion
+        VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>, B of my.test.Test.Companion.create>
         overridden:
           public abstract fun create <B> (block: kotlin.Function2<@[ParameterName(name = "path")] kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, A of io.github.nomisrev.typedapi.EndpointFactory>, B of io.github.nomisrev.typedapi.EndpointFactory.create>): B of io.github.nomisrev.typedapi.EndpointFactory.create declared in io.github.nomisrev.typedapi.EndpointFactory
         BLOCK_BODY
-          CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=B of my.test.NoInput.Companion.create origin=null
-            ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.NoInput>, B of my.test.NoInput.Companion.create> declared in my.test.NoInput.Companion.create' type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.NoInput>, B of my.test.NoInput.Companion.create> origin=null
-            ARG p1: CONST String type=kotlin.String value="/my/path"
-            ARG p2: FUN_EXPR type=kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.NoInput> origin=LAMBDA
-              FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:my.test.NoInput
+          CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 declared in kotlin.Function2' type=B of my.test.Test.Companion.create origin=null
+            ARG <this>: GET_VAR 'block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>, B of my.test.Test.Companion.create> declared in my.test.Test.Companion.create' type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>, B of my.test.Test.Companion.create> origin=null
+            ARG p1: CONST String type=kotlin.String value="/"
+            ARG p2: FUN_EXPR type=kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test> origin=LAMBDA
+              FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:my.test.Test
                 VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
                 BLOCK_BODY
-                  CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.NoInput' type=my.test.NoInput origin=null
-                    ARG api: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.NoInput.Companion.create.<anonymous>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
-    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] visibility:public returnType:my.test.NoInput
+                  CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.Test' type=my.test.Test origin=null
+                    ARG api: GET_VAR 'api: io.github.nomisrev.typedapi.EndpointAPI declared in my.test.Test.Companion.create.<anonymous>' type=io.github.nomisrev.typedapi.EndpointAPI origin=null
+    CONSTRUCTOR GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] visibility:public returnType:my.test.Test
       BLOCK_BODY
-        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.NoInput'
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (api: io.github.nomisrev.typedapi.EndpointAPI) declared in my.test.Test'
           ARG api: CONSTRUCTOR_CALL 'public constructor <init> (vararg values: kotlin.Pair<kotlin.String, kotlin.Any?>) declared in io.github.nomisrev.typedapi.MapEndpointAPI' type=io.github.nomisrev.typedapi.MapEndpointAPI origin=null
             ARG values: CALL 'public final fun arrayOf <T> (vararg elements: T of kotlin.arrayOf): kotlin.Array<T of kotlin.arrayOf> declared in kotlin' type=kotlin.Array<T of kotlin.arrayOf> origin=null
               TYPE_ARG T: kotlin.Pair<kotlin.String, kotlin.Any?>
               ARG elements: VARARG type=kotlin.Array<kotlin.Pair<kotlin.String, kotlin.Any?>> varargElementType=kotlin.Pair<kotlin.String, kotlin.Any?>
-    CONSTRUCTOR visibility:public returnType:my.test.NoInput [primary]
+    CONSTRUCTOR visibility:public returnType:my.test.Test [primary]
       VALUE_PARAMETER kind:Regular name:api index:0 type:io.github.nomisrev.typedapi.EndpointAPI
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:NoInput modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:Test modality:FINAL visibility:public superTypes:[kotlin.Any; io.github.nomisrev.typedapi.HttpRequestValue]' type=kotlin.Unit
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -67,50 +67,54 @@ FILE fqName:my.test fileName:/noInput.kt
         public open fun toString (): kotlin.String declared in kotlin.Any
         public open fun toString (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] name:body visibility:public modality:FINAL returnType:kotlin.Unit
-      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Test
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun body (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Body<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       BLOCK_BODY
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] name:header visibility:public modality:FINAL returnType:kotlin.Unit
-      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Test
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun header (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Header<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       BLOCK_BODY
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.String
-      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Test
       overridden:
         public abstract fun path (): kotlin.String declared in io.github.nomisrev.typedapi.HttpRequestValue
       EXPRESSION_BODY
-        CONST String type=kotlin.String value="/my/path"
+        CONST String type=kotlin.String value="/"
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] name:path visibility:public modality:FINAL returnType:kotlin.Unit
-      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Test
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun path (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Path<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       BLOCK_BODY
     FUN GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] name:query visibility:public modality:FINAL returnType:kotlin.Unit
-      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.NoInput
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:my.test.Test
       VALUE_PARAMETER GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.HttpRequestValueExtension.Key] kind:Regular name:block index:1 type:kotlin.Function2<kotlin.Any?, io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>
       overridden:
         public abstract fun query (block: kotlin.Function2<@[ParameterName(name = "value")] kotlin.Any?, @[ParameterName(name = "input")] io.github.nomisrev.typedapi.Input.Query<kotlin.Any?>, kotlin.Unit>): kotlin.Unit declared in io.github.nomisrev.typedapi.HttpRequestValue
       BLOCK_BODY
   FUN name:box visibility:public modality:FINAL returnType:kotlin.String
     BLOCK_BODY
-      VAR name:value type:my.test.NoInput [val]
-        CONSTRUCTOR_CALL 'public constructor <init> () declared in my.test.NoInput' type=my.test.NoInput origin=null
-      VAR name:path type:kotlin.String [val]
-        CALL 'public final fun path (): kotlin.String declared in my.test.NoInput' type=kotlin.String origin=null
-          ARG <this>: GET_VAR 'val value: my.test.NoInput declared in my.test.box' type=my.test.NoInput origin=null
+      VAR name:s type:kotlin.String [var]
+        CONST String type=kotlin.String value="NOK"
+      VAR name:rest type:kotlin.String [val]
+        CALL 'public final fun create <B> (block: kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>, B of my.test.Test.Companion.create>): B of my.test.Test.Companion.create declared in my.test.Test.Companion' type=kotlin.String origin=null
+          TYPE_ARG B: kotlin.String
+          ARG <this>: GET_OBJECT 'CLASS GENERATED[io.github.nomisrev.typedapi.compiler.plugin.fir.EndpointFactoryExtension.Key] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[io.github.nomisrev.typedapi.EndpointFactory<my.test.Test>]' type=my.test.Test.Companion
+          ARG block: FUN_EXPR type=kotlin.Function2<kotlin.String, kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>, kotlin.String> origin=LAMBDA
+            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:kotlin.String
+              VALUE_PARAMETER kind:Regular name:text index:0 type:kotlin.String
+              VALUE_PARAMETER UNDERSCORE_PARAMETER kind:Regular name:<unused var> index:1 type:kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>
+              BLOCK_BODY
+                SET_VAR 'var s: kotlin.String declared in my.test.box' type=kotlin.Unit origin=EQ
+                  GET_VAR 'text: kotlin.String declared in my.test.box.<anonymous>' type=kotlin.String origin=null
+                RETURN type=kotlin.Nothing from='local final fun <anonymous> (text: kotlin.String, <unused var>: kotlin.Function1<io.github.nomisrev.typedapi.EndpointAPI, my.test.Test>): kotlin.String declared in my.test.box'
+                  CONST String type=kotlin.String value="K"
       RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in my.test'
-        WHEN type=kotlin.String origin=IF
-          BRANCH
-            if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
-              ARG arg0: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
-              ARG arg1: CONST String type=kotlin.String value="/my/path"
-            then: CONST String type=kotlin.String value="OK"
-          BRANCH
-            if: CONST Boolean type=kotlin.Boolean value=true
-            then: GET_VAR 'val path: kotlin.String declared in my.test.box' type=kotlin.String origin=null
+        CALL 'public final fun plus (other: kotlin.Any?): kotlin.String declared in kotlin.String' type=kotlin.String origin=PLUS
+          ARG <this>: GET_VAR 'var s: kotlin.String declared in my.test.box' type=kotlin.String origin=null
+          ARG other: GET_VAR 'val rest: kotlin.String declared in my.test.box' type=kotlin.String origin=null
 FILE fqName:my.test fileName:__GENERATED DECLARATIONS__.kt

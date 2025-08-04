@@ -44,7 +44,7 @@ class ClientTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::SimpleClientApi) { api ->
+            get(SimpleClientApi) { api ->
                 call.respond(
                     ClientTestResponse(
                         id = api.id,
@@ -80,7 +80,7 @@ class ClientTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::NullableParamsApi) { api ->
+            get(NullableParamsApi) { api ->
                 call.respond(
                     NullableResponse(
                         id = api.id,

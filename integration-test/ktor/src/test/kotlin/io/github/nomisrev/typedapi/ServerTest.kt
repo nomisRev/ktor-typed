@@ -59,7 +59,7 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::SimpleTestApi) { api ->
+            get(SimpleTestApi) { api ->
                 call.respond(
                     ServerTestResponse(
                         id = api.id,
@@ -91,11 +91,11 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::Route1Api) { api ->
+            get(Route1Api) { api ->
                 call.respond(RouteResponse("route1", api.id.toString()))
             }
 
-            get(::Route2Api) { api ->
+            get(Route2Api) { api ->
                 call.respond(RouteResponse("route2", api.name))
             }
         }
@@ -133,11 +133,11 @@ class ServerTest {
         routing {
             install(ContentNegotiation) { json() }
 
-            get(::GetApi) { api ->
+            get(GetApi) { api ->
                 call.respond(MethodResponse("GET", api.id))
             }
 
-            post(::PostApi) { api ->
+            post(PostApi) { api ->
                 call.respond(MethodResponse("POST", api.id, api.body))
             }
         }

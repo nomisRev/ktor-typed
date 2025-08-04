@@ -10,6 +10,9 @@ class MyCodeIrGenerationExtension(private val module: PluginContext) : IrGenerat
         moduleFragment: IrModuleFragment,
         pluginContext: IrPluginContext,
     ) {
-        moduleFragment.accept(MyCodeIrGenerator(pluginContext, module, IrSymbols(pluginContext, module)), null)
+        val symbols = IrSymbols(pluginContext, module)
+        moduleFragment.accept(ValueConstructorIrExtension(pluginContext, module, symbols), null)
+        moduleFragment.accept(HttpRequestValueExtension(pluginContext, module, symbols), null)
+        moduleFragment.accept(EndpointFactoryIrExtension(pluginContext, module, symbols), null)
     }
 }

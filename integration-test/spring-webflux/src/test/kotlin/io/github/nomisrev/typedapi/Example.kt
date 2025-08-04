@@ -27,7 +27,7 @@ class Test {
     @Test
     fun example() {
         val router = router {
-            GET(::ProfileApi) { api ->
+            GET(ProfileApi) { api ->
                 ServerResponse.ok().bodyValue(Profile(api.profileId, api.name, api.email, api.userAgent))
             }
         }

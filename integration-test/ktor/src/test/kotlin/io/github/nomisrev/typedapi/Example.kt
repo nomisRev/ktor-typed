@@ -41,7 +41,7 @@ class Test {
     fun example() = testApplication {
         routing {
             install(ContentNegotiation) { json() }
-            get(::ProfileApi) { api ->
+            get(ProfileApi) { api ->
                 call.respond(Profile(api.profileId, api.name, api.email, api.userAgent, api.json))
             }
         }

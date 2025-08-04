@@ -43,6 +43,11 @@ FILE: body.kt
             this<R|my/test/UserEndpoint|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(user).R|kotlin/to|(R|<local>/user|)))
         }
 
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/UserEndpoint>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/UserEndpoint>) -> B|): R|B|
+
+        }
+
     }
     public final fun box(): R|kotlin/String| {
         lval testUser: R|my/test/User| = R|my/test/User.User|(String(John Doe), Int(30))

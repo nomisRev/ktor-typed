@@ -25,6 +25,11 @@ FILE: query.kt
             this<R|my/test/Query|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|(String(age).R|kotlin/to|(R|<local>/age|)))
         }
 
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/Query>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/Query>) -> B|): R|B|
+
+        }
+
     }
     public final fun box(): R|kotlin/String| {
         lval value: R|my/test/Query| = R|my/test/Query|(Int(32))

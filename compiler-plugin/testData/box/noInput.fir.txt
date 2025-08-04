@@ -20,6 +20,11 @@ FILE: noInput.kt
             this<R|my/test/NoInput|>(R|io/github/nomisrev/typedapi/MapEndpointAPI.MapEndpointAPI|())
         }
 
+        public final companion object Companion : R|io/github/nomisrev/typedapi/EndpointFactory<my/test/NoInput>| {
+            public final override fun <B> create(block: R|(kotlin/String, kotlin/Function1<io/github/nomisrev/typedapi/EndpointAPI, my/test/NoInput>) -> B|): R|B|
+
+        }
+
     }
     public final fun box(): R|kotlin/String| {
         lval value: R|my/test/NoInput| = R|my/test/NoInput|()
